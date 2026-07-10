@@ -235,7 +235,7 @@ export default function App() {
                 {/* Right Block: Live Premium Smartphone mockup */}
                 <div className="lg:col-span-5 flex justify-center relative w-full pt-6 lg:pt-0">
                   <div className="absolute -inset-4 bg-gradient-to-tr from-amber-500/10 to-transparent blur-3xl rounded-full" />
-                  <SmartphoneMockup />
+                  <SmartphoneMockup onlyPhone={true} />
                 </div>
               </div>
             </section>
@@ -340,6 +340,17 @@ export default function App() {
             </section>
 
 
+            {/* SEÇÃO 2.5 — EXPLORE A INTERFACE */}
+            <section
+              id="interface"
+              className="py-24 sm:py-32 w-full border-b border-zinc-950 bg-gradient-to-b from-[#080808] to-[#050505]"
+            >
+              <div className="max-w-7xl mx-auto px-6">
+                <SmartphoneMockup />
+              </div>
+            </section>
+
+
             {/* NEW SECTION — PLANOS */}
             <section
               id="planos"
@@ -433,7 +444,7 @@ export default function App() {
                       {/* Pricing block */}
                       <div className="flex items-baseline gap-1 py-2">
                         <span className="text-sm text-zinc-400 font-mono leading-none">R$</span>
-                        <span className="text-5xl font-bold text-amber-500 font-mono leading-none">29,90</span>
+                        <span className="text-5xl font-bold text-amber-500 font-mono leading-none">49,90</span>
                         <span className="text-sm text-zinc-500 font-mono leading-none">/ mês</span>
                       </div>
 

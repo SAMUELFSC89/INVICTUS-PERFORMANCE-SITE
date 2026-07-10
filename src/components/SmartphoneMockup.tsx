@@ -33,7 +33,7 @@ import InvictusLogo from './InvictusLogo';
 
 type MockTab = 'inicio' | 'ranking' | 'treinos' | 'perfil';
 
-export default function SmartphoneMockup() {
+export default function SmartphoneMockup({ onlyPhone = false }: { onlyPhone?: boolean }) {
   const [activeTab, setActiveTab] = useState<MockTab>('inicio');
   const [workoutChecked, setWorkoutChecked] = useState<boolean[]>([true, true, false, false]);
   const [timeState, setTimeState] = useState(542); // Simulated timer (9:02)
@@ -55,7 +55,7 @@ export default function SmartphoneMockup() {
   }, []);
 
   useEffect(() => {
-    if (isManual) return;
+    if (isManual || onlyPhone) return;
     const interval = setInterval(() => {
       setActiveTab(prev => {
         if (prev === 'inicio') return 'ranking';
@@ -65,7 +65,7 @@ export default function SmartphoneMockup() {
       });
     }, 6000);
     return () => clearInterval(interval);
-  }, [isManual]);
+  }, [isManual, onlyPhone]);
 
   const toggleWorkout = (index: number) => {
     const nextList = [...workoutChecked];
@@ -81,88 +81,90 @@ export default function SmartphoneMockup() {
     <div className="w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-16 justify-center">
       
       {/* Visual Navigation Controls on the Left side */}
-      <div className="w-full lg:w-1/2 flex flex-col gap-5 text-left order-last lg:order-first">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 rounded-full border border-red-500/20 text-xs font-mono text-red-500 w-fit mb-2">
-          <Smartphone className="w-3.5 h-3.5" />
-          Acompanhe no Seu Ritmo
-        </div>
-        <h3 className="text-2xl sm:text-3xl font-display font-semibold tracking-tight text-white mb-2">
-          Uma interface lapidada para foco total
-        </h3>
-        <p className="text-zinc-400 text-sm sm:text-base leading-relaxed mb-4">
-          Esqueça os aplicativos abarrotados de menus complicados e pop-ups irritantes. O Invictus foi projetado com uma experiência focada na ação rápida: abra, selecione, execute e conquiste.
-        </p>
+      {!onlyPhone && (
+        <div className="w-full lg:w-1/2 flex flex-col gap-5 text-left order-last lg:order-first">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 rounded-full border border-red-500/20 text-xs font-mono text-red-500 w-fit mb-2">
+            <Smartphone className="w-3.5 h-3.5" />
+            Acompanhe no Seu Ritmo
+          </div>
+          <h3 className="text-2xl sm:text-3xl font-display font-semibold tracking-tight text-white mb-2">
+            Uma interface lapidada para foco total
+          </h3>
+          <p className="text-zinc-400 text-sm sm:text-base leading-relaxed mb-4">
+            Esqueça os aplicativos abarrotados de menus complicados e pop-ups irritantes. O Invictus foi projetado com uma experiência focada na ação rápida: abra, selecione, execute e conquiste.
+          </p>
 
-        {/* Tab Cards (Premium Interactive Toggle Buttons) */}
-        <div className="space-y-3">
-          {[
-            {
-              id: 'inicio' as MockTab,
-              icon: <CircleDot className="w-5 h-5" />,
-              title: "Painel Principal",
-              desc: "A tela de acompanhamento diário com status integrados de temporada, suas próximas metas semanais e resumo de calorias."
-            },
-            {
-              id: 'ranking' as MockTab,
-              icon: <Trophy className="w-5 h-5" />,
-              title: "Tabela de Classificação Real",
-              desc: "Ligas de competitividade saudáveis criadas para medir disciplina, separando atletas em rankings locais de esforço."
-            },
-            {
-              id: 'treinos' as MockTab,
-              icon: <Dumbbell className="w-5 h-5" />,
-              title: "Registro de Treino Presencial",
-              desc: "Controle refinado de cargas de força, biometria cardíaca e validação inteligente de permanência baseada em GPS."
-            },
-            {
-              id: 'perfil' as MockTab,
-              icon: <User className="w-5 h-5" />,
-              title: "Sua Identidade e Integrações",
-              desc: "Sincronização com relógios Garmin Connect e Strava API. Conquistas meritocráticas auditadas sem anúncios."
-            }
-          ].map((tab) => {
-            const isSelected = activeTab === tab.id;
-            return (
-              <button
-                id={`mock-tab-${tab.id}`}
-                key={tab.id}
-                onClick={() => {
-                  setActiveTab(tab.id);
-                  setIsManual(true);
-                }}
-                className={`w-full flex gap-4 p-4 rounded-2xl border text-left transition-all duration-300 relative overflow-hidden group focus:outline-none ${
-                  isSelected 
-                    ? 'bg-zinc-900 border-amber-500/40 shadow-2xl shadow-amber-500/5' 
-                    : 'bg-zinc-950/20 border-zinc-900 hover:bg-zinc-900/40 hover:border-zinc-850'
-                }`}
-              >
-                {/* Visual Accent for Selected State */}
-                {isSelected && (
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-amber-400 to-amber-600" />
-                )}
-                
-                <div className={`p-2.5 rounded-xl transition-all duration-300 ${
-                  isSelected ? 'bg-amber-500 text-black' : 'bg-zinc-900 text-zinc-400 group-hover:text-white'
-                }`}>
-                  {tab.icon}
-                </div>
+          {/* Tab Cards (Premium Interactive Toggle Buttons) */}
+          <div className="space-y-3">
+            {[
+              {
+                id: 'inicio' as MockTab,
+                icon: <CircleDot className="w-5 h-5" />,
+                title: "Painel Principal",
+                desc: "A tela de acompanhamento diário com status integrados de temporada, suas próximas metas semanais e resumo de calorias."
+              },
+              {
+                id: 'ranking' as MockTab,
+                icon: <Trophy className="w-5 h-5" />,
+                title: "Tabela de Classificação Real",
+                desc: "Ligas de competitividade saudáveis criadas para medir disciplina, separando atletas em rankings locais de esforço."
+              },
+              {
+                id: 'treinos' as MockTab,
+                icon: <Dumbbell className="w-5 h-5" />,
+                title: "Registro de Treino Presencial",
+                desc: "Controle refinado de cargas de força, biometria cardíaca e validação inteligente de permanência baseada em GPS."
+              },
+              {
+                id: 'perfil' as MockTab,
+                icon: <User className="w-5 h-5" />,
+                title: "Sua Identidade e Integrações",
+                desc: "Sincronização com relógios Garmin Connect e Strava API. Conquistas meritocráticas auditadas sem anúncios."
+              }
+            ].map((tab) => {
+              const isSelected = activeTab === tab.id;
+              return (
+                <button
+                  id={`mock-tab-${tab.id}`}
+                  key={tab.id}
+                  onClick={() => {
+                    setActiveTab(tab.id);
+                    setIsManual(true);
+                  }}
+                  className={`w-full flex gap-4 p-4 rounded-2xl border text-left transition-all duration-300 relative overflow-hidden group focus:outline-none ${
+                    isSelected 
+                      ? 'bg-zinc-900 border-amber-500/40 shadow-2xl shadow-amber-500/5' 
+                      : 'bg-zinc-950/20 border-zinc-900 hover:bg-zinc-900/40 hover:border-zinc-850'
+                  }`}
+                >
+                  {/* Visual Accent for Selected State */}
+                  {isSelected && (
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-amber-400 to-amber-600" />
+                  )}
+                  
+                  <div className={`p-2.5 rounded-xl transition-all duration-300 ${
+                    isSelected ? 'bg-amber-500 text-black' : 'bg-zinc-900 text-zinc-400 group-hover:text-white'
+                  }`}>
+                    {tab.icon}
+                  </div>
 
-                <div className="flex-1 min-w-0">
-                  <h4 className={`text-base font-semibold font-display transition-colors ${isSelected ? 'text-amber-300' : 'text-zinc-300 group-hover:text-white'}`}>
-                    {tab.title}
-                  </h4>
-                  <p className="text-zinc-500 text-xs sm:text-sm mt-0.5 leading-normal">
-                    {tab.desc}
-                  </p>
-                </div>
-              </button>
-            );
-          })}
+                  <div className="flex-1 min-w-0">
+                    <h4 className={`text-base font-semibold font-display transition-colors ${isSelected ? 'text-amber-300' : 'text-zinc-300 group-hover:text-white'}`}>
+                      {tab.title}
+                    </h4>
+                    <p className="text-zinc-500 text-xs sm:text-sm mt-0.5 leading-normal">
+                      {tab.desc}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Visual Simulated Smartphone mockup Container on the Right */}
-      <div className="w-full lg:w-1/2 flex justify-center relative p-2">
+      <div className={`${onlyPhone ? 'w-full' : 'w-full lg:w-1/2'} flex justify-center relative p-2`}>
         {/* Glow behind phone */}
         <div className="absolute -inset-4 bg-gradient-to-tr from-amber-500/10 to-transparent blur-3xl rounded-full opacity-60 pointer-events-none" />
 

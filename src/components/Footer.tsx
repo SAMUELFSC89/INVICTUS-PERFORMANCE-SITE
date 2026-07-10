@@ -155,13 +155,13 @@ export default function Footer({ onNavigateToPage }: FooterProps) {
               DECLARAÇÃO DE CONFORMIDADE COM AS DIRETRIZES DA APPLE APP STORE E GOOGLE PLAY STORE
             </h5>
             <p className="text-[10.5px] text-zinc-550 leading-relaxed antialiased">
-              O aplicativo Invictus, bem como toda a infraestrutura contida nesta página de divulgação, opera estritamente como um ecossistema focado no aprimoramento de saúde, rastreio esportivo e hábitos diários sustentáveis. Sob nenhuma hipótese organizamos, promovemos, facilitamos ou aceitamos transações monetárias voltadas a apostas de cotas fixas, esquemas rápidos de remuneração financeira, cassinos eletrônicos online, sorteios patrocinados ou investimentos especulativos. A aquisição de medalhas físicas, recompensas digitais ou cupons promocionais fornecidos por parceiros é decorrência estrita de critérios meritocráticos de atividade física legitimamente comprovados pelos relógios integrados e auditorias antifraude por GPS. Todas as dinâmicas de engajamento baseiam-se em lógicas puras de gamificação saudável esportiva.
+              O aplicativo INVICTUS PERFORMANCE, bem como toda a infraestrutura contida nesta página de divulgação, opera estritamente como um ecossistema focado no aprimoramento de saúde, rastreio esportivo e hábitos diários sustentáveis. Sob nenhuma hipótese organizamos, promovemos, facilitamos ou aceitamos transações monetárias voltadas a apostas de cotas fixas, esquemas rápidos de remuneração financeira, cassinos eletrônicos online, sorteios patrocinados ou investimentos especulativos. A aquisição de medalhas físicas, recompensas digitais ou cupons promocionais fornecidos por parceiros é decorrência estrita de critérios meritocráticos de atividade física legitimamente comprovados pelos relógios integrados e auditorias antifraude por GPS. Todas as dinâmicas de engajamento baseiam-se em lógicas puras de gamificação saudável esportiva.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-[11px] text-zinc-600">
             <p>
-              © {new Date().getFullYear()} Invictus Inc. Todos os direitos reservados. Projeto registrado na Google AI Studio.
+              © {new Date().getFullYear()} INVICTUS PERFORMANCE Inc. Todos os direitos reservados. Projeto registrado na Google AI Studio.
             </p>
             <div className="flex gap-4">
               <p>Segurança Militar SSL</p>

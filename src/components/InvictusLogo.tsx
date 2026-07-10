@@ -128,8 +128,8 @@ export default function InvictusLogo({
         </g>
       </svg>
       {showText && (
-        <span className={`font-accent tracking-[0.18em] text-[22px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-[#FFE699] via-[#FBBF24] to-[#B45309] filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] select-none ${textColor}`}>
-          INVICTUS
+        <span className={`font-accent tracking-[0.18em] text-[15px] xs:text-[18px] sm:text-[22px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-[#FFE699] via-[#FBBF24] to-[#B45309] filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] select-none ${textColor}`}>
+          INVICTUS PERFORMANCE
         </span>
       )}
     </div>

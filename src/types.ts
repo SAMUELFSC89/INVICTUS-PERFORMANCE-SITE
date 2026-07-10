@@ -26,8 +26,8 @@ export type PageType = 'home' | 'terms' | 'privacy' | 'rules' | 'faq' | 'rewards
 export const FAQ_DATA: FAQItem[] = [
   {
     id: "faq-1",
-    question: "O que é o aplicativo Invictus?",
-    answer: "O Invictus é uma plataforma premium de evolução pessoal e gamificação de hábitos saudáveis. Nosso objetivo é incentivar a prática consistente de atividades físicas através de um ranking motivacional em que disciplina e regularidade são os fatores chave para a conquista de reputação e recompensas de conquistas digitais."
+    question: "O que é o aplicativo INVICTUS PERFORMANCE?",
+    answer: "O INVICTUS PERFORMANCE é uma plataforma premium de evolução pessoal e gamificação de hábitos saudáveis. Nosso objetivo é incentivar a prática consistente de atividades físicas através de um ranking motivacional em que disciplina e regularidade são os fatores chave para a conquista de reputação e recompensas de conquistas digitais."
   },
   {
     id: "faq-2",
@@ -42,7 +42,7 @@ export const FAQ_DATA: FAQItem[] = [
   {
     id: "faq-4",
     question: "O sistema de pontuação envolve apostas ou dinheiro?",
-    answer: "Absolutamente não. O Invictus é uma plataforma puramente focada em bem-estar, saúde e desenvolvimento humano saudável. Não há apostas, apostas financeiras, apostas contra outros usuários ou transações financeiras associadas a resultados de treinos. Focamos no desenvolvimento saudável e no reconhecimento através de medalhas, troféus digitais e conquistas internas."
+    answer: "Absolutamente não. O INVICTUS PERFORMANCE é uma plataforma puramente focada em bem-estar, saúde e desenvolvimento humano saudável. Não há apostas, apostas financeiras, apostas contra outros usuários ou transações financeiras associadas a resultados de treinos. Focamos no desenvolvimento saudável e no reconhecimento através de medalhas, troféus digitais e conquistas internas."
   },
   {
     id: "faq-5",
@@ -52,19 +52,19 @@ export const FAQ_DATA: FAQItem[] = [
   {
     id: "faq-6",
     question: "Posso conectar meu relógio Garmin, Strava ou Apple Watch?",
-    answer: "Sim! O Invictus possui sincronização ativa com as principais plataformas esportivas do mercado internacional, incluindo Garmin Connect, Strava e Apple Health, tornando o processo de registro de cardio e treinos totalmente automatizado e seguro."
+    answer: "Sim! O INVICTUS PERFORMANCE possui sincronização ativa com as principais plataformas esportivas do mercado internacional, incluindo Garmin Connect, Strava e Apple Health, tornando o processo de registro de cardio e treinos totalmente automatizado e seguro."
   },
   {
     id: "faq-7",
     question: "Existem campanhas de premiação?",
-    answer: "Sim. O Invictus poderá promover campanhas de incentivo e reconhecimento para participantes elegíveis. Cada campanha possui regras, critérios de participação e requisitos próprios divulgados pela plataforma."
+    answer: "Sim. O INVICTUS PERFORMANCE poderá promover campanhas de incentivo e reconhecimento para participantes elegíveis. Cada campanha possui regras, critérios de participação e requisitos próprios divulgados pela plataforma."
   }
 ];
 
 export const TERMS_DOCUMENT: LegalDocument = {
-  title: "Termos de Uso e Serviço - Invictus",
+  title: "Termos de Uso e Serviço - INVICTUS PERFORMANCE",
   lastUpdated: "31 de Maio de 2026",
-  introduction: "Bem-vindo ao Invictus. Estes Termos de Uso regem o acesso e utilização da plataforma digital, aplicativo móvel e serviços relacionados ao ecossistema Invictus. Ao criar uma conta ou utilizar o aplicativo, você expressa sua concordância integral com estes termos.",
+  introduction: "Bem-vindo ao INVICTUS PERFORMANCE. Estes Termos de Uso regem o acesso e utilização da plataforma digital, aplicativo móvel e serviços relacionados ao ecossistema INVICTUS PERFORMANCE. Ao criar uma conta ou utilizar o aplicativo, você expressa sua concordância integral com estes termos.",
   sections: [
     {
       title: "1. Natureza da Plataforma",
@@ -99,7 +99,7 @@ export const TERMS_DOCUMENT: LegalDocument = {
 };
 
 export const PRIVACY_DOCUMENT: LegalDocument = {
-  title: "Política de Privacidade - Invictus",
+  title: "Política de Privacidade - INVICTUS PERFORMANCE",
   lastUpdated: "31 de Maio de 2026",
   introduction: "A privacidade do usuário é um pilar insubstituível. Esta política descreve pormenorizadamente os dados pessoais que coletamos, sua finalidade, como os tratamos de forma segura e os seus direitos em estrito cumprimento à Lei Geral de Proteção de Dados (LGPD) e diretrizes globais da Google Play e Apple App Store.",
   sections: [
@@ -129,9 +129,9 @@ export const PRIVACY_DOCUMENT: LegalDocument = {
 };
 
 export const RULES_DOCUMENT: LegalDocument = {
-  title: "Regras Gerais de Participação - Invictus",
+  title: "Regras Gerais de Participação - INVICTUS PERFORMANCE",
   lastUpdated: "31 de Maio de 2026",
-  introduction: "O Invictus é uma liga esportiva saudável de reputação. Para manter um ecossistema equilibrado, ético e inspirador, todos os usuários devem seguir ativamente as Regras de Participação abaixo:",
+  introduction: "O INVICTUS PERFORMANCE é uma liga esportiva saudável de reputação. Para manter um ecossistema equilibrado, ético e inspirador, todos os usuários devem seguir ativamente as Regras de Participação abaixo:",
   sections: [
     {
       title: "1. Registro Honesto",
@@ -166,9 +166,9 @@ export const RULES_DOCUMENT: LegalDocument = {
 };
 
 export const REWARDS_DOCUMENT: LegalDocument = {
-  title: "Política de Premiações e Conquistas - Invictus",
+  title: "Política de Premiações e Conquistas - INVICTUS PERFORMANCE",
   lastUpdated: "31 de Maio de 2026",
-  introduction: "O Invictus valoriza o esforço real. Esta política define as regras para a concessão de incentivos corporativos, conquistas digitais e troféus dentro da plataforma.",
+  introduction: "O INVICTUS PERFORMANCE valoriza o esforço real. Esta política define as regras para a concessão de incentivos corporativos, conquistas digitais e troféus dentro da plataforma.",
   sections: [
     {
       title: "1. Medalhas e Títulos Digitais",
@@ -187,7 +187,7 @@ export const REWARDS_DOCUMENT: LegalDocument = {
     {
       title: "3. Ausência de Dinâmica de Jogos de Azar",
       content: [
-        "O Invictus reitera que sua lógica é 100% esportiva e meritocrática.",
+        "O INVICTUS PERFORMANCE reitera que sua lógica é 100% esportiva e meritocrática.",
         "A aquisição de pontos ou resgate de conquistas não envolve elementos estocásticos artificiais como roletas, giros de sorte, compras de passes de apostas esportivas, caça-níqueis ou sorteios eletrônicos. Toda evolução depende estritamente de suor, disciplina e consistência real comprovada do atleta."
       ]
     }
@@ -197,7 +197,7 @@ export const REWARDS_DOCUMENT: LegalDocument = {
 export const INCENTIVES_DOCUMENT: LegalDocument = {
   title: "Política de Incentivos e Reconhecimento",
   lastUpdated: "31 de Maio de 2026",
-  introduction: "O Invictus é uma plataforma de gamificação fitness focada em consistência, evolução pessoal e reconhecimento de desempenho. Esta política estabelece as diretrizes normativas das campanhas de incentivo, critérios de classificação e procedimentos de auditoria adotados pela plataforma para garantir a lisura e a integridade de todas as atividades.",
+  introduction: "O INVICTUS PERFORMANCE é uma plataforma de gamificação fitness focada em consistência, evolução pessoal e reconhecimento de desempenho. Esta política estabelece as diretrizes normativas das campanhas de incentivo, critérios de classificação e procedimentos de auditoria adotados pela plataforma para garantir a lisura e a integridade de todas as atividades.",
   sections: [
     {
       title: "1. Objetivo das Campanhas",
@@ -249,7 +249,7 @@ export const INCENTIVES_DOCUMENT: LegalDocument = {
         "Será imediatamente desclassificado e banido das campanhas vigentes e futuras o usuário que:",
         "a) Compartilhar dispositivos vestíveis com terceiros para simular acréscimo de pontuação;",
         "b) Utilizar emuladores virtuais, mockers de GPS ou scripts automatizados de simulação de sensores;",
-        "c) Praticar condutas antidesportivas ou que violem a confidencialidade e a ética de comunidade do Invictus."
+        "c) Praticar condutas antidesportivas ou que violem a confidencialidade e a ética de comunidade do INVICTUS PERFORMANCE."
       ]
     },
     {
@@ -277,7 +277,7 @@ export const INCENTIVES_DOCUMENT: LegalDocument = {
 };
 
 export const VALIDATION_DOCUMENT: LegalDocument = {
-  title: "Política de Validação de Atividades - Invictus",
+  title: "Política de Validação de Atividades - INVICTUS PERFORMANCE",
   lastUpdated: "31 de Maio de 2026",
   introduction: "Como auditamos e asseguramos que o movimento físico é verídico? Esta política especifica os protocolos técnicos e de sensores que validam cada segundo do seu suor.",
   sections: [

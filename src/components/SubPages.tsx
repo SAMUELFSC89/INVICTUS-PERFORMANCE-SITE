@@ -146,9 +146,9 @@ export default function SubPages({ page, onBack }: SubPagesProps) {
             <div className="mt-16 bg-zinc-900/50 rounded-2xl border border-zinc-800 p-6 flex flex-col sm:flex-row gap-4 items-start">
               <ShieldAlert className="w-10 h-10 text-red-500 shrink-0" />
               <div>
-                <h4 className="font-semibold text-white mb-1 text-sm">Garantia de Transparência Invictus</h4>
+                <h4 className="font-semibold text-white mb-1 text-sm">Garantia de Transparência INVICTUS PERFORMANCE</h4>
                 <p className="text-xs text-zinc-400 leading-relaxed">
-                  Todos os nossos termos estão estruturados de acordo com as políticas internacionais de integridade do desenvolvedor. Proibimos estritamente condutas nocivas, abusos algorítmicos ou fraudes mecânicas nos termos descritos acima. O Invictus é operado de acordo com as leis e diretrizes nacionais sem mecanismos de jogos de azar ou especulação.
+                  Todos os nossos termos estão estruturados de acordo com as políticas internacionais de integridade do desenvolvedor. Proibimos estritamente condutas nocivas, abusos algorítmicos ou fraudes mecânicas nos termos descritos acima. O INVICTUS PERFORMANCE é operado de acordo com as leis e diretrizes nacionais sem mecanismos de jogos de azar ou especulação.
                 </p>
               </div>
             </div>
@@ -167,7 +167,7 @@ export default function SubPages({ page, onBack }: SubPagesProps) {
                 Perguntas Frequentes (FAQ)
               </h1>
               <p className="text-sm text-zinc-400">
-                Todas as respostas sobre a plataforma, recompensas saudáveis e integridade de treinos do Invictus.
+                Todas as respostas sobre a plataforma, recompensas saudáveis e integridade de treinos do INVICTUS PERFORMANCE.
               </p>
             </header>
 
