@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;550;600;700;850;900&family=Cinzel:wght@750;950&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", sans-serif;
+  --font-accent: "Cinzel", serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+/* Custom styles for continuous experience scrollbar */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer utilities {
+  /* Continuous, boundaryless ambient fade utilities */
+  .fade-section-bottom {
+    mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+  }
+  
+  .fade-section-top-bottom {
+    mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  }
+
+  .text-glow-red {
+    text-shadow: 0 0 25px rgba(220, 38, 38, 0.35);
+  }
+
+  .text-glow-crimson {
+    text-shadow: 0 0 20px rgba(220, 38, 38, 0.25);
+  }
+}
+
+/* Base resets & styles matching Nike/Apple */
+html {
+  scroll-behavior: smooth;
+  background-color: #050505;
+}
+
+body {
+  color: #F5F5F7;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Seamless transitions between continuous layers */
+.scrollytelling-ambient-glow {
+  background: radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.04) 0%, rgba(153, 27, 27, 0.02) 40%, transparent 70%);
+}
+
