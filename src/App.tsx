@@ -39,7 +39,8 @@ import {
   Clock3,
   Dna,
   Share2,
-  LockKeyhole
+  LockKeyhole,
+  User
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Navbar from './components/Navbar';
@@ -210,6 +211,10 @@ export default function App() {
                     <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-full text-[10px] font-mono text-amber-500 font-semibold uppercase">
                       <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500/20" />
                       100% Antifraude
+                    </div>
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900/60 backdrop-blur-md border border-zinc-800/80 rounded-full text-[10px] font-mono text-zinc-300 font-semibold">
+                      <User className="w-3.5 h-3.5 text-[#FFC107]" />
+                      Proprietário: samuelfsc89@gmail.com
                     </div>
                   </div>
 

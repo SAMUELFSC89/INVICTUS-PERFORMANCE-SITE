@@ -161,7 +161,7 @@ export default function Footer({ onNavigateToPage }: FooterProps) {
 
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-[11px] text-zinc-600">
             <p>
-              © {new Date().getFullYear()} INVICTUS PERFORMANCE Inc. Todos os direitos reservados. Projeto registrado na Google AI Studio.
+              © {new Date().getFullYear()} INVICTUS PERFORMANCE Inc. Todos os direitos reservados. Propriedade Intelectual Registrada por Samuel (samuelfsc89@gmail.com).
             </p>
             <div className="flex gap-4">
               <p>Segurança Militar SSL</p>
