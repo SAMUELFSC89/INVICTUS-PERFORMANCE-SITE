@@ -65,6 +65,18 @@ export default function App() {
   // FAQ accordion state
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
+  // Toast notification state
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (message: string) => {
+    setToastMessage(message);
+    // Dismiss after 4s
+    const timer = setTimeout(() => {
+      setToastMessage(null);
+    }, 4000);
+    return () => clearTimeout(timer);
+  };
+
   // Constants for Cardio interactive description
   const cardioDetails = {
     corrida: {
@@ -169,7 +181,7 @@ export default function App() {
             {/* SEÇÃO 1 — HERO SECTION */}
             <section
               id="hero"
-              className="relative min-h-screen flex items-center justify-center pt-24 sm:pt-32 pb-16 overflow-hidden border-b border-zinc-950"
+              className="relative w-full overflow-hidden border-b border-zinc-950 pt-20 pb-16 sm:pt-24 sm:pb-24 lg:pt-28 lg:pb-32 bg-gradient-to-b from-[#050505] to-[#080808]"
             >
               <div className="absolute inset-0 z-0">
                 <img
@@ -182,31 +194,69 @@ export default function App() {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(197,160,89,0.05)_0%,transparent_70%)]" />
               </div>
 
-              <div className="relative z-10 max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              <div className="relative z-10 max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
                 
                 {/* Left Block text */}
                 <div className="lg:col-span-7 flex flex-col items-start text-left space-y-6">
                   
-                  {/* Premium Badge */}
-                  <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 bg-black/60 backdrop-blur-md border border-zinc-800/80 rounded-full">
-                    <InvictusLogo size={18} showText={false} />
-                    <span className="text-[10px] sm:text-[11px] font-mono tracking-[0.25em] text-[#FFC107] font-semibold uppercase">
-                      LIGA MERITOCRÁTICA FITNESS
-                    </span>
+                  {/* Premium Badges row */}
+                  <div className="flex flex-wrap gap-2.5">
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-black/60 backdrop-blur-md border border-zinc-800/80 rounded-full">
+                      <InvictusLogo size={18} showText={false} />
+                      <span className="text-[10px] sm:text-[11px] font-mono tracking-[0.25em] text-[#FFC107] font-semibold uppercase">
+                        LIGA MERITOCRÁTICA FITNESS
+                      </span>
+                    </div>
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-full text-[10px] font-mono text-amber-500 font-semibold uppercase">
+                      <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500/20" />
+                      100% Antifraude
+                    </div>
                   </div>
 
                   {/* Heading Title */}
                   <h1 className="font-accent font-black text-4xl sm:text-5xl md:text-6xl tracking-tight text-white leading-none">
                     Transforme sua <br className="hidden sm:inline" />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 pl-1">
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600">
                       disciplina em resultados
                     </span>.
                   </h1>
 
                   {/* Hero Subtitle */}
-                  <p className="text-zinc-300 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl">
-                    Treine, evolua, acompanhe sua performance e participe de campanhas de incentivo baseadas em consistência e desempenho físico comprovado.
+                  <p className="text-zinc-200 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl antialiased">
+                    O aplicativo de desafios fitness onde seus treinos geram pontos, sua evolução vira competição e sua dedicação leva você ao topo.
                   </p>
+
+                  {/* Core Value Pillars row for fast 5-second comprehension */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full pt-2">
+                    <div className="p-3 bg-zinc-950/60 border border-zinc-900 rounded-xl text-left">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Dumbbell className="w-4 h-4 text-amber-500" />
+                        <span className="text-white text-[11px] font-semibold uppercase font-sans">Treinos</span>
+                      </div>
+                      <p className="text-[10px] text-zinc-500 leading-normal">Gere pontos legítimos na musculação ou cardio.</p>
+                    </div>
+                    <div className="p-3 bg-zinc-950/60 border border-zinc-900 rounded-xl text-left">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Trophy className="w-4 h-4 text-amber-500" />
+                        <span className="text-white text-[11px] font-semibold uppercase font-sans">Competição</span>
+                      </div>
+                      <p className="text-[10px] text-zinc-500 leading-normal">Participe de desafios estimulantes semanais.</p>
+                    </div>
+                    <div className="p-3 bg-zinc-950/60 border border-zinc-900 rounded-xl text-left">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Activity className="w-4 h-4 text-amber-500" />
+                        <span className="text-white text-[11px] font-semibold uppercase font-sans">Evolução</span>
+                      </div>
+                      <p className="text-[10px] text-zinc-500 leading-normal">Acompanhe seu avanço em níveis de XP e consistência.</p>
+                    </div>
+                    <div className="p-3 bg-zinc-950/60 border border-zinc-900 rounded-xl text-left">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Star className="w-4 h-4 text-amber-500" />
+                        <span className="text-white text-[11px] font-semibold uppercase font-sans">Conquistas</span>
+                      </div>
+                      <p className="text-[10px] text-zinc-500 leading-normal">Desbloqueie insígnias e recompensas meritocráticas.</p>
+                    </div>
+                  </div>
 
                   <p className="text-xs text-zinc-500 font-light max-w-xl leading-relaxed">
                     O INVICTUS é uma plataforma focada unicamente em alta performance física desportiva de forma saudável. 
@@ -218,24 +268,125 @@ export default function App() {
                     <button
                       id="btn-hero-cta"
                       onClick={() => handleScrollToId('download')}
-                      className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black font-semibold rounded-xl text-center shadow-lg hover:shadow-amber-500/10 transition-all cursor-pointer"
+                      className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black font-semibold rounded-xl text-center shadow-lg hover:shadow-amber-500/20 transition-all cursor-pointer font-sans text-sm tracking-wide"
                     >
-                      Começar Agora
+                      Baixar Aplicativo e Começar
                     </button>
                     <button
                       id="btn-hero-secondary"
                       onClick={() => handleScrollToId('como-funciona')}
-                      className="px-8 py-4 bg-zinc-950/85 hover:bg-zinc-900 border border-zinc-800 text-white font-semibold rounded-xl text-center transition-colors cursor-pointer"
+                      className="px-8 py-4 bg-zinc-950/85 hover:bg-zinc-900 border border-zinc-800 text-white font-semibold rounded-xl text-center transition-colors cursor-pointer font-sans text-sm tracking-wide"
                     >
-                      Ver Como Funciona
+                      Como Funciona & Ligas
                     </button>
                   </div>
                 </div>
 
                 {/* Right Block: Live Premium Smartphone mockup */}
-                <div className="lg:col-span-5 flex justify-center relative w-full pt-6 lg:pt-0">
-                  <div className="absolute -inset-4 bg-gradient-to-tr from-amber-500/10 to-transparent blur-3xl rounded-full" />
+                <div className="lg:col-span-5 flex justify-center relative w-full pt-6 lg:pt-4">
+                  <div className="absolute -inset-4 bg-gradient-to-tr from-amber-500/10 to-transparent blur-3xl rounded-full opacity-60" />
                   <SmartphoneMockup onlyPhone={true} />
+                </div>
+              </div>
+            </section>
+
+
+            {/* SEÇÃO 1.5 — PROPÓSITO: O QUE É O INVICTUS PERFORMANCE */}
+            <section
+              id="propósito"
+              className="py-20 sm:py-28 w-full border-b border-zinc-950 bg-gradient-to-b from-[#080808] to-[#050505] relative overflow-hidden"
+            >
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(229,169,60,0.03)_0%,transparent_60%)] pointer-events-none z-0" />
+              
+              <div className="max-w-7xl mx-auto px-6 relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+                  
+                  {/* Left content block */}
+                  <div className="lg:col-span-7 text-left space-y-6">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/20 text-xs font-mono text-amber-500 w-fit">
+                      <Star className="w-3.5 h-3.5 fill-amber-500/20" />
+                      Constância e Resultado
+                    </div>
+                    
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight text-white leading-tight">
+                      O que é o <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-amber-500">Invictus Performance</span>?
+                    </h2>
+                    
+                    <div className="space-y-4 text-zinc-300 text-sm sm:text-base leading-relaxed antialiased">
+                      <p className="font-medium text-white text-base sm:text-lg">
+                        O Invictus Performance nasceu para resolver um dos maiores desafios de quem treina: manter a constância.
+                      </p>
+                      <p>
+                        Transformamos disciplina em uma experiência competitiva, onde cada treino aproxima você dos seus objetivos. Conectando-se ao app, seu suor legítimo na musculação ou nos exercícios cardiovasculares gera pontuações auditáveis em tempo real.
+                      </p>
+                      <p>
+                        Não oferecemos atalhos nem falsas promessas: aqui, cada grama de evolução é fruto do seu merecimento e dedicação.
+                      </p>
+                    </div>
+
+                    {/* Differential highlight statement */}
+                    <div className="p-5 bg-zinc-950 border border-zinc-900 rounded-2xl border-l-4 border-l-amber-500 relative overflow-hidden group">
+                      <p className="text-amber-400 font-display text-base sm:text-lg font-medium leading-relaxed italic relative z-10">
+                        "Você não treina sozinho. Você entra em uma competição pela sua melhor versão."
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Right visual key card */}
+                  <div className="lg:col-span-5">
+                    <div className="p-8 bg-zinc-950/80 border border-zinc-900 rounded-3xl text-left space-y-6 relative overflow-hidden">
+                      <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none scale-150">
+                        <InvictusLogo size={90} showText={false} />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">O Diferencial Principal</span>
+                        <h4 className="text-lg font-semibold text-white">Construindo Hábitos Pró</h4>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="flex gap-4 items-start">
+                          <div className="p-2 bg-zinc-900 border border-zinc-850 rounded-lg text-amber-500 shrink-0">
+                            <Flame className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <h5 className="text-white text-sm font-semibold">Offline vs Online</h5>
+                            <p className="text-xs text-zinc-400 mt-0.5">Sua dedicação diária presencial transposta com precisão para uma liga digital estimulante.</p>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-4 items-start">
+                          <div className="p-2 bg-zinc-900 border border-zinc-850 rounded-lg text-amber-500 shrink-0">
+                            <Trophy className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <h5 className="text-white text-sm font-semibold">Ligas de Nível Justo</h5>
+                            <p className="text-xs text-zinc-400 mt-0.5">Sem amadorismo. Você compete em grupos de afinidade física pareados com seu ritmo.</p>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-4 items-start">
+                          <div className="p-2 bg-zinc-900 border border-zinc-850 rounded-lg text-amber-500 shrink-0">
+                            <ShieldCheck className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <h5 className="text-white text-sm font-semibold">Evolução de Atleta</h5>
+                            <p className="text-xs text-zinc-400 mt-0.5">Sua dedicação monitorada de forma limpa, gerando conquistas duradouras.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="h-[1px] bg-zinc-900 w-full" />
+
+                      <button
+                        onClick={() => handleScrollToId('como-funciona')}
+                        className="w-full py-3 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 rounded-xl text-xs font-mono font-bold tracking-widest uppercase text-white transition-colors"
+                      >
+                        Descubra o Funcionamento
+                      </button>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </section>
@@ -251,86 +402,80 @@ export default function App() {
                 {/* Section Header */}
                 <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
                   <span className="text-[#E5A93C] font-mono text-xs tracking-[0.25em] font-semibold uppercase">
-                    MÉTODO E CONSTÂNCIA
+                    SIMPLES • PRÁTICO • ESTIMULANTE
                   </span>
                   <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight text-white leading-tight">
-                    Sua jornada em 5 passos simples
+                    Como funciona o Invictus?
                   </h2>
                   <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                    Sincronize seu treino presencial ou cardio e veja sua progressão consolidada com precisão absoluta.
+                    Sua constância esportiva em um ciclo virtuoso perfeito de apenas 4 passos.
                   </p>
                 </div>
 
-                {/* Step cards grid */}
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-6 max-w-7xl mx-auto">
+                {/* Redesigned 4-Step cards grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
                   
                   {/* Passo 1 */}
-                  <div className="p-6 bg-zinc-950/40 border border-zinc-900 rounded-2xl flex flex-col justify-between hover:border-amber-500/20 transition-all duration-300 relative group">
-                    <span className="text-5xl font-mono text-zinc-800 group-hover:text-amber-500/30 transition-colors duration-300 absolute top-4 right-6 font-bold">01</span>
-                    <div className="space-y-4 pt-4 text-left">
-                      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl w-fit text-amber-400">
+                  <div className="p-6 bg-zinc-950/40 border border-zinc-900 rounded-2xl flex flex-col justify-between hover:border-amber-500/20 hover:bg-zinc-950 transition-all duration-300 relative group text-left h-[260px]">
+                    <span className="text-5xl font-mono text-zinc-900 group-hover:text-amber-500/10 transition-colors duration-300 absolute top-4 right-6 font-bold font-accent">01</span>
+                    <div className="space-y-4 pt-4">
+                      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl w-fit text-amber-400 group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
                         <Map className="w-5 h-5" />
                       </div>
-                      <h3 className="text-base sm:text-lg font-semibold text-white">Escolha sua academia</h3>
-                      <p className="text-xs text-zinc-450 leading-relaxed">
-                        Encontre e vincule-se à academia participante mais próxima de sua residência ou trabalho.
-                      </p>
+                      <div className="space-y-1.5">
+                        <h3 className="text-base sm:text-lg font-semibold text-white">1 - Entre em um desafio</h3>
+                        <p className="text-xs text-zinc-500 leading-relaxed group-hover:text-zinc-400 transition-colors">
+                          Escolha uma competição ativa na plataforma e confirme sua participação para iniciar a disputa.
+                        </p>
+                      </div>
                     </div>
                   </div>
 
                   {/* Passo 2 */}
-                  <div className="p-6 bg-zinc-950/40 border border-zinc-900 rounded-2xl flex flex-col justify-between hover:border-amber-500/20 transition-all duration-300 relative group">
-                    <span className="text-5xl font-mono text-zinc-800 group-hover:text-amber-500/30 transition-colors duration-300 absolute top-4 right-6 font-bold">02</span>
-                    <div className="space-y-4 pt-4 text-left">
-                      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl w-fit text-amber-400">
-                        <Navigation className="w-5 h-5" />
+                  <div className="p-6 bg-zinc-950/40 border border-zinc-900 rounded-2xl flex flex-col justify-between hover:border-amber-500/20 hover:bg-zinc-950 transition-all duration-300 relative group text-left h-[260px]">
+                    <span className="text-5xl font-mono text-zinc-900 group-hover:text-amber-500/10 transition-colors duration-300 absolute top-4 right-6 font-bold font-accent">02</span>
+                    <div className="space-y-4 pt-4">
+                      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl w-fit text-amber-400 group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
+                        <Clock3 className="w-5 h-5" />
                       </div>
-                      <h3 className="text-base sm:text-lg font-semibold text-white">Faça seu check-in</h3>
-                      <p className="text-xs text-zinc-450 leading-relaxed">
-                        Ao entrar na sala de musculação, o sistema valida sua presença utilizando geolocalização e mecanismos antifraude.
-                      </p>
+                      <div className="space-y-1.5">
+                        <h3 className="text-base sm:text-lg font-semibold text-white">2 - Treine e acumule pontos</h3>
+                        <p className="text-xs text-zinc-500 leading-relaxed group-hover:text-zinc-400 transition-colors">
+                          Sua dedicação gera evolução. Faça treinos legítimos presenciais ou cardios rastreáveis para gerar XP.
+                        </p>
+                      </div>
                     </div>
                   </div>
 
                   {/* Passo 3 */}
-                  <div className="p-6 bg-zinc-950/40 border border-zinc-900 rounded-2xl flex flex-col justify-between hover:border-amber-500/20 transition-all duration-300 relative group">
-                    <span className="text-5xl font-mono text-zinc-800 group-hover:text-amber-500/30 transition-colors duration-300 absolute top-4 right-6 font-bold">03</span>
-                    <div className="space-y-4 pt-4 text-left">
-                      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl w-fit text-amber-400">
-                        <Clock3 className="w-5 h-5" />
+                  <div className="p-6 bg-zinc-950/40 border border-zinc-900 rounded-2xl flex flex-col justify-between hover:border-amber-500/20 hover:bg-zinc-950 transition-all duration-300 relative group text-left h-[260px]">
+                    <span className="text-5xl font-mono text-zinc-900 group-hover:text-amber-500/10 transition-colors duration-300 absolute top-4 right-6 font-bold font-accent">03</span>
+                    <div className="space-y-4 pt-4">
+                      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl w-fit text-amber-400 group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
+                        <Trophy className="w-5 h-5" />
                       </div>
-                      <h3 className="text-base sm:text-lg font-semibold text-white">Treine e evolua</h3>
-                      <p className="text-xs text-zinc-450 leading-relaxed">
-                        Treino na Academia: <span className="text-white font-medium">30 a 90 minutos</span>. Cardio ao ar livre: <span className="text-white font-medium">20 a 90 minutos</span>. Mantenha o foco.
-                      </p>
+                      <div className="space-y-1.5">
+                        <h3 className="text-base sm:text-lg font-semibold text-white">3 - Suba no ranking</h3>
+                        <p className="text-xs text-zinc-500 leading-relaxed group-hover:text-zinc-400 transition-colors">
+                          Compare seu desempenho em chaves regionais equilibradas. Acompanhe a tabela liderada por mérito.
+                        </p>
+                      </div>
                     </div>
                   </div>
 
                   {/* Passo 4 */}
-                  <div className="p-6 bg-zinc-950/40 border border-zinc-900 rounded-2xl flex flex-col justify-between hover:border-amber-500/20 transition-all duration-300 relative group">
-                    <span className="text-5xl font-mono text-zinc-800 group-hover:text-amber-500/30 transition-colors duration-300 absolute top-4 right-6 font-bold">04</span>
-                    <div className="space-y-4 pt-4 text-left">
-                      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl w-fit text-amber-400">
-                        <Star className="w-5 h-5" />
+                  <div className="p-6 bg-zinc-950/40 border border-zinc-900 rounded-2xl flex flex-col justify-between hover:border-amber-500/20 hover:bg-zinc-950 transition-all duration-300 relative group text-left h-[260px]">
+                    <span className="text-5xl font-mono text-zinc-900 group-hover:text-amber-500/10 transition-colors duration-300 absolute top-4 right-6 font-bold font-accent">04</span>
+                    <div className="space-y-4 pt-4">
+                      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl w-fit text-amber-400 group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
+                        <Users className="w-5 h-5" />
                       </div>
-                      <h3 className="text-base sm:text-lg font-semibold text-white">Ganhe XP e suba de nível</h3>
-                      <p className="text-xs text-zinc-450 leading-relaxed">
-                        Acumule pontos merecidos, mantenha suas sequências (streaks) ativas e evolua dentro das ligas da plataforma.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Passo 5 */}
-                  <div className="p-6 bg-zinc-950/40 border border-zinc-900 rounded-2xl flex flex-col justify-between hover:border-amber-500/20 transition-all duration-300 relative group">
-                    <span className="text-5xl font-mono text-zinc-800 group-hover:text-amber-500/30 transition-colors duration-300 absolute top-4 right-6 font-bold">05</span>
-                    <div className="space-y-4 pt-4 text-left">
-                      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl w-fit text-amber-400">
-                        <Trophy className="w-5 h-5" />
+                      <div className="space-y-1.5">
+                        <h3 className="text-base sm:text-lg font-semibold text-white">4 - Supere seus limites</h3>
+                        <p className="text-xs text-zinc-500 leading-relaxed group-hover:text-zinc-400 transition-colors">
+                          Evolua junto com a comunidade. Mantenha streaks ativos e atinja novos limites físicos a cada semana.
+                        </p>
                       </div>
-                      <h3 className="text-base sm:text-lg font-semibold text-white">Participe dos rankings</h3>
-                      <p className="text-xs text-zinc-450 leading-relaxed">
-                        Compare seu desempenho com outros atletas da sua região em grupos justos e estimulantes.
-                      </p>
                     </div>
                   </div>
 
@@ -367,20 +512,20 @@ export default function App() {
                     Escolha o plano ideal para sua rotina
                   </h2>
                   <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                    Comece com o plano Open ou libere o poder da integração com smartwatches no plano Performance.
+                    Comece com o Plano Essencial ou libere a experiência máxima de performance no Plano Performance.
                   </p>
                 </div>
 
                 {/* Grid of plans */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
                   
-                  {/* Plano Open */}
+                  {/* Plano Essencial */}
                   <div className="p-8 bg-zinc-950/45 border-2 border-zinc-900 hover:border-zinc-850 rounded-3xl flex flex-col justify-between transition-all duration-300 text-left relative overflow-hidden">
                     <div className="space-y-6">
                       <div className="space-y-2">
-                        <h3 className="text-2xl font-bold text-white uppercase font-sans">Plano Open</h3>
+                        <h3 className="text-2xl font-bold text-white uppercase font-sans">Plano Essencial</h3>
                         <p className="text-xs text-zinc-500 leading-normal">
-                          Ideal para quem deseja criar constância de forma descomplicada.
+                          Entrada para o universo Invictus.
                         </p>
                       </div>
 
@@ -420,7 +565,7 @@ export default function App() {
                         onClick={() => handleScrollToId('download')}
                         className="w-full py-4 px-6 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 hover:border-zinc-700 text-white font-semibold rounded-2xl transition-colors cursor-pointer text-sm font-mono uppercase tracking-widest"
                       >
-                        Selecionar Open
+                        Selecionar Essencial
                       </button>
                     </div>
                   </div>
@@ -437,7 +582,7 @@ export default function App() {
                       <div className="space-y-2">
                         <h3 className="text-2xl font-bold text-white uppercase font-sans">Plano Performance</h3>
                         <p className="text-xs text-zinc-400 leading-normal">
-                          Para quem deseja precisão extrema, métricas de saúde avançadas e conexões externas.
+                          Experiência completa para quem quer competir no máximo nível.
                         </p>
                       </div>
 
@@ -455,7 +600,7 @@ export default function App() {
                       <div className="space-y-3.5">
                         <p className="text-xs font-semibold text-amber-400 font-mono uppercase tracking-widest mb-1">Recursos Máximos Incluídos:</p>
                         {[
-                          "Tudo contido no Plano Open",
+                          "Tudo contido no Plano Essencial",
                           "Sincronização com relógios inteligentes",
                           "Captura de frequência cardíaca real",
                           "Medição precisa de calorias gastas",
@@ -1113,159 +1258,108 @@ export default function App() {
             </section>
 
 
-            {/* SEÇÃO — BENEFÍCIOS (GRID DE 12 ITENS) */}
+            {/* SEÇÃO — BENEFÍCIOS (DIFERENCIAIS DO INVICTUS) */}
             <section
               id="beneficios"
-              className="py-24 sm:py-32 w-full bg-gradient-to-b from-[#050505] to-[#080808] border-b border-zinc-950"
+              className="py-24 sm:py-32 w-full bg-gradient-to-b from-[#050505] to-[#080808] border-b border-zinc-950 relative overflow-hidden"
             >
-              <div className="max-w-7xl mx-auto px-6">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(197,160,89,0.02)_0%,transparent_50%)] pointer-events-none" />
+              
+              <div className="max-w-7xl mx-auto px-6 relative z-10">
                 
                 {/* Section Header */}
                 <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
                   <span className="text-[#E5A93C] font-mono text-xs tracking-[0.25em] font-semibold uppercase">
-                    PRODUTO DA SUA EVOLUÇÃO
+                    O DIFERENCIAL DEFINITIVO
                   </span>
                   <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight text-white leading-tight">
-                    Por que escolher o INVICTUS?
+                    Por que o Invictus é diferente?
                   </h2>
                   <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                    Unimos tecnologia desportiva, gamificação ética e extrema segurança para blindar seu avanço.
+                    Unimos tecnologia esportiva de ponta e gamificação saudável para blindar seu foco e manter sua consistência diária.
                   </p>
                 </div>
 
-                {/* 12 Benefits Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto text-left">
+                {/* 5 Pillars Bento Layout */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 max-w-7xl mx-auto items-stretch">
                   
-                  {/* Ben 1 */}
-                  <div className="p-6 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/10 rounded-2xl space-y-3 transition-colors duration-300">
-                    <div className="p-2 bg-amber-550/10 text-amber-500 rounded-lg w-fit">
-                      <Zap className="w-5 h-5" />
+                  {/* Pillar 1: Gamificação */}
+                  <div className="p-6 sm:p-8 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/20 rounded-3xl space-y-4 transition-all duration-300 flex flex-col justify-between md:col-span-6 text-left group">
+                    <div className="space-y-4">
+                      <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-xl w-fit group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
+                        <Zap className="w-6 h-6" />
+                      </div>
+                      <h4 className="font-semibold text-white text-lg sm:text-xl">Gamificação dos Treinos</h4>
+                      <p className="text-sm text-zinc-450 leading-relaxed">
+                        Esqueça rotinas monótonas. Suas atividades diárias (musculação ou cardio) são convertidas em pontos de XP legítimos, streaks ativos e medalhas de conquista personalizadas.
+                      </p>
                     </div>
-                    <h4 className="font-semibold text-white text-base">Motivação</h4>
-                    <p className="text-xs text-zinc-500 leading-relaxed">
-                      Sinta-se impulsionado a mover-se todos os dias através de metas, streaks e desafios tangíveis.
-                    </p>
+                    <div className="pt-4 text-xs font-mono text-zinc-550 uppercase">Engajamento Comprovado</div>
                   </div>
 
-                  {/* Ben 2 */}
-                  <div className="p-6 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/10 rounded-2xl space-y-3 transition-colors duration-300">
-                    <div className="p-2 bg-amber-550/10 text-amber-500 rounded-lg w-fit">
-                      <TrendingUp className="w-5 h-5" />
+                  {/* Pillar 2: Rankings */}
+                  <div className="p-6 sm:p-8 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/20 rounded-3xl space-y-4 transition-all duration-300 flex flex-col justify-between md:col-span-6 text-left group">
+                    <div className="space-y-4">
+                      <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-xl w-fit group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
+                        <Trophy className="w-6 h-6" />
+                      </div>
+                      <h4 className="font-semibold text-white text-lg sm:text-xl">Rankings Competitivos</h4>
+                      <p className="text-sm text-zinc-450 leading-relaxed">
+                        Compita em ligas regionais balanceadas. Nosso sistema divide os atletas de forma justa baseado em dados físicos históricos reais para garantir que todos tenham chances de vencer com dedicação pura.
+                      </p>
                     </div>
-                    <h4 className="font-semibold text-white text-base">Evolução física</h4>
-                    <p className="text-xs text-zinc-500 leading-relaxed">
-                      Transforme seu esforço e suor na musculação ou cardio em ganho muscular e hipertrofia progressiva.
-                    </p>
+                    <div className="pt-4 text-xs font-mono text-zinc-550 uppercase">Competição Justa por Mérito</div>
                   </div>
 
-                  {/* Ben 3 */}
-                  <div className="p-6 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/10 rounded-2xl space-y-3 transition-colors duration-300">
-                    <div className="p-2 bg-amber-550/10 text-amber-500 rounded-lg w-fit">
-                      <HeartPulse className="w-5 h-5" />
-                    </div>
-                    <h4 className="font-semibold text-white text-base">Hábitos saudáveis</h4>
-                    <p className="text-xs text-zinc-500 leading-relaxed">
-                      Consolide uma rotina de hidratação, alimentação balanceada e descanso regular preservando sua saúde.
-                    </p>
+                  {/* High impact central banner (Span 12) */}
+                  <div className="md:col-span-12 p-8 sm:p-10 bg-gradient-to-r from-[#090909] via-zinc-950 to-[#090909] border border-zinc-850 rounded-3xl text-center relative overflow-hidden flex flex-col items-center justify-center space-y-4 group">
+                    <div className="absolute -right-20 -top-20 w-80 h-80 bg-amber-500/5 blur-3xl rounded-full" />
+                    <div className="absolute -left-20 -bottom-20 w-80 h-80 bg-amber-500/5 blur-3xl rounded-full" />
+                    
+                    <span className="text-xs font-mono text-amber-500 tracking-[0.3em] uppercase font-bold">O MANIFESTO INVICTUS</span>
+                    <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-black text-white italic tracking-tight leading-tight max-w-4xl">
+                      "Você não treina sozinho. Você entra em uma competição pela sua melhor versão."
+                    </h3>
+                    <div className="w-16 h-1 bg-gradient-to-r from-amber-600 to-amber-400 rounded-full mt-2" />
                   </div>
 
-                  {/* Ben 4 */}
-                  <div className="p-6 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/10 rounded-2xl space-y-3 transition-colors duration-300">
-                    <div className="p-2 bg-amber-550/10 text-amber-500 rounded-lg w-fit">
-                      <Users className="w-5 h-5" />
+                  {/* Pillar 3: Desafios por Temporadas */}
+                  <div className="p-6 sm:p-8 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/20 rounded-3xl space-y-4 transition-all duration-300 flex flex-col justify-between md:col-span-4 text-left group">
+                    <div className="space-y-4">
+                      <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-xl w-fit group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
+                        <Calendar className="w-5 h-5" />
+                      </div>
+                      <h4 className="font-semibold text-white text-base sm:text-lg">Desafios por Temporadas</h4>
+                      <p className="text-xs sm:text-sm text-zinc-450 leading-relaxed">
+                        Participe de ciclos de performance com metas que mudam a cada estação, garantindo estímulos novos e constância contínua.
+                      </p>
                     </div>
-                    <h4 className="font-semibold text-white text-base">Comunidade</h4>
-                    <p className="text-xs text-zinc-500 leading-relaxed">
-                      Troque mensagens motivadoras e conquistas com parceiros reais focados no mesmo propósito que você.
-                    </p>
                   </div>
 
-                  {/* Ben 5 */}
-                  <div className="p-6 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/10 rounded-2xl space-y-3 transition-colors duration-300">
-                    <div className="p-2 bg-amber-550/10 text-amber-500 rounded-lg w-fit">
-                      <Activity className="w-5 h-5" />
+                  {/* Pillar 4: Comunidade Fitness */}
+                  <div className="p-6 sm:p-8 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/20 rounded-3xl space-y-4 transition-all duration-300 flex flex-col justify-between md:col-span-4 text-left group">
+                    <div className="space-y-4">
+                      <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-xl w-fit group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
+                        <Users className="w-5 h-5" />
+                      </div>
+                      <h4 className="font-semibold text-white text-base sm:text-lg">Comunidade Fitness</h4>
+                      <p className="text-xs sm:text-sm text-zinc-450 leading-relaxed">
+                        Conecte-se com pessoas reais que dividem o mesmo propósito de vida física focada em saúde, superação e disciplina mútua.
+                      </p>
                     </div>
-                    <h4 className="font-semibold text-white text-base">Estatísticas avançadas</h4>
-                    <p className="text-xs text-zinc-500 leading-relaxed">
-                      Audite dados concretos sobre calorias, frequência cardíaca e frequência de treinos semanais.
-                    </p>
                   </div>
 
-                  {/* Ben 6 */}
-                  <div className="p-6 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/10 rounded-2xl space-y-3 transition-colors duration-300">
-                    <div className="p-2 bg-amber-550/10 text-amber-500 rounded-lg w-fit">
-                      <Compass className="w-5 h-5" />
+                  {/* Pillar 5: Sistema de Evolução */}
+                  <div className="p-6 sm:p-8 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/20 rounded-3xl space-y-4 transition-all duration-300 flex flex-col justify-between md:col-span-4 text-left group">
+                    <div className="space-y-4">
+                      <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-xl w-fit group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
+                        <Activity className="w-5 h-5" />
+                      </div>
+                      <h4 className="font-semibold text-white text-base sm:text-lg">Sistema de Evolução</h4>
+                      <p className="text-xs sm:text-sm text-zinc-450 leading-relaxed">
+                        Seus dados biométricos, calorias queimadas e cargas levantadas consolidados de forma organizada e limpa no app.
+                      </p>
                     </div>
-                    <h4 className="font-semibold text-white text-base">Performance real</h4>
-                    <p className="text-xs text-zinc-500 leading-relaxed">
-                      Seu monitoramento reflete puramente esforço biomecânico legítimo, sem qualquer sorteio ou atalho.
-                    </p>
-                  </div>
-
-                  {/* Ben 7 */}
-                  <div className="p-6 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/10 rounded-2xl space-y-3 transition-colors duration-300">
-                    <div className="p-2 bg-amber-550/10 text-amber-500 rounded-lg w-fit">
-                      <Trophy className="w-5 h-5" />
-                    </div>
-                    <h4 className="font-semibold text-white text-base">Rankings</h4>
-                    <p className="text-xs text-zinc-500 leading-relaxed">
-                      Chaves de classificação restritas por localidade física e quantidade segura de participantes.
-                    </p>
-                  </div>
-
-                  {/* Ben 8 */}
-                  <div className="p-6 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/10 rounded-2xl space-y-3 transition-colors duration-300">
-                    <div className="p-2 bg-amber-550/10 text-amber-500 rounded-lg w-fit">
-                      <Target className="w-5 h-5" />
-                    </div>
-                    <h4 className="font-semibold text-white text-base">Desafios</h4>
-                    <p className="text-xs text-zinc-500 leading-relaxed">
-                      Sincronize metas de finais de semana ou quinzenais disputando marcos saudáveis com amigos.
-                    </p>
-                  </div>
-
-                  {/* Ben 9 */}
-                  <div className="p-6 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/10 rounded-2xl space-y-3 transition-colors duration-300">
-                    <div className="p-2 bg-amber-550/10 text-amber-500 rounded-lg w-fit">
-                      <ShieldCheck className="w-5 h-5" />
-                    </div>
-                    <h4 className="font-semibold text-white text-base">Segurança</h4>
-                    <p className="text-xs text-zinc-500 leading-relaxed">
-                      Sua privacidade resguardada por controles rígidos e conformidade de acordo com a LGPD.
-                    </p>
-                  </div>
-
-                  {/* Ben 10 */}
-                  <div className="p-6 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/10 rounded-2xl space-y-3 transition-colors duration-300">
-                    <div className="p-2 bg-amber-550/10 text-amber-500 rounded-lg w-fit">
-                      <Globe className="w-5 h-5" />
-                    </div>
-                    <h4 className="font-semibold text-white text-base">Tecnologia</h4>
-                    <p className="text-xs text-zinc-500 leading-relaxed">
-                      Conexão dinâmica e contínua com os principais relógios inteligentes e wearables de precisão mundiais.
-                    </p>
-                  </div>
-
-                  {/* Ben 11 */}
-                  <div className="p-6 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/10 rounded-2xl space-y-3 transition-colors duration-300">
-                    <div className="p-2 bg-amber-550/10 text-amber-500 rounded-lg w-fit">
-                      <Award className="w-5 h-5" />
-                    </div>
-                    <h4 className="font-semibold text-white text-base">Reconhecimento</h4>
-                    <p className="text-xs text-zinc-500 leading-relaxed">
-                      Mostre sua garra desbloqueando medalhas de conquistas digitais exclusivas em sua estante do perfil.
-                    </p>
-                  </div>
-
-                  {/* Ben 12 */}
-                  <div className="p-6 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/10 rounded-2xl space-y-3 transition-colors duration-300">
-                    <div className="p-2 bg-amber-550/10 text-amber-500 rounded-lg w-fit">
-                      <Flame className="w-5 h-5 text-amber-500" />
-                    </div>
-                    <h4 className="font-semibold text-white text-base">Constância</h4>
-                    <p className="text-xs text-zinc-500 leading-relaxed">
-                      Mecanismos estimulantes pensados sob medida para transformar intenções em condutas longas e saudáveis.
-                    </p>
                   </div>
 
                 </div>
@@ -1378,7 +1472,7 @@ export default function App() {
                     <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">Google Android</span>
                     <button 
                       id="btn-trigger-playstore"
-                      onClick={() => alert("Link de download Google Play Store simulado com sucesso em alta fidelidade.")}
+                      onClick={() => showToast("O download do aplicativo Android iniciou de forma segura através do Google Play Store.")}
                       className="w-full py-3 px-4 bg-white hover:bg-zinc-200 text-black font-semibold rounded-xl text-xs tracking-wider uppercase font-mono transition-colors focus:outline-none cursor-pointer"
                     >
                       Google Play
@@ -1388,7 +1482,7 @@ export default function App() {
                     <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">Apple iOS iPhone</span>
                     <button 
                       id="btn-trigger-appstore"
-                      onClick={() => alert("Link de download Apple App Store simulado com sucesso em alta fidelidade.")}
+                      onClick={() => showToast("O download do aplicativo iOS iniciou de forma segura através da Apple App Store.")}
                       className="w-full py-3 px-4 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 hover:border-zinc-700 text-white font-semibold rounded-xl text-xs tracking-wider uppercase font-mono transition-colors focus:outline-none cursor-pointer"
                     >
                       App Store
@@ -1425,6 +1519,26 @@ export default function App() {
 
       {/* Global standard compliant footer with disclaimers */}
       <Footer onNavigateToPage={navigateToPage} />
+
+      {/* Premium Toast Notification */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-6 right-6 z-50 p-4 bg-zinc-950 border-2 border-amber-500 rounded-2xl shadow-2xl flex items-center gap-3 max-w-sm"
+          >
+            <div className="p-2 bg-amber-500 text-black rounded-lg">
+              <Star className="w-5 h-5 fill-black" />
+            </div>
+            <div className="text-left">
+              <h5 className="text-white text-xs font-mono uppercase tracking-wider font-bold">Download Iniciado</h5>
+              <p className="text-zinc-400 text-xs mt-0.5 leading-normal">{toastMessage}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
