@@ -33,12 +33,25 @@ import InvictusLogo from './InvictusLogo';
 
 type MockTab = 'inicio' | 'ranking' | 'treinos' | 'perfil';
 
-export default function SmartphoneMockup({ onlyPhone = false }: { onlyPhone?: boolean }) {
+export default function SmartphoneMockup({ 
+  onlyPhone = false, 
+  activeTabOverride 
+}: { 
+  onlyPhone?: boolean;
+  activeTabOverride?: MockTab;
+}) {
   const [activeTab, setActiveTab] = useState<MockTab>('inicio');
   const [workoutChecked, setWorkoutChecked] = useState<boolean[]>([true, true, false, false]);
   const [timeState, setTimeState] = useState(542); // Simulated timer (9:02)
   const [heartRate, setHeartRate] = useState(132);
   const [isManual, setIsManual] = useState(false);
+
+  // Synchronize state if override is provided
+  useEffect(() => {
+    if (activeTabOverride) {
+      setActiveTab(activeTabOverride);
+    }
+  }, [activeTabOverride]);
 
   // Auto-rotate tabs to illustrate different interface aspects on the landing page, 
   // pausing instantly once the user manually interacts.
@@ -427,15 +440,18 @@ export default function SmartphoneMockup({ onlyPhone = false }: { onlyPhone?: bo
                     <div className="p-3 bg-zinc-950 border border-zinc-900 rounded-2xl space-y-2 text-left relative overflow-hidden">
                       <div className="flex justify-between items-start">
                         <div>
-                          <p className="text-[7.5px] font-mono tracking-widest text-[#FFC107] font-bold uppercase leading-none">INCENTIVOS DA TEMPORADA</p>
-                          <h4 className="font-extrabold text-white text-2xl tracking-tighter mt-1 font-display leading-none">
-                            R$ 0
+                          <p className="text-[7.5px] font-mono tracking-widest text-[#FFC107] font-bold uppercase leading-none">PREMIAÇÃO EM DINHEIRO ACUMULADA</p>
+                          <h4 className="font-extrabold text-white text-base tracking-tight mt-1.5 font-display leading-none flex items-center gap-1.5">
+                            <span className="text-emerald-400">💵 R$ ••••••</span>
+                            <span className="text-[7px] bg-amber-400/10 text-amber-400 border border-amber-400/20 px-1.5 py-0.5 rounded font-mono font-bold uppercase tracking-wider">
+                              LIGA ATIVA 🔒
+                            </span>
                           </h4>
                         </div>
                         <span className="text-[6.5px] font-mono text-zinc-500 uppercase bg-zinc-900 px-1 py-0.5 rounded font-bold leading-none shrink-0">EXCLUSIVO UNIDADE</span>
                       </div>
                       <p className="text-[8px] text-zinc-500 leading-normal font-sans">
-                        OS INCENTIVOS EXIBIDOS NESTA TEMPORADA FAZEM PARTE DE CAMPANHAS PROMOCIONAIS, AÇÕES DE ENGAJAMENTO E PROGRAMAS DE RECONHECIMENTO ESPORTIVO DISPONIBILIZADOS PELA PLATAFORMA E PARCEIROS PARTICIPANTES.
+                        OS INCENTIVOS EXIBIDOS NESTA TEMPORADA FAZEM PARTE DE CAMPANHAS PROMOCIONAIS, AÇÕES DE ENGAJAMENTO E PROGRAMAS DE RECONHECIMENTO ESPORTIVO EM DINHEIRO DISPONIBILIZADOS PELA PLATAFORMA E PARCEIROS PARTICIPANTES.
                       </p>
                       <button className="w-full py-1.5 bg-zinc-900 hover:bg-zinc-850 text-amber-400 text-[8.5px] font-mono font-bold rounded-lg border border-amber-500/10 flex items-center justify-center gap-1 mt-1 transition-colors">
                         ⚡ DISTRIBUIÇÃO PARA O TOP 10
@@ -446,18 +462,59 @@ export default function SmartphoneMockup({ onlyPhone = false }: { onlyPhone?: bo
                     <div className="grid grid-cols-2 gap-2 text-left">
                       <div className="p-2.5 bg-zinc-950 border border-zinc-900 rounded-xl">
                         <span className="text-[7px] font-mono text-zinc-500 uppercase">ATLETAS</span>
-                        <p className="text-lg font-black text-white font-display mt-0.5">0</p>
+                        <p className="text-lg font-black text-white font-display mt-0.5">50</p>
                       </div>
                       <div className="p-2.5 bg-zinc-950 border border-zinc-900 rounded-xl">
                         <span className="text-[7px] font-mono text-zinc-500 uppercase">SUA POSIÇÃO</span>
-                        <p className="text-lg font-black text-white font-display mt-0.5">#-</p>
+                        <p className="text-lg font-black text-white font-display mt-0.5">#4</p>
                       </div>
                     </div>
 
                     {/* Yellow status bar banner */}
                     <div className="p-2 bg-amber-400 text-black font-semibold rounded-xl flex justify-between items-center text-[9px] uppercase font-display italic">
                       <span className="flex items-center gap-0.5">📍 POSIÇÃO ACADEMIA | ⌃ SUBINDO!</span>
-                      <span className="font-mono font-black text-xs">0 PTS</span>
+                      <span className="font-mono font-black text-xs">1.500 PTS</span>
+                    </div>
+
+                    {/* Simulated Athletes List */}
+                    <div className="space-y-1.5 pt-1 text-left">
+                      <div className="flex justify-between items-center text-[8px] font-bold text-zinc-500 uppercase tracking-wider px-1">
+                        <span>Classificação Atletas</span>
+                        <span>Pontos</span>
+                      </div>
+
+                      {[
+                        { rank: 1, name: "Rodrigo M.", points: "2.450", badge: "🥇", isUser: false },
+                        { rank: 2, name: "Juliana S.", points: "2.120", badge: "🥈", isUser: false },
+                        { rank: 3, name: "Marcos V.", points: "1.890", badge: "🥉", isUser: false },
+                        { rank: 4, name: "Você (Atleta)", points: "1.500", badge: "⚡", isUser: true },
+                        { rank: 5, name: "Amanda K.", points: "1.420", badge: "5º", isUser: false },
+                      ].map((athlete) => (
+                        <div 
+                          key={athlete.rank}
+                          className={`flex items-center justify-between p-2 rounded-xl border transition-all ${
+                            athlete.isUser 
+                              ? 'bg-amber-400/10 border-amber-500/30' 
+                              : 'bg-zinc-950 border-zinc-900/60'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className="text-[10px] font-mono font-black text-amber-500 w-4 text-center">
+                              {athlete.badge}
+                            </span>
+                            {/* Small Simulated Avatar */}
+                            <div className="w-5 h-5 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0">
+                              <User className="w-3 h-3 text-zinc-500" />
+                            </div>
+                            <span className={`text-[10px] font-bold truncate ${athlete.isUser ? 'text-amber-300 font-extrabold' : 'text-zinc-300'}`}>
+                              {athlete.name}
+                            </span>
+                          </div>
+                          <span className={`text-[10px] font-mono font-bold ${athlete.isUser ? 'text-amber-400' : 'text-zinc-400'}`}>
+                            {athlete.points} PTS
+                          </span>
+                        </div>
+                      ))}
                     </div>
                   </motion.div>
                 )}
@@ -560,7 +617,7 @@ export default function SmartphoneMockup({ onlyPhone = false }: { onlyPhone?: bo
                       {/* Exercise 3 */}
                       <div className="p-3 bg-zinc-950 border border-zinc-900 rounded-2xl flex items-center justify-between gap-1">
                         <div className="flex items-center gap-2 min-w-0">
-                          <div className="p-2 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/15 shrink-0">
+                          <div className="p-2 bg-amber-500/10 text-amber-400 rounded-xl border border-amber-500/15 shrink-0">
                             <Utensils className="w-4 h-4" />
                           </div>
                           <div className="text-left space-y-0.5 truncate">
@@ -569,8 +626,8 @@ export default function SmartphoneMockup({ onlyPhone = false }: { onlyPhone?: bo
                           </div>
                         </div>
                         <div className="flex items-center gap-1.5 shrink-0">
-                          <span className="text-[8px] font-mono bg-zinc-900 text-blue-400 border border-blue-500/20 px-1.5 py-0.5 rounded font-black uppercase">STREAK IA</span>
-                          <button className="px-2 py-1 bg-blue-500 hover:bg-blue-450 text-white text-[8.5px] font-extrabold uppercase rounded-lg font-display">
+                          <span className="text-[8px] font-mono bg-zinc-900 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded font-black uppercase">STREAK IA</span>
+                          <button className="px-2 py-1 bg-amber-500 hover:bg-amber-450 text-black text-[8.5px] font-extrabold uppercase rounded-lg font-display">
                             VALIDAR ➔
                           </button>
                         </div>
@@ -722,7 +779,7 @@ export default function SmartphoneMockup({ onlyPhone = false }: { onlyPhone?: bo
                         {[
                           { name: "IGNITE", desc: "80 km • 30 dias", diff: "BAIXA", rarity: "COMUM", color: "text-zinc-300" },
                           { name: "PULSE", desc: "120 km • 30 dias", diff: "MÉDIA", rarity: "RARA", color: "text-[#FFC107]" },
-                          { name: "APEX", desc: "160 km • 30 dias", diff: "ALTA", rarity: "ÉPICA", color: "text-purple-400" },
+                          { name: "APEX", desc: "160 km • 30 dias", diff: "ALTA", rarity: "ÉPICA", color: "text-amber-500" },
                           { name: "TITAN", desc: "220 km • 30 dias", diff: "EXTREMA", rarity: "LENDÁRIA", color: "text-red-500" },
                         ].map((circuit) => (
                           <div key={circuit.name} className="p-2.5 bg-zinc-950 border border-zinc-900 rounded-xl space-y-2">
@@ -817,7 +874,7 @@ export default function SmartphoneMockup({ onlyPhone = false }: { onlyPhone?: bo
                         <span className="px-1.5 py-0.5 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full">
                           🏆 0
                         </span>
-                        <span className="px-1.5 py-0.5 bg-blue-500/15 border border-blue-500/20 text-blue-400 rounded-full">
+                        <span className="px-1.5 py-0.5 bg-amber-500/15 border border-amber-500/20 text-amber-400 rounded-full">
                           📍 Porto Alegre
                         </span>
                       </div>

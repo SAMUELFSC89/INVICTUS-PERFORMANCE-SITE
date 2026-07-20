@@ -66,6 +66,42 @@ export default function App() {
   // FAQ accordion state
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
+  // Modal and custom states
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
+  const [waitlistEmail, setWaitlistEmail] = useState('');
+  const [isWaitlistSubmitted, setIsWaitlistSubmitted] = useState(false);
+
+  const [isAcademyOpen, setIsAcademyOpen] = useState(false);
+  const [academyName, setAcademyName] = useState('');
+  const [academyEmail, setAcademyEmail] = useState('');
+  const [academyCity, setAcademyCity] = useState('');
+  const [academyMessage, setAcademyMessage] = useState('');
+  const [isAcademySubmitted, setIsAcademySubmitted] = useState(false);
+
+  const [activeMockTab, setActiveMockTab] = useState<'inicio' | 'ranking' | 'treinos' | 'perfil'>('inicio');
+
+  // Listen to scroll to update smartphone mockup tab
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['real-ranking', 'real-performance', 'real-seasons', 'real-history'];
+      for (const section of sections) {
+        const el = document.getElementById(section);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+            if (section === 'real-ranking') setActiveMockTab('ranking');
+            if (section === 'real-performance') setActiveMockTab('inicio');
+            if (section === 'real-seasons') setActiveMockTab('perfil');
+            if (section === 'real-history') setActiveMockTab('treinos');
+            break;
+          }
+        }
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Toast notification state
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -178,160 +214,139 @@ export default function App() {
             transition={{ duration: 0.3 }}
             className="flex-1 w-full"
           >
-            
             {/* SEÇÃO 1 — HERO SECTION */}
             <section
               id="hero"
-              className="relative w-full overflow-hidden border-b border-zinc-950 pt-20 pb-16 sm:pt-24 sm:pb-24 lg:pt-28 lg:pb-32 bg-gradient-to-b from-[#050505] to-[#080808]"
+              className="relative w-full overflow-hidden border-b border-zinc-900 pt-32 pb-24 sm:pt-40 sm:pb-36 lg:pt-48 lg:pb-44 bg-black"
             >
-              <div className="absolute inset-0 z-0">
-                <img
-                  src={HERO_IMG}
-                  alt="Atletas focados treinando musculação de forma disciplinada na academia"
-                  className="w-full h-full object-cover object-center filter brightness-[0.25] contrast-[1.05]"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-[#050505]" />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(197,160,89,0.05)_0%,transparent_70%)]" />
-              </div>
+              {/* Ultra-premium subtle abstract light design */}
+              <div className="absolute top-1/4 left-1/3 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[160px] pointer-events-none" />
+              <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-amber-600/5 rounded-full blur-[140px] pointer-events-none" />
 
-              <div className="relative z-10 max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+              <div className="relative z-10 max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
                 
                 {/* Left Block text */}
-                <div className="lg:col-span-7 flex flex-col items-start text-left space-y-6">
+                <div className="lg:col-span-7 flex flex-col items-start text-left space-y-8">
                   
                   {/* Premium Badges row */}
-                  <div className="flex flex-wrap gap-2.5">
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-black/60 backdrop-blur-md border border-zinc-800/80 rounded-full">
+                  <div className="flex flex-wrap gap-3">
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-zinc-900/60 backdrop-blur-md border border-zinc-800/80 rounded-full">
                       <InvictusLogo size={18} showText={false} />
-                      <span className="text-[10px] sm:text-[11px] font-mono tracking-[0.25em] text-[#FFC107] font-semibold uppercase">
-                        LIGA MERITOCRÁTICA FITNESS
+                      <span className="text-[10px] font-mono tracking-[0.25em] text-amber-400 font-semibold uppercase">
+                        CAMPEONATO DE CONSISTÊNCIA
                       </span>
                     </div>
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-full text-[10px] font-mono text-amber-500 font-semibold uppercase">
-                      <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500/20" />
-                      100% Antifraude
-                    </div>
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900/60 backdrop-blur-md border border-zinc-800/80 rounded-full text-[10px] font-mono text-zinc-300 font-semibold">
-                      <User className="w-3.5 h-3.5 text-[#FFC107]" />
-                      Proprietário: samuelfsc89@gmail.com
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900/40 border border-zinc-800/60 rounded-full text-[10px] font-mono text-zinc-400 font-semibold uppercase">
+                      <Flame className="w-3.5 h-3.5 text-amber-500" />
+                      100% Automatizado
                     </div>
                   </div>
 
                   {/* Heading Title */}
-                  <h1 className="font-accent font-black text-4xl sm:text-5xl md:text-6xl tracking-tight text-white leading-none">
-                    Transforme sua <br className="hidden sm:inline" />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600">
-                      disciplina em resultados
+                  <h1 className="font-display font-black text-5xl sm:text-6xl md:text-7xl tracking-tight text-white leading-tight">
+                    Sua academia vira <br className="hidden sm:inline" />
+                    um campeonato <br className="hidden sm:inline" />
+                    de <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFE699] via-[#FBBF24] to-[#B45309]">
+                      30 dias
                     </span>.
                   </h1>
 
                   {/* Hero Subtitle */}
-                  <p className="text-zinc-200 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl antialiased">
-                    O aplicativo de desafios fitness onde seus treinos geram pontos, sua evolução vira competição e sua dedicação leva você ao topo.
+                  <p className="text-zinc-400 text-lg sm:text-xl font-normal leading-relaxed max-w-2xl antialiased">
+                    Treine normalmente. O Invictus registra automaticamente seus treinos, atualiza sua posição no ranking e transforma consistência em conquistas.
                   </p>
 
+                  <div className="h-[1px] bg-zinc-900 w-full" />
+
                   {/* Core Value Pillars row for fast 5-second comprehension */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full pt-2">
-                    <div className="p-3 bg-zinc-950/60 border border-zinc-900 rounded-xl text-left">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Dumbbell className="w-4 h-4 text-amber-500" />
-                        <span className="text-white text-[11px] font-semibold uppercase font-sans">Treinos</span>
-                      </div>
-                      <p className="text-[10px] text-zinc-500 leading-normal">Gere pontos legítimos na musculação ou cardio.</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
+                    <div className="p-4 bg-zinc-950/80 border border-zinc-900 rounded-2xl text-left hover:border-blue-500/20 transition-all">
+                      <Dumbbell className="w-5 h-5 text-blue-400 mb-2" />
+                      <span className="text-white text-xs font-semibold uppercase font-mono tracking-wider block">Musculação</span>
+                      <p className="text-[10px] text-zinc-500 leading-normal mt-1">Pontos via check-in inteligente presencial.</p>
                     </div>
-                    <div className="p-3 bg-zinc-950/60 border border-zinc-900 rounded-xl text-left">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Trophy className="w-4 h-4 text-amber-500" />
-                        <span className="text-white text-[11px] font-semibold uppercase font-sans">Competição</span>
-                      </div>
-                      <p className="text-[10px] text-zinc-500 leading-normal">Participe de desafios estimulantes semanais.</p>
+                    <div className="p-4 bg-zinc-950/80 border border-zinc-900 rounded-2xl text-left hover:border-purple-500/20 transition-all">
+                      <Activity className="w-5 h-5 text-purple-400 mb-2" />
+                      <span className="text-white text-xs font-semibold uppercase font-mono tracking-wider block">Relógios</span>
+                      <p className="text-[10px] text-zinc-500 leading-normal mt-1">Cardios importados de forma autêntica.</p>
                     </div>
-                    <div className="p-3 bg-zinc-950/60 border border-zinc-900 rounded-xl text-left">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Activity className="w-4 h-4 text-amber-500" />
-                        <span className="text-white text-[11px] font-semibold uppercase font-sans">Evolução</span>
-                      </div>
-                      <p className="text-[10px] text-zinc-500 leading-normal">Acompanhe seu avanço em níveis de XP e consistência.</p>
+                    <div className="p-4 bg-zinc-950/80 border border-zinc-900 rounded-2xl text-left hover:border-blue-500/20 transition-all">
+                      <Trophy className="w-5 h-5 text-blue-400 mb-2" />
+                      <span className="text-white text-xs font-semibold uppercase font-mono tracking-wider block">Temporadas</span>
+                      <p className="text-[10px] text-zinc-500 leading-normal mt-1">Dispute ligas locais de 30 dias com igualdade.</p>
                     </div>
-                    <div className="p-3 bg-zinc-950/60 border border-zinc-900 rounded-xl text-left">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Star className="w-4 h-4 text-amber-500" />
-                        <span className="text-white text-[11px] font-semibold uppercase font-sans">Conquistas</span>
-                      </div>
-                      <p className="text-[10px] text-zinc-500 leading-normal">Desbloqueie insígnias e recompensas meritocráticas.</p>
+                    <div className="p-4 bg-zinc-950/80 border border-zinc-900 rounded-2xl text-left hover:border-purple-500/20 transition-all">
+                      <Star className="w-5 h-5 text-purple-400 mb-2" />
+                      <span className="text-white text-xs font-semibold uppercase font-mono tracking-wider block">Premios</span>
+                      <p className="text-[10px] text-zinc-500 leading-normal mt-1">Desbloqueie conquistas por disciplina pura.</p>
                     </div>
                   </div>
 
-                  <p className="text-xs text-zinc-500 font-light max-w-xl leading-relaxed">
-                    O INVICTUS é uma plataforma focada unicamente em alta performance física desportiva de forma saudável. 
-                    Nossa missão apoia-se em esforço comprovado, sem qualquer envolvimento com sorteios, loterias ou dinâmicas no estilo cassino.
-                  </p>
-
                   {/* CTA Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto pt-2">
+                  <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto pt-4">
                     <button
                       id="btn-hero-cta"
-                      onClick={() => handleScrollToId('download')}
-                      className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black font-semibold rounded-xl text-center shadow-lg hover:shadow-amber-500/20 transition-all cursor-pointer font-sans text-sm tracking-wide"
+                      onClick={() => setIsWaitlistOpen(true)}
+                      className="px-8 py-4 bg-white hover:bg-zinc-200 text-black font-semibold rounded-2xl text-center shadow-lg transition-all cursor-pointer font-sans text-sm tracking-wide"
                     >
-                      Baixar Aplicativo e Começar
+                      Entrar na lista de espera
                     </button>
                     <button
                       id="btn-hero-secondary"
                       onClick={() => handleScrollToId('como-funciona')}
-                      className="px-8 py-4 bg-zinc-950/85 hover:bg-zinc-900 border border-zinc-800 text-white font-semibold rounded-xl text-center transition-colors cursor-pointer font-sans text-sm tracking-wide"
+                      className="px-8 py-4 bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 text-white font-semibold rounded-2xl text-center transition-colors cursor-pointer font-sans text-sm tracking-wide"
                     >
-                      Como Funciona & Ligas
+                      Ver como funciona
                     </button>
                   </div>
                 </div>
 
                 {/* Right Block: Live Premium Smartphone mockup */}
-                <div className="lg:col-span-5 flex justify-center relative w-full pt-6 lg:pt-4">
-                  <div className="absolute -inset-4 bg-gradient-to-tr from-amber-500/10 to-transparent blur-3xl rounded-full opacity-60" />
+                <div className="lg:col-span-5 flex justify-center relative w-full pt-6 lg:pt-0">
+                  <div className="absolute -inset-10 bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
                   <SmartphoneMockup onlyPhone={true} />
                 </div>
               </div>
             </section>
 
-
             {/* SEÇÃO 1.5 — PROPÓSITO: O QUE É O INVICTUS PERFORMANCE */}
             <section
               id="propósito"
-              className="py-20 sm:py-28 w-full border-b border-zinc-950 bg-gradient-to-b from-[#080808] to-[#050505] relative overflow-hidden"
+              className="py-32 sm:py-40 w-full border-b border-zinc-900 bg-black relative overflow-hidden"
             >
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(229,169,60,0.03)_0%,transparent_60%)] pointer-events-none z-0" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-blue-500/5 blur-[160px] pointer-events-none z-0" />
               
               <div className="max-w-7xl mx-auto px-6 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
                   
                   {/* Left content block */}
-                  <div className="lg:col-span-7 text-left space-y-6">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/20 text-xs font-mono text-amber-500 w-fit">
-                      <Star className="w-3.5 h-3.5 fill-amber-500/20" />
-                      Constância e Resultado
+                  <div className="lg:col-span-7 text-left space-y-8">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-zinc-900 border border-zinc-800 text-xs font-mono text-zinc-400 rounded-full">
+                      <Star className="w-3.5 h-3.5 text-blue-400" />
+                      Evolução sem desculpas
                     </div>
                     
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight text-white leading-tight">
-                      O que é o <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-amber-500">Invictus Performance</span>?
+                    <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold tracking-tight text-white leading-tight">
+                      O que é o <br />
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+                        Invictus Performance?
+                      </span>
                     </h2>
                     
-                    <div className="space-y-4 text-zinc-300 text-sm sm:text-base leading-relaxed antialiased">
-                      <p className="font-medium text-white text-base sm:text-lg">
-                        O Invictus Performance nasceu para resolver um dos maiores desafios de quem treina: manter a constância.
+                    <div className="space-y-6 text-zinc-400 text-base sm:text-lg leading-relaxed antialiased">
+                      <p className="font-semibold text-white text-lg sm:text-xl">
+                        O Invictus Performance é um aplicativo de desafios fitness que transforma sua rotina de treinos em uma experiência competitiva e gamificada por consistência.
                       </p>
                       <p>
-                        Transformamos disciplina em uma experiência competitiva, onde cada treino aproxima você dos seus objetivos. Conectando-se ao app, seu suor legítimo na musculação ou nos exercícios cardiovasculares gera pontuações auditáveis em tempo real.
+                        Acreditamos que o maior problema do treinamento esportivo tradicional é a quebra de ritmo. No Invictus, o usuário treina normalmente. O aplicativo registra automaticamente seus treinos, calcula sua pontuação em tempo real e promove a evolução saudável em rankings regionais exclusivos.
                       </p>
                       <p>
-                        Não oferecemos atalhos nem falsas promessas: aqui, cada grama de evolução é fruto do seu merecimento e dedicação.
+                        Aqui, não existem atalhos. O mérito é medido por esforço biomecânico autêntico, trazendo para o digital a exata medida de sua dedicação diária.
                       </p>
                     </div>
 
-                    {/* Differential highlight statement */}
-                    <div className="p-5 bg-zinc-950 border border-zinc-900 rounded-2xl border-l-4 border-l-amber-500 relative overflow-hidden group">
-                      <p className="text-amber-400 font-display text-base sm:text-lg font-medium leading-relaxed italic relative z-10">
+                    <div className="p-6 bg-zinc-950 border border-zinc-900 rounded-2xl border-l-4 border-l-blue-500">
+                      <p className="text-zinc-300 font-display text-lg font-medium leading-relaxed italic">
                         "Você não treina sozinho. Você entra em uma competição pela sua melhor versão."
                       </p>
                     </div>
@@ -339,44 +354,44 @@ export default function App() {
 
                   {/* Right visual key card */}
                   <div className="lg:col-span-5">
-                    <div className="p-8 bg-zinc-950/80 border border-zinc-900 rounded-3xl text-left space-y-6 relative overflow-hidden">
+                    <div className="p-8 bg-zinc-950 border border-zinc-900 rounded-3xl text-left space-y-6 relative overflow-hidden">
                       <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none scale-150">
                         <InvictusLogo size={90} showText={false} />
                       </div>
                       
-                      <div className="space-y-2">
-                        <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">O Diferencial Principal</span>
-                        <h4 className="text-lg font-semibold text-white">Construindo Hábitos Pró</h4>
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest block">DIRETRIZES DE BASE</span>
+                        <h4 className="text-xl font-bold text-white">Como você participa</h4>
                       </div>
 
-                      <div className="space-y-4">
+                      <div className="space-y-5">
                         <div className="flex gap-4 items-start">
-                          <div className="p-2 bg-zinc-900 border border-zinc-850 rounded-lg text-amber-500 shrink-0">
-                            <Flame className="w-4 h-4" />
+                          <div className="p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-blue-400 shrink-0">
+                            <Dumbbell className="w-5 h-5" />
                           </div>
                           <div>
-                            <h5 className="text-white text-sm font-semibold">Offline vs Online</h5>
-                            <p className="text-xs text-zinc-400 mt-0.5">Sua dedicação diária presencial transposta com precisão para uma liga digital estimulante.</p>
+                            <h5 className="text-white text-sm font-semibold">Realize Treinos Próprios</h5>
+                            <p className="text-xs text-zinc-550 mt-1">Gere pontos através da sua dedicação presencial registrada e validada de forma transparente.</p>
                           </div>
                         </div>
 
                         <div className="flex gap-4 items-start">
-                          <div className="p-2 bg-zinc-900 border border-zinc-850 rounded-lg text-amber-500 shrink-0">
-                            <Trophy className="w-4 h-4" />
+                          <div className="p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-purple-400 shrink-0">
+                            <Trophy className="w-5 h-5" />
                           </div>
                           <div>
-                            <h5 className="text-white text-sm font-semibold">Ligas de Nível Justo</h5>
-                            <p className="text-xs text-zinc-400 mt-0.5">Sem amadorismo. Você compete em grupos de afinidade física pareados com seu ritmo.</p>
+                            <h5 className="text-white text-sm font-semibold">Evolua no Ranking</h5>
+                            <p className="text-xs text-zinc-550 mt-1">Compita com outros participantes em tabelas locais pareadas para um campeonato justo.</p>
                           </div>
                         </div>
 
                         <div className="flex gap-4 items-start">
-                          <div className="p-2 bg-zinc-900 border border-zinc-850 rounded-lg text-amber-500 shrink-0">
-                            <ShieldCheck className="w-4 h-4" />
+                          <div className="p-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-blue-400 shrink-0">
+                            <Award className="w-5 h-5" />
                           </div>
                           <div>
-                            <h5 className="text-white text-sm font-semibold">Evolução de Atleta</h5>
-                            <p className="text-xs text-zinc-400 mt-0.5">Sua dedicação monitorada de forma limpa, gerando conquistas duradouras.</p>
+                            <h5 className="text-white text-sm font-semibold">Temporadas e Prêmios</h5>
+                            <p className="text-xs text-zinc-550 mt-1">Participe de ciclos de 30 dias com recompensas associadas aos marcos de performance.</p>
                           </div>
                         </div>
                       </div>
@@ -385,9 +400,9 @@ export default function App() {
 
                       <button
                         onClick={() => handleScrollToId('como-funciona')}
-                        className="w-full py-3 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 rounded-xl text-xs font-mono font-bold tracking-widest uppercase text-white transition-colors"
+                        className="w-full py-3.5 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 rounded-xl text-xs font-mono font-bold tracking-widest uppercase text-white transition-all cursor-pointer"
                       >
-                        Descubra o Funcionamento
+                        Descobrir Funcionamento
                       </button>
                     </div>
                   </div>
@@ -405,80 +420,64 @@ export default function App() {
               <div className="max-w-7xl mx-auto px-6">
                 
                 {/* Section Header */}
-                <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
-                  <span className="text-[#E5A93C] font-mono text-xs tracking-[0.25em] font-semibold uppercase">
-                    SIMPLES • PRÁTICO • ESTIMULANTE
+                <div className="text-left max-w-3xl mb-24 space-y-4">
+                  <span className="text-blue-400 font-mono text-xs tracking-[0.25em] font-semibold uppercase block">
+                    FLUXO DE PRODUTO
                   </span>
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight text-white leading-tight">
-                    Como funciona o Invictus?
+                  <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold tracking-tight text-white leading-tight">
+                    Sua jornada em três passos.
                   </h2>
-                  <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                    Sua constância esportiva em um ciclo virtuoso perfeito de apenas 4 passos.
+                  <p className="text-zinc-400 text-lg sm:text-xl leading-relaxed">
+                    Mantendo o foco no seu treinamento diário tradicional, o Invictus cuida da automação e da competição saudável nos bastidores.
                   </p>
                 </div>
 
-                {/* Redesigned 4-Step cards grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+                {/* Redesigned 3-Step cards grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
                   
                   {/* Passo 1 */}
-                  <div className="p-6 bg-zinc-950/40 border border-zinc-900 rounded-2xl flex flex-col justify-between hover:border-amber-500/20 hover:bg-zinc-950 transition-all duration-300 relative group text-left h-[260px]">
-                    <span className="text-5xl font-mono text-zinc-900 group-hover:text-amber-500/10 transition-colors duration-300 absolute top-4 right-6 font-bold font-accent">01</span>
-                    <div className="space-y-4 pt-4">
-                      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl w-fit text-amber-400 group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
-                        <Map className="w-5 h-5" />
+                  <div className="p-8 bg-zinc-950 border border-zinc-900 rounded-3xl flex flex-col justify-between hover:border-blue-500/20 transition-all duration-300 relative group text-left h-[280px]">
+                    <span className="text-6xl font-mono text-zinc-900 absolute top-6 right-8 font-black">01</span>
+                    <div className="space-y-6 pt-4">
+                      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-2xl w-fit text-blue-400">
+                        <Smartphone className="w-6 h-6" />
                       </div>
-                      <div className="space-y-1.5">
-                        <h3 className="text-base sm:text-lg font-semibold text-white">1 - Entre em um desafio</h3>
-                        <p className="text-xs text-zinc-500 leading-relaxed group-hover:text-zinc-400 transition-colors">
-                          Escolha uma competição ativa na plataforma e confirme sua participação para iniciar a disputa.
+                      <div className="space-y-2">
+                        <h3 className="text-xl font-bold text-white">Conecte seu dispositivo</h3>
+                        <p className="text-sm text-zinc-400 leading-relaxed">
+                          Sincronize sua conta com o Apple Health, Health Connect ou Strava de forma instantânea em apenas um clique.
                         </p>
                       </div>
                     </div>
                   </div>
 
                   {/* Passo 2 */}
-                  <div className="p-6 bg-zinc-950/40 border border-zinc-900 rounded-2xl flex flex-col justify-between hover:border-amber-500/20 hover:bg-zinc-950 transition-all duration-300 relative group text-left h-[260px]">
-                    <span className="text-5xl font-mono text-zinc-900 group-hover:text-amber-500/10 transition-colors duration-300 absolute top-4 right-6 font-bold font-accent">02</span>
-                    <div className="space-y-4 pt-4">
-                      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl w-fit text-amber-400 group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
-                        <Clock3 className="w-5 h-5" />
+                  <div className="p-8 bg-zinc-950 border border-zinc-900 rounded-3xl flex flex-col justify-between hover:border-purple-500/20 transition-all duration-300 relative group text-left h-[280px]">
+                    <span className="text-6xl font-mono text-zinc-900 absolute top-6 right-8 font-black">02</span>
+                    <div className="space-y-6 pt-4">
+                      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-2xl w-fit text-purple-400">
+                        <Dumbbell className="w-6 h-6" />
                       </div>
-                      <div className="space-y-1.5">
-                        <h3 className="text-base sm:text-lg font-semibold text-white">2 - Treine e acumule pontos</h3>
-                        <p className="text-xs text-zinc-500 leading-relaxed group-hover:text-zinc-400 transition-colors">
-                          Sua dedicação gera evolução. Faça treinos legítimos presenciais ou cardios rastreáveis para gerar XP.
+                      <div className="space-y-2">
+                        <h3 className="text-xl font-bold text-white">Treine normalmente</h3>
+                        <p className="text-sm text-zinc-400 leading-relaxed">
+                          Musculação ou cardio, o app detecta e calcula seus pontos baseados em gasto calórico, geocercas e cadência biomecânica real.
                         </p>
                       </div>
                     </div>
                   </div>
 
                   {/* Passo 3 */}
-                  <div className="p-6 bg-zinc-950/40 border border-zinc-900 rounded-2xl flex flex-col justify-between hover:border-amber-500/20 hover:bg-zinc-950 transition-all duration-300 relative group text-left h-[260px]">
-                    <span className="text-5xl font-mono text-zinc-900 group-hover:text-amber-500/10 transition-colors duration-300 absolute top-4 right-6 font-bold font-accent">03</span>
-                    <div className="space-y-4 pt-4">
-                      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl w-fit text-amber-400 group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
-                        <Trophy className="w-5 h-5" />
+                  <div className="p-8 bg-zinc-950 border border-zinc-900 rounded-3xl flex flex-col justify-between hover:border-blue-500/20 transition-all duration-300 relative group text-left h-[280px]">
+                    <span className="text-6xl font-mono text-zinc-900 absolute top-6 right-8 font-black">03</span>
+                    <div className="space-y-6 pt-4">
+                      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-2xl w-fit text-blue-400">
+                        <Trophy className="w-6 h-6" />
                       </div>
-                      <div className="space-y-1.5">
-                        <h3 className="text-base sm:text-lg font-semibold text-white">3 - Suba no ranking</h3>
-                        <p className="text-xs text-zinc-500 leading-relaxed group-hover:text-zinc-400 transition-colors">
-                          Compare seu desempenho em chaves regionais equilibradas. Acompanhe a tabela liderada por mérito.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Passo 4 */}
-                  <div className="p-6 bg-zinc-950/40 border border-zinc-900 rounded-2xl flex flex-col justify-between hover:border-amber-500/20 hover:bg-zinc-950 transition-all duration-300 relative group text-left h-[260px]">
-                    <span className="text-5xl font-mono text-zinc-900 group-hover:text-amber-500/10 transition-colors duration-300 absolute top-4 right-6 font-bold font-accent">04</span>
-                    <div className="space-y-4 pt-4">
-                      <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl w-fit text-amber-400 group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
-                        <Users className="w-5 h-5" />
-                      </div>
-                      <div className="space-y-1.5">
-                        <h3 className="text-base sm:text-lg font-semibold text-white">4 - Supere seus limites</h3>
-                        <p className="text-xs text-zinc-500 leading-relaxed group-hover:text-zinc-400 transition-colors">
-                          Evolua junto com a comunidade. Mantenha streaks ativos e atinja novos limites físicos a cada semana.
+                      <div className="space-y-2">
+                        <h3 className="text-xl font-bold text-white">Suba no ranking e vença</h3>
+                        <p className="text-sm text-zinc-400 leading-relaxed">
+                          Acompanhe sua posição no ranking de 30 dias de forma meritocrática e desbloqueie recompensas reais exclusivas por dedicação.
                         </p>
                       </div>
                     </div>
@@ -490,47 +489,164 @@ export default function App() {
             </section>
 
 
-            {/* SEÇÃO 2.5 — EXPLORE A INTERFACE */}
+            {/* SEÇÃO 3 — EXPLORE A INTERFACE (HIGH-FIDELITY SCREENSHOTS PRESENTATION) */}
             <section
               id="interface"
-              className="py-24 sm:py-32 w-full border-b border-zinc-950 bg-gradient-to-b from-[#080808] to-[#050505]"
+              className="py-32 sm:py-40 w-full border-b border-zinc-900 bg-black relative overflow-hidden"
             >
-              <div className="max-w-7xl mx-auto px-6">
-                <SmartphoneMockup />
+              <div className="absolute top-1/2 left-1/4 w-[600px] h-[600px] bg-purple-500/5 rounded-full blur-[140px] pointer-events-none" />
+
+              <div className="max-w-7xl mx-auto px-6 relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                  
+                  {/* Left Controls: Click to switch smartphone tabs */}
+                  <div className="lg:col-span-6 text-left space-y-12">
+                    <div className="space-y-4">
+                      <span className="text-purple-400 font-mono text-xs tracking-[0.25em] font-semibold uppercase block">
+                        INTERFACE PREMIUM
+                      </span>
+                      <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold tracking-tight text-white leading-tight">
+                        Screenshots Reais do Aplicativo
+                      </h2>
+                      <p className="text-zinc-400 text-base sm:text-lg">
+                        Explore como nossa tecnologia de ponta é traduzida em uma experiência visual extremamente limpa, rápida e inspiradora.
+                      </p>
+                    </div>
+
+                    <div className="space-y-4">
+                      
+                      {/* Control 1: Desempenho */}
+                      <button
+                        onClick={() => setActiveMockTab('inicio')}
+                        className={`w-full p-6 rounded-2xl border text-left transition-all duration-300 flex items-start gap-4 ${
+                          activeMockTab === 'inicio' 
+                            ? 'bg-zinc-950 border-blue-500/30 shadow-lg shadow-blue-500/5' 
+                            : 'bg-zinc-950/40 border-zinc-900 hover:border-zinc-800'
+                        }`}
+                      >
+                        <div className={`p-3 rounded-xl border shrink-0 transition-all ${
+                          activeMockTab === 'inicio' ? 'bg-zinc-900 border-blue-500/20 text-blue-400' : 'bg-zinc-900/50 border-zinc-850 text-zinc-500'
+                        }`}>
+                          <Activity className="w-5 h-5" />
+                        </div>
+                        <div className="space-y-1">
+                          <h4 className="text-white text-base font-bold">Seu Desempenho</h4>
+                          <p className="text-xs text-zinc-400 leading-normal">
+                            Visualize gráficos consolidados de treino, calorias queimadas e seu score de consistência de alta precisão.
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* Control 2: Ranking */}
+                      <button
+                        onClick={() => setActiveMockTab('ranking')}
+                        className={`w-full p-6 rounded-2xl border text-left transition-all duration-300 flex items-start gap-4 ${
+                          activeMockTab === 'ranking' 
+                            ? 'bg-zinc-950 border-purple-500/30 shadow-lg shadow-purple-500/5' 
+                            : 'bg-zinc-950/40 border-zinc-900 hover:border-zinc-800'
+                        }`}
+                      >
+                        <div className={`p-3 rounded-xl border shrink-0 transition-all ${
+                          activeMockTab === 'ranking' ? 'bg-zinc-900 border-purple-500/20 text-purple-400' : 'bg-zinc-900/50 border-zinc-850 text-zinc-500'
+                        }`}>
+                          <Trophy className="w-5 h-5" />
+                        </div>
+                        <div className="space-y-1">
+                          <h4 className="text-white text-base font-bold">Ranking em Tempo Real</h4>
+                          <p className="text-xs text-zinc-400 leading-normal">
+                            Monitore as movimentações diárias da tabela competitiva. Cada suor validado altera a tabela imediatamente.
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* Control 3: Histórico */}
+                      <button
+                        onClick={() => setActiveMockTab('treinos')}
+                        className={`w-full p-6 rounded-2xl border text-left transition-all duration-300 flex items-start gap-4 ${
+                          activeMockTab === 'treinos' 
+                            ? 'bg-zinc-950 border-blue-500/30 shadow-lg shadow-blue-500/5' 
+                            : 'bg-zinc-950/40 border-zinc-900 hover:border-zinc-800'
+                        }`}
+                      >
+                        <div className={`p-3 rounded-xl border shrink-0 transition-all ${
+                          activeMockTab === 'treinos' ? 'bg-zinc-900 border-blue-500/20 text-blue-400' : 'bg-zinc-900/50 border-zinc-850 text-zinc-500'
+                        }`}>
+                          <Dumbbell className="w-5 h-5" />
+                        </div>
+                        <div className="space-y-1">
+                          <h4 className="text-white text-base font-bold">Histórico e Validações</h4>
+                          <p className="text-xs text-zinc-400 leading-normal">
+                            Linha do tempo auditável com todos os seus treinos e registros homologados por nossa IA de integridade física.
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* Control 4: Perfil */}
+                      <button
+                        onClick={() => setActiveMockTab('perfil')}
+                        className={`w-full p-6 rounded-2xl border text-left transition-all duration-300 flex items-start gap-4 ${
+                          activeMockTab === 'perfil' 
+                            ? 'bg-zinc-950 border-purple-500/30 shadow-lg shadow-purple-500/5' 
+                            : 'bg-zinc-950/40 border-zinc-900 hover:border-zinc-800'
+                        }`}
+                      >
+                        <div className={`p-3 rounded-xl border shrink-0 transition-all ${
+                          activeMockTab === 'perfil' ? 'bg-zinc-900 border-purple-500/20 text-purple-400' : 'bg-zinc-900/50 border-zinc-850 text-zinc-500'
+                        }`}>
+                          <User className="w-5 h-5" />
+                        </div>
+                        <div className="space-y-1">
+                          <h4 className="text-white text-base font-bold">Seu Perfil e Temporadas</h4>
+                          <p className="text-xs text-zinc-400 leading-normal">
+                            Gerencie suas conquistas, níveis de XP acumulado, insígnias conquistadas e métricas corporais integradas.
+                          </p>
+                        </div>
+                      </button>
+
+                    </div>
+                  </div>
+
+                  {/* Right Phone Mockup displaying corresponding active screen */}
+                  <div className="lg:col-span-6 flex justify-center relative w-full pt-10 lg:pt-0">
+                    <div className="absolute -inset-10 bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
+                    <SmartphoneMockup onlyPhone={true} activeTabOverride={activeMockTab} />
+                  </div>
+
+                </div>
               </div>
             </section>
 
 
-            {/* NEW SECTION — PLANOS */}
+            {/* SEÇÃO 4 — PLANOS */}
             <section
               id="planos"
-              className="py-24 sm:py-32 w-full border-b border-zinc-950 bg-gradient-to-b from-[#080808] to-[#050505]"
+              className="py-32 sm:py-40 w-full border-b border-zinc-900 bg-black"
             >
               <div className="max-w-7xl mx-auto px-6">
                 
                 {/* Section Header */}
-                <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
-                  <span className="text-amber-500 font-mono text-xs tracking-[0.25em] font-semibold uppercase">
+                <div className="text-left max-w-3xl mb-24 space-y-4">
+                  <span className="text-blue-400 font-mono text-xs tracking-[0.25em] font-semibold uppercase block">
                     ACESSO EXCLUSIVO
                   </span>
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight text-white leading-tight">
-                    Escolha o plano ideal para sua rotina
+                  <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold tracking-tight text-white leading-tight">
+                    Escolha o plano ideal para sua rotina.
                   </h2>
-                  <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                    Comece com o Plano Essencial ou libere a experiência máxima de performance no Plano Performance.
+                  <p className="text-zinc-400 text-lg sm:text-xl leading-relaxed">
+                    Comece com o Plano Essencial ou libere a experiência máxima de performance desportiva.
                   </p>
                 </div>
 
                 {/* Grid of plans */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
                   
                   {/* Plano Essencial */}
-                  <div className="p-8 bg-zinc-950/45 border-2 border-zinc-900 hover:border-zinc-850 rounded-3xl flex flex-col justify-between transition-all duration-300 text-left relative overflow-hidden">
-                    <div className="space-y-6">
+                  <div className="p-10 bg-zinc-950 border border-zinc-900 hover:border-zinc-800 rounded-3xl flex flex-col justify-between transition-all duration-300 text-left relative overflow-hidden">
+                    <div className="space-y-8">
                       <div className="space-y-2">
-                        <h3 className="text-2xl font-bold text-white uppercase font-sans">Plano Essencial</h3>
-                        <p className="text-xs text-zinc-500 leading-normal">
-                          Entrada para o universo Invictus.
+                        <h3 className="text-2xl font-bold text-white uppercase tracking-wider font-display">Plano Essencial</h3>
+                        <p className="text-sm text-zinc-500 leading-normal">
+                          Entrada para o universo de competição saudável do Invictus.
                         </p>
                       </div>
 
@@ -542,11 +658,11 @@ export default function App() {
                       </div>
 
                       {/* Divider */}
-                      <div className="h-[1px] bg-zinc-900/80 w-full" />
+                      <div className="h-[1px] bg-zinc-900 w-full" />
 
                       {/* Benefits list */}
-                      <div className="space-y-3.5">
-                        <p className="text-xs font-semibold text-zinc-400 font-mono uppercase tracking-widest mb-1">Recursos Incluídos:</p>
+                      <div className="space-y-4">
+                        <p className="text-xs font-semibold text-zinc-500 font-mono uppercase tracking-widest mb-2">Recursos Incluídos:</p>
                         {[
                           "Check-in inteligente via celular",
                           "Sistema de rankings regionais",
@@ -557,18 +673,18 @@ export default function App() {
                           "Histórico cronológico de atividades",
                           "Evoluição por níveis e XP"
                         ].map((benefit, idx) => (
-                          <div key={idx} className="flex items-center gap-2.5 text-zinc-300 text-sm">
-                            <CheckCircle2 className="w-4 h-4 text-amber-500 shrink-0" />
+                          <div key={idx} className="flex items-center gap-3 text-zinc-300 text-sm">
+                            <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0" />
                             <span>{benefit}</span>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    <div className="pt-8">
+                    <div className="pt-10">
                       <button
                         onClick={() => handleScrollToId('download')}
-                        className="w-full py-4 px-6 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 hover:border-zinc-700 text-white font-semibold rounded-2xl transition-colors cursor-pointer text-sm font-mono uppercase tracking-widest"
+                        className="w-full py-4 px-6 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 hover:border-zinc-700 text-white font-semibold rounded-2xl transition-all cursor-pointer text-sm font-mono uppercase tracking-widest"
                       >
                         Selecionar Essencial
                       </button>
@@ -576,34 +692,34 @@ export default function App() {
                   </div>
 
                   {/* Plano Performance */}
-                  <div className="p-8 bg-zinc-950 border-2 border-amber-500 rounded-3xl flex flex-col justify-between transition-all duration-300 text-left relative overflow-hidden ring-4 ring-amber-500/5">
+                  <div className="p-10 bg-zinc-950 border border-blue-500/20 rounded-3xl flex flex-col justify-between transition-all duration-300 text-left relative overflow-hidden ring-1 ring-blue-500/10">
                     
                     {/* RECOMMENDED BADGE */}
-                    <div className="absolute top-0 right-0 bg-gradient-to-l from-amber-500 to-amber-600 text-black px-4 py-1.5 rounded-bl-2xl text-[10px] font-bold font-mono uppercase tracking-widest select-none">
-                      Plano recomendado
+                    <div className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-1.5 rounded-bl-2xl text-[10px] font-bold font-mono uppercase tracking-widest select-none">
+                      Recomendado
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-8">
                       <div className="space-y-2">
-                        <h3 className="text-2xl font-bold text-white uppercase font-sans">Plano Performance</h3>
-                        <p className="text-xs text-zinc-400 leading-normal">
-                          Experiência completa para quem quer competir no máximo nível.
+                        <h3 className="text-2xl font-bold text-white uppercase tracking-wider font-display">Plano Performance</h3>
+                        <p className="text-sm text-zinc-400 leading-normal">
+                          Experiência completa para quem quer competir no máximo nível de integridade física.
                         </p>
                       </div>
 
                       {/* Pricing block */}
                       <div className="flex items-baseline gap-1 py-2">
                         <span className="text-sm text-zinc-400 font-mono leading-none">R$</span>
-                        <span className="text-5xl font-bold text-amber-500 font-mono leading-none">49,90</span>
+                        <span className="text-5xl font-bold text-white font-mono leading-none">49,90</span>
                         <span className="text-sm text-zinc-500 font-mono leading-none">/ mês</span>
                       </div>
 
                       {/* Divider */}
-                      <div className="h-[1px] bg-zinc-900/80 w-full" />
+                      <div className="h-[1px] bg-zinc-900 w-full" />
 
                       {/* Benefits list */}
-                      <div className="space-y-3.5">
-                        <p className="text-xs font-semibold text-amber-400 font-mono uppercase tracking-widest mb-1">Recursos Máximos Incluídos:</p>
+                      <div className="space-y-4">
+                        <p className="text-xs font-semibold text-amber-500 font-mono uppercase tracking-widest mb-2">Recursos Máximos Incluídos:</p>
                         {[
                           "Tudo contido no Plano Essencial",
                           "Sincronização com relógios inteligentes",
@@ -614,7 +730,7 @@ export default function App() {
                           "Análise profunda de performance mecânica",
                           "Estatísticas desportivas avançadas"
                         ].map((benefit, idx) => (
-                          <div key={idx} className="flex items-center gap-2.5 text-zinc-300 text-sm">
+                          <div key={idx} className="flex items-center gap-3 text-zinc-300 text-sm">
                             <CheckCircle2 className="w-4 h-4 text-amber-500 shrink-0" />
                             <span className={idx > 0 ? "text-amber-200 font-medium" : ""}>{benefit}</span>
                           </div>
@@ -622,10 +738,10 @@ export default function App() {
                       </div>
                     </div>
 
-                    <div className="pt-8">
+                    <div className="pt-10">
                       <button
                         onClick={() => handleScrollToId('download')}
-                        className="w-full py-4 px-6 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black font-semibold rounded-2xl transition-all cursor-pointer text-sm font-mono uppercase tracking-widest shadow-lg shadow-amber-500/5 hover:scale-[1.01]"
+                        className="w-full py-4 px-6 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-black font-semibold rounded-2xl transition-all cursor-pointer text-sm font-mono uppercase tracking-widest shadow-lg shadow-amber-500/10 hover:scale-[1.01]"
                       >
                         Assinar Performance
                       </button>
@@ -641,33 +757,36 @@ export default function App() {
             {/* SEÇÃO — SISTEMA DE SEGURANÇA ANTIFRAUDE */}
             <section
               id="antifraude"
-              className="py-24 sm:py-32 w-full bg-[#050505] border-b border-zinc-950"
+              className="py-32 sm:py-40 w-full bg-black border-b border-zinc-900"
             >
               <div className="max-w-7xl mx-auto px-6">
                 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
                   
                   {/* Left Column: Informative textual base */}
-                  <div className="lg:col-span-4 space-y-6 text-left">
-                    <span className="text-[#FF5500] font-mono text-xs tracking-[0.25em] font-semibold uppercase">
-                      AUDITORIA E JUSTIÇA
-                    </span>
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight text-white leading-tight">
-                      Segurança em múltiplas camadas
-                    </h2>
-                    <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                      O INVICTUS utiliza um dos sistemas de validação mais completos do segmento fitness para assegurar a idoneidade da nossa tabela de líderes.
-                    </p>
-                    <p className="text-zinc-500 text-xs leading-relaxed">
-                      Todas as auditorias respeitam integralmente os direitos de privacidade e anonimização de suas rotas, avaliando apenas dados agregados e de esforço bruto necessários para autenticar cada atividade esportiva.
+                  <div className="lg:col-span-4 space-y-8 text-left">
+                    <div className="space-y-4">
+                      <span className="text-amber-500 font-mono text-xs tracking-[0.25em] font-semibold uppercase block">
+                        INTEGRIDADE E PRIVACIDADE
+                      </span>
+                      <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold tracking-tight text-white leading-tight">
+                        Auditoria em tempo real.
+                      </h2>
+                      <p className="text-zinc-400 text-lg leading-relaxed">
+                        O Invictus utiliza algoritmos sofisticados de criptografia e validação física para garantir a autenticidade de cada metro percorrido ou repetição executada.
+                      </p>
+                    </div>
+
+                    <p className="text-zinc-500 text-sm leading-relaxed">
+                      Respeitando sua privacidade de dados de ponta a ponta. Nosso pipeline de integridade avalia apenas assinaturas biométricas e de esforço agregado, sem armazenar rotas geográficas ou dados sensíveis.
                     </p>
 
-                    <div className="p-2.5 bg-zinc-950 rounded-xl border border-zinc-900/60 flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-zinc-400">
-                        <Lock className="w-4 h-4 text-green-500" />
-                        <span className="text-xs font-mono font-medium">Conexão Segura SSL</span>
+                    <div className="p-4 bg-zinc-950 rounded-2xl border border-zinc-900 flex items-center justify-between">
+                      <div className="flex items-center gap-3 text-zinc-300">
+                        <Lock className="w-5 h-5 text-amber-500" />
+                        <span className="text-xs font-mono">Protocolo Antifraude Ativo</span>
                       </div>
-                      <span className="text-[10px] font-mono bg-green-950 text-green-400 px-2 py-0.5 rounded-full">ATIVO</span>
+                      <span className="text-[10px] font-mono bg-amber-950 text-amber-500 px-3 py-1 rounded-full font-bold">SHA-256</span>
                     </div>
                   </div>
 
@@ -675,114 +794,114 @@ export default function App() {
                   <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     
                     {/* Card 1 */}
-                    <div className="p-5 bg-zinc-950 border border-zinc-900 hover:border-amber-500/10 rounded-2xl flex flex-col justify-between hover:scale-[1.01] transition-all duration-300 text-left h-40">
+                    <div className="p-6 bg-zinc-950 border border-zinc-900 rounded-3xl flex flex-col justify-between hover:border-zinc-800 transition-all duration-300 text-left h-44">
                       <div className="flex justify-between items-start">
-                        <span className="p-2.5 bg-amber-550/10 text-amber-500 rounded-xl">
+                        <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-2xl">
                           <Map className="w-5 h-5" />
-                        </span>
-                        <span className="text-[9px] font-mono text-zinc-600">CAMADA 1</span>
+                        </div>
+                        <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">CAMADA 01</span>
                       </div>
-                      <div className="space-y-1">
-                        <h4 className="font-semibold text-white text-sm sm:text-base">Geolocalização Inteligente</h4>
-                        <p className="text-xs text-zinc-500 leading-normal">Validação rigorosa de presença do atleta no local de treino escolhido por meio de checagem espacial.</p>
+                      <div className="space-y-2">
+                        <h4 className="font-bold text-white text-base">Geolocalização Assistida</h4>
+                        <p className="text-xs text-zinc-400 leading-normal">Validação espacial passiva para comprovar presença física real no local selecionado.</p>
                       </div>
                     </div>
 
                     {/* Card 2 */}
-                    <div className="p-5 bg-zinc-950 border border-zinc-900 hover:border-amber-500/10 rounded-2xl flex flex-col justify-between hover:scale-[1.01] transition-all duration-300 text-left h-40">
+                    <div className="p-6 bg-zinc-950 border border-zinc-900 rounded-3xl flex flex-col justify-between hover:border-zinc-800 transition-all duration-300 text-left h-44">
                       <div className="flex justify-between items-start">
-                        <span className="p-2.5 bg-amber-550/10 text-amber-500 rounded-xl">
+                        <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-2xl">
                           <Clock className="w-5 h-5" />
-                        </span>
-                        <span className="text-[9px] font-mono text-zinc-600">CAMADA 2</span>
+                        </div>
+                        <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">CAMADA 02</span>
                       </div>
-                      <div className="space-y-1">
-                        <h4 className="font-semibold text-white text-sm sm:text-base">Permanência Real</h4>
-                        <p className="text-xs text-zinc-500 leading-normal">Validação em segundo plano do tempo mínimo de treinamento na academia para certificar esforço verídico.</p>
+                      <div className="space-y-2">
+                        <h4 className="font-bold text-white text-base">Análise de Permanência</h4>
+                        <p className="text-xs text-zinc-400 leading-normal">Cálculo em background de tempo de sessão para neutralizar check-ins falsos e relatórios nulos.</p>
                       </div>
                     </div>
 
                     {/* Card 3 */}
-                    <div className="p-5 bg-zinc-950 border border-zinc-900 hover:border-amber-500/10 rounded-2xl flex flex-col justify-between hover:scale-[1.01] transition-all duration-300 text-left h-40">
+                    <div className="p-6 bg-zinc-950 border border-zinc-900 rounded-3xl flex flex-col justify-between hover:border-zinc-800 transition-all duration-300 text-left h-44">
                       <div className="flex justify-between items-start">
-                        <span className="p-2.5 bg-amber-550/10 text-amber-500 rounded-xl">
+                        <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-2xl">
                           <Activity className="w-5 h-5" />
-                        </span>
-                        <span className="text-[9px] font-mono text-zinc-600">CAMADA 3</span>
+                        </div>
+                        <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">CAMADA 03</span>
                       </div>
-                      <div className="space-y-1">
-                        <h4 className="font-semibold text-white text-sm sm:text-base">Análise de Movimento</h4>
-                        <p className="text-xs text-zinc-500 leading-normal">Análise estatística de cadência e aceleração para neutralizar registros por veículos ou robôs simuladores.</p>
+                      <div className="space-y-2">
+                        <h4 className="font-bold text-white text-base">Cadência Biomecânica</h4>
+                        <p className="text-xs text-zinc-400 leading-normal">Filtro mecânico estatístico para descartar falsos registros gerados por transporte veicular.</p>
                       </div>
                     </div>
 
                     {/* Card 4 */}
-                    <div className="p-5 bg-zinc-950 border border-zinc-900 hover:border-amber-500/10 rounded-2xl flex flex-col justify-between hover:scale-[1.01] transition-all duration-300 text-left h-40">
+                    <div className="p-6 bg-zinc-950 border border-zinc-900 rounded-3xl flex flex-col justify-between hover:border-zinc-800 transition-all duration-300 text-left h-44">
                       <div className="flex justify-between items-start">
-                        <span className="p-2.5 bg-amber-550/10 text-amber-500 rounded-xl">
+                        <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-2xl">
                           <Lock className="w-5 h-5" />
-                        </span>
-                        <span className="text-[9px] font-mono text-zinc-600">CAMADA 4</span>
+                        </div>
+                        <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">CAMADA 04</span>
                       </div>
-                      <div className="space-y-1">
-                        <h4 className="font-semibold text-white text-sm sm:text-base">Validação por Sensores</h4>
-                        <p className="text-xs text-zinc-500 leading-normal">Leitura matemática inteligente de sensores integrados nos dispositivos móveis dos esportistas.</p>
+                      <div className="space-y-2">
+                        <h4 className="font-bold text-white text-base">Mapeamento de Sensores</h4>
+                        <p className="text-xs text-zinc-400 leading-normal">Assinatura de acelerômetro e giroscópio do dispositivo para autenticar o movimento humano.</p>
                       </div>
                     </div>
 
                     {/* Card 5 */}
-                    <div className="p-5 bg-zinc-950 border border-zinc-900 hover:border-amber-500/10 rounded-2xl flex flex-col justify-between hover:scale-[1.01] transition-all duration-300 text-left h-40">
+                    <div className="p-6 bg-zinc-950 border border-zinc-900 rounded-3xl flex flex-col justify-between hover:border-zinc-800 transition-all duration-300 text-left h-44">
                       <div className="flex justify-between items-start">
-                        <span className="p-2.5 bg-amber-550/10 text-amber-500 rounded-xl">
+                        <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-2xl">
                           <Zap className="w-5 h-5" />
-                        </span>
-                        <span className="text-[9px] font-mono text-zinc-600">CAMADA 5</span>
+                        </div>
+                        <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">CAMADA 05</span>
                       </div>
-                      <div className="space-y-1">
-                        <h4 className="font-semibold text-white text-sm sm:text-base">Verificações Aleatórias</h4>
-                        <p className="text-xs text-zinc-500 leading-normal">Confirmas ocasionais extras solicitadas de forma discreta pela plataforma para manter o equilíbrio.</p>
+                      <div className="space-y-2">
+                        <h4 className="font-bold text-white text-base">Micro-Verificações</h4>
+                        <p className="text-xs text-zinc-400 leading-normal">Solicitações intermitentes discretas baseadas em comportamento de pontuação anômala.</p>
                       </div>
                     </div>
 
                     {/* Card 6 */}
-                    <div className="p-5 bg-zinc-950 border border-zinc-900 hover:border-amber-500/10 rounded-2xl flex flex-col justify-between hover:scale-[1.01] transition-all duration-300 text-left h-40">
+                    <div className="p-6 bg-zinc-950 border border-zinc-900 rounded-3xl flex flex-col justify-between hover:border-zinc-800 transition-all duration-300 text-left h-44">
                       <div className="flex justify-between items-start">
-                        <span className="p-2.5 bg-amber-550/10 text-amber-500 rounded-xl">
+                        <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-2xl">
                           <Eye className="w-5 h-5" />
-                        </span>
-                        <span className="text-[9px] font-mono text-zinc-600">CAMADA 6</span>
+                        </div>
+                        <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">CAMADA 06</span>
                       </div>
-                      <div className="space-y-1">
-                        <h4 className="font-semibold text-white text-sm sm:text-base">Revisão Manual</h4>
-                        <p className="text-xs text-zinc-500 leading-normal">Auditorias personalizadas conduzidas por nossa equipe técnica diante de comportamentos extremos de pontos.</p>
+                      <div className="space-y-2">
+                        <h4 className="font-bold text-white text-base">Revisão Humana</h4>
+                        <p className="text-xs text-zinc-400 leading-normal">Comitê de integridade focado em avaliar logs extremos reportados pelo sistema automático.</p>
                       </div>
                     </div>
 
                     {/* Card 7 */}
-                    <div className="p-5 bg-zinc-950 border border-zinc-900 hover:border-amber-500/10 rounded-2xl flex flex-col justify-between hover:scale-[1.01] transition-all duration-300 text-left h-40">
+                    <div className="p-6 bg-zinc-950 border border-zinc-900 rounded-3xl flex flex-col justify-between hover:border-zinc-800 transition-all duration-300 text-left h-44">
                       <div className="flex justify-between items-start">
-                        <span className="p-2.5 bg-amber-550/10 text-amber-500 rounded-xl">
+                        <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-2xl">
                           <Users className="w-5 h-5" />
-                        </span>
-                        <span className="text-[9px] font-mono text-zinc-600">CAMADA 7</span>
+                        </div>
+                        <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">CAMADA 07</span>
                       </div>
-                      <div className="space-y-1">
-                        <h4 className="font-semibold text-white text-sm sm:text-base">Denúncias da Comunidade</h4>
-                        <p className="text-xs text-zinc-500 leading-normal">Sistema intuitivo integrado para relatar suspeitas de uso ilegal do perfil esportivo com transparência.</p>
+                      <div className="space-y-2">
+                        <h4 className="font-bold text-white text-base">Feedback Comunitário</h4>
+                        <p className="text-xs text-zinc-400 leading-normal">Canal transparente dentro das ligas para reportar comportamentos manifestamente irregulares.</p>
                       </div>
                     </div>
 
                     {/* Card 8 */}
-                    <div className="p-5 bg-zinc-950 border border-zinc-900 hover:border-amber-500/10 rounded-2xl flex flex-col justify-between hover:scale-[1.01] transition-all duration-300 text-left h-40">
+                    <div className="p-6 bg-zinc-950 border border-zinc-900 rounded-3xl flex flex-col justify-between hover:border-zinc-800 transition-all duration-300 text-left h-44">
                       <div className="flex justify-between items-start">
-                        <span className="p-2.5 bg-amber-550/10 text-amber-500 rounded-xl">
+                        <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-2xl">
                           <ShieldCheck className="w-5 h-5" />
-                        </span>
-                        <span className="text-[9px] font-mono text-zinc-600">CAMADA 8</span>
+                        </div>
+                        <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">CAMADA 08</span>
                       </div>
-                      <div className="space-y-1">
-                        <h4 className="font-semibold text-white text-sm sm:text-base">Score de Confiabilidade</h4>
-                        <p className="text-xs text-zinc-500 leading-normal">Índice individual cumulativo atualizado por IA que afere a credibilidade de cada treino validado.</p>
+                      <div className="space-y-2">
+                        <h4 className="font-bold text-white text-base">Score de Confiança</h4>
+                        <p className="text-xs text-zinc-400 leading-normal">Índice cumulativo do atleta atualizado em tempo real baseado no histórico de validações bem-sucedidas.</p>
                       </div>
                     </div>
 
@@ -797,118 +916,118 @@ export default function App() {
             {/* SEÇÃO — CARDIO (MAIS FORMAS DE EVOLUIR) */}
             <section
               id="cardio"
-              className="py-24 sm:py-32 w-full bg-gradient-to-b from-[#050505] to-[#080808] border-b border-zinc-950"
+              className="py-32 sm:py-40 w-full bg-black border-b border-zinc-900"
             >
               <div className="max-w-7xl mx-auto px-6">
                 
                 {/* Section Header */}
-                <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-                  <span className="text-[#E5A93C] font-mono text-xs tracking-[0.25em] font-semibold uppercase">
+                <div className="text-left max-w-3xl mb-24 space-y-4">
+                  <span className="text-amber-500 font-mono text-xs tracking-[0.25em] font-semibold uppercase block">
                     CARDIO RASTREÁVEL
                   </span>
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight text-white leading-tight">
-                    Mais formas de evoluir
+                  <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold tracking-tight text-white leading-tight">
+                    Mais formas de evoluir.
                   </h2>
-                  <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                    Escolha a modalidade que melhor se adapta à sua rotina esportiva diária.
+                  <p className="text-zinc-400 text-lg sm:text-xl leading-relaxed">
+                    Escolha a modalidade que melhor se adapta à sua rotina desportiva diária.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center max-w-6xl mx-auto">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start max-w-7xl mx-auto">
                   
                   {/* Left: Tab Selectors */}
-                  <div className="lg:col-span-5 space-y-4">
-                    <p className="text-xs text-zinc-500 font-mono tracking-widest uppercase text-left mb-2">Selecione o esporte:</p>
+                  <div className="lg:col-span-5 space-y-4 text-left">
+                    <p className="text-xs text-zinc-500 font-mono tracking-widest uppercase mb-4">Selecione o esporte:</p>
                     
                     <button
                       id="tab-corrida"
                       onClick={() => setActiveCardioTab('corrida')}
-                      className={`w-full p-4 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
+                      className={`w-full p-5 rounded-2xl border text-left flex items-center justify-between transition-all cursor-pointer ${
                         activeCardioTab === 'corrida' 
-                          ? 'bg-amber-500/10 border-amber-500 text-white' 
-                          : 'bg-zinc-950/60 border-zinc-900 text-zinc-400 hover:border-zinc-800'
+                          ? 'bg-zinc-950 border-amber-500/30 text-white shadow-lg' 
+                          : 'bg-zinc-950/40 border-zinc-900 text-zinc-400 hover:border-zinc-800'
                       }`}
                     >
-                      <span className="font-semibold text-sm sm:text-base">🏃 Corrida</span>
-                      <ChevronRight className="w-4 h-4" />
+                      <span className="font-bold text-base">🏃 Corrida</span>
+                      <ChevronRight className="w-5 h-5" />
                     </button>
 
                     <button
                       id="tab-caminhada"
                       onClick={() => setActiveCardioTab('caminhada')}
-                      className={`w-full p-4 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
+                      className={`w-full p-5 rounded-2xl border text-left flex items-center justify-between transition-all cursor-pointer ${
                         activeCardioTab === 'caminhada' 
-                          ? 'bg-amber-500/10 border-amber-500 text-white' 
-                          : 'bg-zinc-950/60 border-zinc-900 text-zinc-400 hover:border-zinc-800'
+                          ? 'bg-zinc-950 border-amber-500/30 text-white shadow-lg' 
+                          : 'bg-zinc-950/40 border-zinc-900 text-zinc-400 hover:border-zinc-800'
                       }`}
                     >
-                      <span className="font-semibold text-sm sm:text-base">🚶 Caminhada</span>
-                      <ChevronRight className="w-4 h-4" />
+                      <span className="font-bold text-base">🚶 Caminhada</span>
+                      <ChevronRight className="w-5 h-5" />
                     </button>
 
                     <button
                       id="tab-bike"
                       onClick={() => setActiveCardioTab('bike')}
-                      className={`w-full p-4 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
+                      className={`w-full p-5 rounded-2xl border text-left flex items-center justify-between transition-all cursor-pointer ${
                         activeCardioTab === 'bike' 
-                          ? 'bg-amber-500/10 border-amber-500 text-white' 
-                          : 'bg-zinc-950/60 border-zinc-900 text-zinc-400 hover:border-zinc-800'
+                          ? 'bg-zinc-950 border-amber-500/30 text-white shadow-lg' 
+                          : 'bg-zinc-950/40 border-zinc-900 text-zinc-400 hover:border-zinc-800'
                       }`}
                     >
-                      <span className="font-semibold text-sm sm:text-base">🚴 Bike</span>
-                      <ChevronRight className="w-4 h-4" />
+                      <span className="font-bold text-base">🚴 Bike</span>
+                      <ChevronRight className="w-5 h-5" />
                     </button>
 
                     <button
                       id="tab-academia"
                       onClick={() => setActiveCardioTab('academia')}
-                      className={`w-full p-4 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
+                      className={`w-full p-5 rounded-2xl border text-left flex items-center justify-between transition-all cursor-pointer ${
                         activeCardioTab === 'academia' 
-                          ? 'bg-amber-500/10 border-amber-500 text-white' 
-                          : 'bg-zinc-950/60 border-zinc-900 text-zinc-400 hover:border-zinc-800'
+                          ? 'bg-zinc-950 border-amber-500/30 text-white shadow-lg' 
+                          : 'bg-zinc-950/40 border-zinc-900 text-zinc-400 hover:border-zinc-800'
                       }`}
                     >
-                      <span className="font-semibold text-sm sm:text-base">🏋️ Cardio na academia</span>
-                      <ChevronRight className="w-4 h-4" />
+                      <span className="font-bold text-base">🏋️ Cardio na academia</span>
+                      <ChevronRight className="w-5 h-5" />
                     </button>
 
                     <button
                       id="tab-outros"
                       onClick={() => setActiveCardioTab('outros')}
-                      className={`w-full p-4 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
+                      className={`w-full p-5 rounded-2xl border text-left flex items-center justify-between transition-all cursor-pointer ${
                         activeCardioTab === 'outros' 
-                          ? 'bg-amber-500/10 border-amber-500 text-white' 
-                          : 'bg-zinc-950/60 border-zinc-900 text-zinc-400 hover:border-zinc-800'
+                          ? 'bg-zinc-950 border-amber-500/30 text-white shadow-lg' 
+                          : 'bg-zinc-950/40 border-zinc-900 text-zinc-400 hover:border-zinc-800'
                       }`}
                     >
-                      <span className="font-semibold text-sm sm:text-base">➕ Outros</span>
-                      <ChevronRight className="w-4 h-4" />
+                      <span className="font-bold text-base">➕ Outros</span>
+                      <ChevronRight className="w-5 h-5" />
                     </button>
                   </div>
 
                   {/* Right: Dynamic Description Display Box */}
-                  <div className="lg:col-span-12 xl:col-span-7 col-span-1 border border-zinc-800/80 bg-zinc-950/50 p-8 rounded-3xl min-h-[300px] flex flex-col justify-between text-left relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none scale-[2]">
+                  <div className="lg:col-span-7 border border-zinc-900 bg-zinc-950 p-10 rounded-3xl min-h-[340px] flex flex-col justify-between text-left relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none scale-[2]">
                       <InvictusLogo size={120} showText={false} />
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-8">
                       <div className="flex items-center justify-between">
-                        <span className="px-3.5 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-500 font-mono text-xs rounded-full uppercase tracking-wider font-semibold">
+                        <span className="px-4 py-1.5 bg-amber-950 border border-amber-500/20 text-amber-500 font-mono text-xs rounded-full uppercase tracking-wider font-bold">
                           {cardioDetails[activeCardioTab].tag}
                         </span>
                         {cardioDetails[activeCardioTab].icon}
                       </div>
 
-                      <div className="space-y-3">
-                        <h3 className="text-xl sm:text-2xl font-bold text-white font-sans">{cardioDetails[activeCardioTab].title}</h3>
-                        <p className="text-zinc-300 text-sm sm:text-base leading-relaxed antialiased">
+                      <div className="space-y-4">
+                        <h3 className="text-2xl sm:text-3xl font-bold text-white font-display">{cardioDetails[activeCardioTab].title}</h3>
+                        <p className="text-zinc-400 text-base leading-relaxed antialiased">
                           {cardioDetails[activeCardioTab].desc}
                         </p>
                       </div>
                     </div>
 
-                    <div className="pt-6 border-t border-zinc-900 mt-6 text-zinc-500 text-xs sm:text-sm font-mono flex items-center gap-2">
+                    <div className="pt-8 border-t border-zinc-900 mt-8 text-zinc-500 text-sm font-mono flex items-center gap-2">
                       <span className="text-amber-500">◆</span>
                       <span>{cardioDetails[activeCardioTab].stats}</span>
                     </div>
@@ -923,52 +1042,57 @@ export default function App() {
             {/* SEÇÃO — PERFORMANCE (SEUS DADOS, SUA EVOLUÇÃO) */}
             <section
               id="performance"
-              className="py-24 sm:py-32 w-full bg-[#050505] border-b border-zinc-950"
+              className="py-32 sm:py-40 w-full bg-black border-b border-zinc-900"
             >
               <div className="max-w-7xl mx-auto px-6">
                 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
                   
                   {/* Left Column: text content */}
-                  <div className="lg:col-span-5 space-y-6 text-left">
-                    <span className="text-amber-500 font-mono text-xs tracking-[0.25em] font-semibold uppercase">
-                      TELEMETRIA COMPLETA
-                    </span>
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight text-white leading-tight">
-                      Seus dados, sua evolução
-                    </h2>
-                    <p className="text-zinc-300 text-sm sm:text-base leading-relaxed">
-                      Visualize o progresso real de suas sessões de atividade física de maneira integrada e imersiva. 
-                      Acompanhe em detalhes batimento cardíaco, calorias, streaks e tempos acumulados sem distrações promocionais agressivas.
+                  <div className="lg:col-span-5 space-y-8 text-left">
+                    <div className="space-y-4">
+                      <span className="text-amber-500 font-mono text-xs tracking-[0.25em] font-semibold uppercase block">
+                        TELEMETRIA INTEGRADA
+                      </span>
+                      <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold tracking-tight text-white leading-tight">
+                        Seus dados, sua evolução.
+                      </h2>
+                      <p className="text-zinc-400 text-lg leading-relaxed">
+                        Visualize o progresso real de suas sessões desportivas de maneira limpa, unificada e sem fricções.
+                      </p>
+                    </div>
+
+                    <p className="text-zinc-500 text-base leading-relaxed">
+                      Acompanhe em detalhes a sua frequência cardíaca, gasto energético real, sequência de treinos ativos e evolução temporal sem a poluição de notificações promocionais ou ruídos desnecessários.
                     </p>
 
-                    <div className="flex gap-4">
+                    <div className="flex gap-3 pt-2">
                       <button
                         onClick={() => setActiveDashboardRange('semanal')}
-                        className={`px-4 py-2 rounded-lg text-xs font-mono font-bold tracking-widest uppercase transition-all border ${
+                        className={`px-4 py-2.5 rounded-xl text-xs font-mono font-bold tracking-widest uppercase transition-all border ${
                           activeDashboardRange === 'semanal' 
-                            ? 'bg-amber-500 text-black border-amber-500' 
-                            : 'bg-zinc-950 hover:bg-zinc-900 text-zinc-400 border-zinc-800'
+                            ? 'bg-white text-black border-white shadow-md' 
+                            : 'bg-zinc-950 hover:bg-zinc-900 text-zinc-400 border-zinc-900'
                         }`}
                       >
                         Semanal
                       </button>
                       <button
                         onClick={() => setActiveDashboardRange('mensal')}
-                        className={`px-4 py-2 rounded-lg text-xs font-mono font-bold tracking-widest uppercase transition-all border ${
+                        className={`px-4 py-2.5 rounded-xl text-xs font-mono font-bold tracking-widest uppercase transition-all border ${
                           activeDashboardRange === 'mensal' 
-                            ? 'bg-amber-500 text-black border-amber-500' 
-                            : 'bg-zinc-950 hover:bg-zinc-900 text-zinc-400 border-zinc-800'
+                            ? 'bg-white text-black border-white shadow-md' 
+                            : 'bg-zinc-950 hover:bg-zinc-900 text-zinc-400 border-zinc-900'
                         }`}
                       >
                         Mensal
                       </button>
                       <button
                         onClick={() => setActiveDashboardRange('anual')}
-                        className={`px-4 py-2 rounded-lg text-xs font-mono font-bold tracking-widest uppercase transition-all border ${
+                        className={`px-4 py-2.5 rounded-xl text-xs font-mono font-bold tracking-widest uppercase transition-all border ${
                           activeDashboardRange === 'anual' 
-                            ? 'bg-amber-500 text-black border-amber-500' 
-                            : 'bg-zinc-950 hover:bg-zinc-900 text-zinc-400 border-zinc-800'
+                            ? 'bg-white text-black border-white shadow-md' 
+                            : 'bg-zinc-950 hover:bg-zinc-900 text-zinc-400 border-zinc-900'
                         }`}
                       >
                         Anual
@@ -978,52 +1102,52 @@ export default function App() {
 
                   {/* Right Column: Premium Dashboard Graphic with CSS interactive charts */}
                   <div className="lg:col-span-7 relative">
-                    <div className="absolute -inset-2 bg-gradient-to-r from-amber-500/5 to-transparent rounded-[30px] blur-2xl opacity-80" />
+                    <div className="absolute -inset-4 bg-gradient-to-r from-amber-500/5 to-transparent rounded-[40px] blur-3xl opacity-50 pointer-events-none" />
                     
-                    <div className="relative p-6 sm:p-8 bg-zinc-950/80 rounded-3xl border border-zinc-850 space-y-6">
+                    <div className="relative p-8 bg-zinc-950 rounded-3xl border border-zinc-900 space-y-8">
                       
                       {/* Dashboard Header toolbar */}
-                      <div className="flex justify-between items-center pb-4 border-b border-zinc-900/60">
-                        <div className="flex items-center gap-2">
-                          <span className="p-2 bg-amber-500/10 rounded-lg">
-                            <Activity className="w-5 h-5 text-amber-500" />
+                      <div className="flex justify-between items-center pb-6 border-b border-zinc-900">
+                        <div className="flex items-center gap-3">
+                          <span className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-2xl">
+                            <Activity className="w-5 h-5" />
                           </span>
                           <div className="text-left">
-                            <span className="text-[9px] font-mono text-zinc-550 uppercase">TECLADO DO DISPOSITIVO</span>
-                            <h4 className="text-white text-sm font-semibold uppercase tracking-wider font-sans">MÉTRICAS ATIVAS</h4>
+                            <span className="text-[10px] font-mono text-zinc-550 uppercase tracking-wider">TECLADO DO DISPOSITIVO</span>
+                            <h4 className="text-white text-sm font-bold uppercase tracking-widest font-sans">MÉTRICAS ATIVAS</h4>
                           </div>
                         </div>
-                        <span className="text-[10px] bg-amber-550/15 border border-amber-550/30 text-amber-400 px-2.5 py-1 rounded-full font-mono font-bold">
-                          ESTADO: SINCRONIZADO
+                        <span className="text-[10px] bg-amber-950 border border-amber-500/20 text-amber-500 px-3 py-1 rounded-full font-mono font-bold uppercase tracking-wider">
+                          Sincronizado
                         </span>
                       </div>
-
+ 
                       {/* Info Cards Grid */}
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        <div className="p-4 bg-zinc-900/40 border border-zinc-850 rounded-2xl text-left">
-                          <span className="text-[9.5px] font-mono text-zinc-500 block uppercase">Batimentos (FC)</span>
-                          <p className="text-white text-xl sm:text-2xl font-bold font-mono mt-1 flex items-baseline gap-1">
+                        <div className="p-5 bg-zinc-900/30 border border-zinc-900 rounded-2xl text-left">
+                          <span className="text-[10px] font-mono text-zinc-500 block uppercase tracking-wider">Frequência</span>
+                          <p className="text-white text-xl sm:text-2xl font-bold font-mono mt-2 flex items-baseline gap-1">
                             {activeDashboardRange === 'semanal' ? '138' : activeDashboardRange === 'mensal' ? '135' : '131'}
                             <span className="text-xs text-zinc-500 font-normal">BPM</span>
                           </p>
                         </div>
-                        <div className="p-4 bg-zinc-900/40 border border-zinc-850 rounded-2xl text-left">
-                          <span className="text-[9.5px] font-mono text-zinc-500 block uppercase">Gasto Energético</span>
-                          <p className="text-white text-xl sm:text-2xl font-bold font-mono mt-1 flex items-baseline gap-1">
-                            {activeDashboardRange === 'semanal' ? '540' : activeDashboardRange === 'mensal' ? '2.400' : '28.800'}
+                        <div className="p-5 bg-zinc-900/30 border border-zinc-900 rounded-2xl text-left">
+                          <span className="text-[10px] font-mono text-zinc-500 block uppercase tracking-wider">Energia</span>
+                          <p className="text-white text-xl sm:text-2xl font-bold font-mono mt-2 flex items-baseline gap-1">
+                            {activeDashboardRange === 'semanal' ? '540' : activeDashboardRange === 'mensal' ? '2.400' : '28k'}
                             <span className="text-xs text-zinc-500 font-normal">kcal</span>
                           </p>
                         </div>
-                        <div className="p-4 bg-zinc-900/40 border border-zinc-850 rounded-2xl text-left">
-                          <span className="text-[9.5px] font-mono text-zinc-500 block uppercase">Tempo Praticado</span>
-                          <p className="text-white text-xl sm:text-2xl font-bold font-mono mt-1 flex items-baseline gap-1">
+                        <div className="p-5 bg-zinc-900/30 border border-zinc-900 rounded-2xl text-left">
+                          <span className="text-[10px] font-mono text-zinc-550 block uppercase tracking-wider">Tempo</span>
+                          <p className="text-white text-xl sm:text-2xl font-bold font-mono mt-2 flex items-baseline gap-1">
                             {activeDashboardRange === 'semanal' ? '4.5' : activeDashboardRange === 'mensal' ? '18.2' : '224'}
                             <span className="text-xs text-zinc-500 font-normal">h</span>
                           </p>
                         </div>
-                        <div className="p-4 bg-zinc-900/40 border border-zinc-850 rounded-2xl text-left">
-                          <span className="text-[9.5px] font-mono text-zinc-500 block uppercase">Seq. de Dias</span>
-                          <p className="text-amber-400 text-xl sm:text-2xl font-bold font-mono mt-1 flex items-baseline gap-1">
+                        <div className="p-5 bg-zinc-900/30 border border-zinc-900 rounded-2xl text-left">
+                          <span className="text-[10px] font-mono text-zinc-550 block uppercase tracking-wider">Sequência</span>
+                          <p className="text-amber-500 text-xl sm:text-2xl font-bold font-mono mt-2 flex items-baseline gap-1">
                             12
                             <span className="text-xs text-zinc-500 font-normal">dias</span>
                           </p>
@@ -1031,14 +1155,14 @@ export default function App() {
                       </div>
 
                       {/* Custom Decorative Graphic Chart using SVG */}
-                      <div className="p-5 bg-[#000]/10 border border-zinc-900/80 rounded-2xl space-y-3">
-                        <div className="flex justify-between items-center text-xs font-mono text-zinc-400">
-                          <span>Média Histórica de Esforço</span>
-                          <span className="text-amber-400 bg-amber-950/20 px-2 py-0.5 rounded border border-amber-900/30">LIGA OUTUBRO</span>
+                      <div className="p-6 bg-black border border-zinc-900 rounded-2xl space-y-4">
+                        <div className="flex justify-between items-center text-xs font-mono">
+                          <span className="text-zinc-400">Esforço Desportivo Agregado</span>
+                          <span className="text-amber-500 bg-amber-950 border border-amber-500/20 px-2 py-0.5 rounded text-[10px] font-bold">LIGA OUTUBRO</span>
                         </div>
                         
                         {/* Interactive custom line simulation */}
-                        <div className="h-44 flex items-end justify-between gap-1 sm:gap-2.5 pt-4 text-zinc-500 font-mono text-[9px]">
+                        <div className="h-44 flex items-end justify-between gap-1 sm:gap-3 pt-4 text-zinc-500 font-mono text-[9px]">
                           {[
                             { label: 'Seg', val: activeDashboardRange === 'semanal' ? 40 : 65 },
                             { label: 'Ter', val: activeDashboardRange === 'semanal' ? 85 : 70 },
@@ -1049,15 +1173,15 @@ export default function App() {
                             { label: 'Dom', val: activeDashboardRange === 'semanal' ? 10 : 30 }
                           ].map((item, id) => (
                             <div key={id} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                              <div className="w-full bg-zinc-900/80 rounded h-full flex flex-col justify-end relative">
+                              <div className="w-full bg-zinc-950 rounded-lg h-full flex flex-col justify-end relative overflow-hidden border border-zinc-900">
                                 <motion.div 
                                   initial={{ height: 0 }}
                                   animate={{ height: `${item.val}%` }}
                                   transition={{ duration: 1, delay: id * 0.05 }}
-                                  className="w-full bg-gradient-to-t from-amber-600 to-amber-400 rounded-b" 
+                                  className="w-full bg-gradient-to-t from-amber-600 to-amber-500" 
                                 />
                               </div>
-                              <span className="text-zinc-500 font-mono">{item.label}</span>
+                              <span className="text-zinc-550 font-mono text-[10px]">{item.label}</span>
                             </div>
                           ))}
                         </div>
@@ -1075,23 +1199,23 @@ export default function App() {
             {/* SEÇÃO — RANKINGS REGIONAIS */}
             <section
               id="rankings"
-              className="py-24 sm:py-32 w-full bg-gradient-to-b from-[#050505] to-[#080808] border-b border-zinc-950"
+              className="py-32 sm:py-40 w-full bg-black border-b border-zinc-900"
             >
               <div className="max-w-7xl mx-auto px-6">
                 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
                   
                   {/* Left Column: Visual Ranking screen (reused and upgraded original visual) */}
                   <div className="lg:col-span-6 relative order-last lg:order-first">
-                    <div className="absolute -inset-2 bg-gradient-to-tr from-amber-500/5 to-transparent blur-2xl rounded-full" />
+                    <div className="absolute -inset-4 bg-gradient-to-tr from-amber-500/5 to-transparent blur-3xl rounded-full pointer-events-none" />
                     
-                    <div className="relative p-6 sm:p-7 bg-[#0A0A0A]/95 rounded-3xl border border-zinc-900 text-left space-y-6">
-                      <div className="flex justify-between items-start border-b border-zinc-900 pb-4">
+                    <div className="relative p-8 bg-zinc-950 rounded-3xl border border-zinc-900 text-left space-y-6">
+                      <div className="flex justify-between items-start border-b border-zinc-900 pb-5">
                         <div>
-                          <p className="text-[10px] font-mono text-zinc-550 uppercase tracking-widest">Liga Semanal Oficial</p>
-                          <h4 className="font-semibold text-white text-lg">Classificação Desportiva</h4>
+                          <p className="text-[10px] font-mono text-zinc-550 uppercase tracking-widest font-bold">Liga Semanal Oficial</p>
+                          <h4 className="font-bold text-white text-lg font-display">Classificação Desportiva</h4>
                         </div>
-                        <span className="p-1 px-3 bg-zinc-900 text-[#E5A93C] rounded-full text-xs font-mono font-bold border border-zinc-800">
+                        <span className="p-1.5 px-3 bg-zinc-900 text-amber-500 rounded-full text-xs font-mono font-bold border border-zinc-800">
                           Curitiba • G-15
                         </span>
                       </div>
@@ -1106,10 +1230,10 @@ export default function App() {
                         ].map((user, idx) => (
                           <div 
                             key={idx}
-                            className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all duration-300 ${
+                            className={`p-4 rounded-2xl border flex items-center justify-between transition-all duration-300 ${
                               user.self 
-                                ? 'bg-amber-500/10 border-amber-500/30 shadow-[0_4px_20px_rgba(245,158,11,0.05)]' 
-                                : 'bg-zinc-950/60 border-zinc-950 hover:border-zinc-850'
+                                ? 'bg-amber-500/5 border-amber-500/20 shadow-[0_4px_30px_rgba(245,158,11,0.05)]' 
+                                : 'bg-zinc-950 border-zinc-900/60 hover:border-zinc-800'
                             }`}
                           >
                             <div className="flex items-center gap-3">
@@ -1117,13 +1241,13 @@ export default function App() {
                                 #{user.rank}
                               </span>
                               <div>
-                                <h5 className={`text-xs sm:text-sm font-semibold ${user.self ? 'text-amber-300' : 'text-zinc-200'}`}>{user.name}</h5>
+                                <h5 className={`text-sm font-bold ${user.self ? 'text-amber-300' : 'text-zinc-250'}`}>{user.name}</h5>
                                 <span className="text-[10px] text-zinc-500 font-mono tracking-wide">{user.xp}</span>
                               </div>
                             </div>
                             <div className="flex items-center gap-2 font-mono text-xs text-right">
                               <span className="font-bold text-white">{user.pts}</span>
-                              <span className="text-[9px] text-zinc-500">pts</span>
+                              <span className="text-[10px] text-zinc-500">pts</span>
                               <span className={`text-[10px] ${user.up ? 'text-green-500' : 'text-red-500'}`}>
                                 {user.up ? '▲' : '▼'}
                               </span>
@@ -1135,25 +1259,27 @@ export default function App() {
                   </div>
 
                   {/* Right Column: explanations */}
-                  <div className="lg:col-span-6 space-y-6 text-left">
-                    <span className="text-amber-550 font-mono text-xs tracking-[0.25em] font-semibold uppercase">
-                      COMPETICÃO EQUILIBRADA
-                    </span>
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight text-white leading-tight">
-                      Rankings por região
-                    </h2>
-                    <p className="text-zinc-300 text-sm sm:text-base leading-relaxed">
-                      Os rankings são organizados por grupos regionais para manter o equilíbrio competitivo. O sistema utiliza limites de participantes por grupo para garantir competitividade e escalabilidade.
-                    </p>
+                  <div className="lg:col-span-6 space-y-8 text-left">
+                    <div className="space-y-4">
+                      <span className="text-amber-500 font-mono text-xs tracking-[0.25em] font-semibold uppercase block">
+                        COMPETIÇÃO EQUILIBRADA
+                      </span>
+                      <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold tracking-tight text-white leading-tight">
+                        Rankings por região.
+                      </h2>
+                      <p className="text-zinc-400 text-lg leading-relaxed">
+                        Os rankings são organizados automaticamente por microrregiões para manter o pareamento geográfico justo e motivador.
+                      </p>
+                    </div>
                     
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono tracking-wider uppercase text-zinc-400">
-                      <div className="p-4 bg-zinc-950 rounded-xl border border-zinc-900/60 text-left">
-                        <span className="block text-white font-semibold text-sm mb-0.5">Grupo por Cidade</span>
-                        Ligas micro-regionais para parear atletas com rotinas semelhantes.
+                      <div className="p-5 bg-zinc-950 rounded-2xl border border-zinc-900 text-left">
+                        <span className="block text-white font-bold text-sm mb-1 uppercase font-sans tracking-wide">Divisão Local</span>
+                        Ligas micro-regionais para alinhar competidores de acordo com a sua localidade imediata.
                       </div>
-                      <div className="p-4 bg-zinc-950 rounded-xl border border-zinc-900/60 text-left">
-                        <span className="block text-white font-semibold text-sm mb-0.5">Participação Máxima</span>
-                        Limite rigoroso de competidores por chave para evitar tabelas impossíveis de serem acompanhadas.
+                      <div className="p-5 bg-zinc-950 rounded-2xl border border-zinc-900 text-left">
+                        <span className="block text-white font-bold text-sm mb-1 uppercase font-sans tracking-wide">Chaves Fechadas</span>
+                        Limite estrito de atletas por chave para assegurar que a classificação permaneça dinâmica e acessível.
                       </div>
                     </div>
                   </div>
@@ -1167,87 +1293,89 @@ export default function App() {
             {/* SEÇÃO — DESAFIOS PRIVADOS */}
             <section
               id="desafios"
-              className="py-24 sm:py-32 w-full bg-[#050505] border-b border-zinc-950"
+              className="py-32 sm:py-40 w-full bg-black border-b border-zinc-900"
             >
               <div className="max-w-7xl mx-auto px-6">
                 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
                   
                   {/* Left Column: explanations */}
-                  <div className="lg:col-span-5 space-y-6 text-left">
-                    <span className="text-amber-500 font-mono text-xs tracking-[0.25em] font-semibold uppercase">
-                      INTEGRAÇÃO SOCIAL
-                    </span>
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight text-white leading-tight">
-                      Crie desafios com seus amigos
-                    </h2>
-                    <p className="text-zinc-300 text-sm sm:text-base leading-relaxed">
-                      Monte seus próprios desafios de performance física. Defina os participantes, a duração e o objetivo comum. Acompanhe a corrida pelo topo em tempo real através de atualizações automáticas.
-                    </p>
+                  <div className="lg:col-span-5 space-y-8 text-left">
+                    <div className="space-y-4">
+                      <span className="text-amber-500 font-mono text-xs tracking-[0.25em] font-semibold uppercase block">
+                        INTEGRAÇÃO SOCIAL
+                      </span>
+                      <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold tracking-tight text-white leading-tight">
+                        Crie desafios privados.
+                      </h2>
+                      <p className="text-zinc-400 text-lg leading-relaxed">
+                        Crie os seus próprios torneios de consistência física. Escolha os amigos participantes, as metas agregadas e acompanhe a disputa em tempo real.
+                      </p>
+                    </div>
                     
-                    <p className="text-zinc-400 text-xs sm:text-sm pl-4 border-l-2 border-amber-500/60 leading-relaxed italic">
-                      "Desafiar amigos no final de semana aumentou a consistência de nossa garagem de treinos em mais de 65%." — Equipe Alpha de Curitiba.
+                    <p className="text-zinc-500 text-sm pl-4 border-l-2 border-amber-500/40 leading-relaxed italic">
+                      "Desafiar meus colegas de trabalho no fim de semana mudou radicalmente nosso nível de constância desportiva." — Equipe Alpha de Curitiba.
                     </p>
                   </div>
 
                   {/* Right Column: Visual Challenge Card */}
                   <div className="lg:col-span-7 relative">
-                    <div className="absolute -inset-2 bg-gradient-to-tr from-amber-500/5 to-transparent blur-2xl rounded-full" />
+                    <div className="absolute -inset-4 bg-gradient-to-tr from-amber-500/5 to-transparent blur-3xl rounded-full pointer-events-none" />
                     
-                    <div className="relative p-6 sm:p-8 bg-zinc-950 border border-zinc-850 rounded-3xl text-left space-y-6 max-w-xl mx-auto">
+                    <div className="relative p-8 bg-zinc-950 border border-zinc-900 rounded-3xl text-left space-y-6 max-w-xl mx-auto">
                       
                       {/* Heading */}
-                      <div className="flex justify-between items-start pb-4 border-b border-zinc-900/60">
+                      <div className="flex justify-between items-start pb-4 border-b border-zinc-900">
                         <div>
-                          <span className="text-[10px] font-mono text-amber-500 uppercase font-semibold">Torneio Ativo</span>
-                          <h4 className="font-semibold text-white text-base sm:text-lg">Foco Total no Cardio Amigos</h4>
+                          <span className="text-[10px] font-mono text-amber-500 uppercase font-bold">Torneio Ativo</span>
+                          <h4 className="font-bold text-white text-base sm:text-lg">Foco Total no Cardio Amigos</h4>
                         </div>
-                        <span className="px-3 py-1 bg-red-950/20 border border-red-900/35 text-red-400 font-mono text-[10px] rounded-full font-bold">
+                        <span className="px-3 py-1 bg-red-950/40 border border-red-500/20 text-red-400 font-mono text-[10px] rounded-full font-bold">
                           FALTAM 3 DIAS
                         </span>
                       </div>
 
                       {/* Params definition */}
                       <div className="grid grid-cols-3 gap-3 text-xs font-mono text-zinc-400 uppercase">
-                        <div className="p-2.5 bg-zinc-900/40 rounded-xl">
-                          <span className="block text-zinc-650 text-[9px] mb-0.5">DURAÇÃO</span>
+                        <div className="p-3 bg-zinc-900/40 border border-zinc-900 rounded-xl">
+                          <span className="block text-zinc-550 text-[9px] mb-1 font-bold">DURAÇÃO</span>
                           <span className="text-white font-bold">30 DIAS</span>
                         </div>
-                        <div className="p-2.5 bg-zinc-900/40 rounded-xl">
-                          <span className="block text-zinc-650 text-[9px] mb-0.5">OBJETIVO</span>
+                        <div className="p-3 bg-zinc-900/40 border border-zinc-900 rounded-xl">
+                          <span className="block text-zinc-550 text-[9px] mb-1 font-bold">OBJETIVO</span>
                           <span className="text-white font-bold">6.000 KCAL</span>
                         </div>
-                        <div className="p-2.5 bg-zinc-900/40 rounded-xl">
-                          <span className="block text-zinc-650 text-[9px] mb-0.5">REQUISITO</span>
+                        <div className="p-3 bg-zinc-900/40 border border-zinc-900 rounded-xl">
+                          <span className="block text-zinc-550 text-[9px] mb-1 font-bold">REQUISITO</span>
                           <span className="text-white font-bold">GPS + FC</span>
                         </div>
                       </div>
 
                       {/* Progress bar */}
                       <div className="space-y-2">
-                        <div className="flex justify-between text-xs text-zinc-450 font-mono">
+                        <div className="flex justify-between text-xs text-zinc-400 font-mono">
                           <span>Progresso Coletivo</span>
                           <span className="text-white font-bold">4.440 kcal (74%)</span>
                         </div>
                         <div className="w-full bg-zinc-900 rounded-full h-3 overflow-hidden">
-                          <div className="bg-gradient-to-r from-amber-600 to-amber-400 h-full rounded-full" style={{ width: '74%' }} />
+                          <div className="bg-gradient-to-r from-amber-600 to-amber-500 h-full rounded-full" style={{ width: '74%' }} />
                         </div>
                       </div>
 
                       {/* Active friends loop list */}
-                      <div className="space-y-2 pt-2">
-                        <span className="text-[10px] font-mono text-zinc-650 block uppercase">Participantes no Desafio</span>
+                      <div className="space-y-3 pt-2">
+                        <span className="text-[10px] font-mono text-zinc-500 block uppercase font-bold tracking-wider">Participantes no Desafio</span>
                         <div className="grid grid-cols-3 gap-2">
                           {[
                             { name: "Thiago", val: "1.800 kcal", active: true },
                             { name: "Ana Beatriz", val: "1.520 kcal", active: true },
                             { name: "Lucas (Você)", val: "1.120 kcal", active: true }
                           ].map((friend, fId) => (
-                            <div key={fId} className="p-2 bg-zinc-900/60 border border-zinc-900 hover:border-zinc-800 rounded-xl flex items-center gap-2 text-left text-xs text-zinc-300">
-                              <span className="w-2 h-2 rounded-full bg-green-500" />
-                              <div>
-                                <p className="font-semibold text-white text-[11px] truncate">{friend.name}</p>
-                                <span className="text-[9.5px] font-mono text-zinc-500">{friend.val}</span>
+                            <div key={fId} className="p-3 bg-zinc-900/40 border border-zinc-900 rounded-xl flex items-center gap-2.5 text-left text-xs text-zinc-300">
+                              <span className="w-2 h-2 rounded-full bg-green-500 shrink-0" />
+                              <div className="min-w-0">
+                                <p className="font-bold text-white text-[11px] truncate">{friend.name}</p>
+                                <span className="text-[9.5px] font-mono text-zinc-500 block">{friend.val}</span>
                               </div>
                             </div>
                           ))}
@@ -1261,27 +1389,24 @@ export default function App() {
 
               </div>
             </section>
-
-
-            {/* SEÇÃO — BENEFÍCIOS (DIFERENCIAIS DO INVICTUS) */}
             <section
               id="beneficios"
-              className="py-24 sm:py-32 w-full bg-gradient-to-b from-[#050505] to-[#080808] border-b border-zinc-950 relative overflow-hidden"
+              className="py-32 sm:py-40 w-full bg-black border-b border-zinc-900 relative overflow-hidden"
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(197,160,89,0.02)_0%,transparent_50%)] pointer-events-none" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(245,158,11,0.015)_0%,transparent_50%)] pointer-events-none" />
               
               <div className="max-w-7xl mx-auto px-6 relative z-10">
                 
                 {/* Section Header */}
-                <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
-                  <span className="text-[#E5A93C] font-mono text-xs tracking-[0.25em] font-semibold uppercase">
+                <div className="text-left max-w-3xl mb-24 space-y-4">
+                  <span className="text-amber-500 font-mono text-xs tracking-[0.25em] font-semibold uppercase block">
                     O DIFERENCIAL DEFINITIVO
                   </span>
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight text-white leading-tight">
+                  <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold tracking-tight text-white leading-tight">
                     Por que o Invictus é diferente?
                   </h2>
-                  <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                    Unimos tecnologia esportiva de ponta e gamificação saudável para blindar seu foco e manter sua consistência diária.
+                  <p className="text-zinc-400 text-lg sm:text-xl leading-relaxed">
+                    Unimos tecnologia desportiva avançada, validação física de integridade e gamificação saudável para blindar sua constância diária.
                   </p>
                 </div>
 
@@ -1289,80 +1414,80 @@ export default function App() {
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6 max-w-7xl mx-auto items-stretch">
                   
                   {/* Pillar 1: Gamificação */}
-                  <div className="p-6 sm:p-8 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/20 rounded-3xl space-y-4 transition-all duration-300 flex flex-col justify-between md:col-span-6 text-left group">
+                  <div className="p-8 bg-zinc-950 border border-zinc-900 hover:border-zinc-800 rounded-3xl space-y-5 transition-all duration-300 flex flex-col justify-between md:col-span-6 text-left group">
                     <div className="space-y-4">
-                      <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-xl w-fit group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
+                      <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-2xl w-fit group-hover:bg-amber-500 group-hover:text-white transition-colors duration-300">
                         <Zap className="w-6 h-6" />
                       </div>
-                      <h4 className="font-semibold text-white text-lg sm:text-xl">Gamificação dos Treinos</h4>
-                      <p className="text-sm text-zinc-450 leading-relaxed">
-                        Esqueça rotinas monótonas. Suas atividades diárias (musculação ou cardio) são convertidas em pontos de XP legítimos, streaks ativos e medalhas de conquista personalizadas.
+                      <h4 className="font-bold text-white text-lg sm:text-xl font-display">Gamificação dos Treinos</h4>
+                      <p className="text-sm text-zinc-400 leading-relaxed">
+                        Esqueça rotinas monótonas. Suas atividades físicas são convertidas em pontos de XP legítimos, sequências diárias ativas e conquistas estruturadas.
                       </p>
                     </div>
-                    <div className="pt-4 text-xs font-mono text-zinc-550 uppercase">Engajamento Comprovado</div>
+                    <div className="pt-4 text-xs font-mono text-zinc-500 uppercase tracking-wider">Engajamento Comprovado</div>
                   </div>
 
                   {/* Pillar 2: Rankings */}
-                  <div className="p-6 sm:p-8 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/20 rounded-3xl space-y-4 transition-all duration-300 flex flex-col justify-between md:col-span-6 text-left group">
+                  <div className="p-8 bg-zinc-950 border border-zinc-900 hover:border-zinc-800 rounded-3xl space-y-5 transition-all duration-300 flex flex-col justify-between md:col-span-6 text-left group">
                     <div className="space-y-4">
-                      <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-xl w-fit group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
+                      <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-2xl w-fit group-hover:bg-amber-500 group-hover:text-white transition-colors duration-300">
                         <Trophy className="w-6 h-6" />
                       </div>
-                      <h4 className="font-semibold text-white text-lg sm:text-xl">Rankings Competitivos</h4>
-                      <p className="text-sm text-zinc-450 leading-relaxed">
-                        Compita em ligas regionais balanceadas. Nosso sistema divide os atletas de forma justa baseado em dados físicos históricos reais para garantir que todos tenham chances de vencer com dedicação pura.
+                      <h4 className="font-bold text-white text-lg sm:text-xl font-display">Rankings Competitivos</h4>
+                      <p className="text-sm text-zinc-400 leading-relaxed">
+                        Compita em ligas regionais dinâmicas. Nosso sistema divide os atletas de forma justa baseado em dados físicos históricos reais para garantir que todos tenham chances de vencer com dedicação.
                       </p>
                     </div>
-                    <div className="pt-4 text-xs font-mono text-zinc-550 uppercase">Competição Justa por Mérito</div>
+                    <div className="pt-4 text-xs font-mono text-zinc-500 uppercase tracking-wider">Competição Justa</div>
                   </div>
 
                   {/* High impact central banner (Span 12) */}
-                  <div className="md:col-span-12 p-8 sm:p-10 bg-gradient-to-r from-[#090909] via-zinc-950 to-[#090909] border border-zinc-850 rounded-3xl text-center relative overflow-hidden flex flex-col items-center justify-center space-y-4 group">
+                  <div className="md:col-span-12 p-10 sm:p-12 bg-zinc-950 border border-zinc-900 rounded-3xl text-center relative overflow-hidden flex flex-col items-center justify-center space-y-4 group">
                     <div className="absolute -right-20 -top-20 w-80 h-80 bg-amber-500/5 blur-3xl rounded-full" />
                     <div className="absolute -left-20 -bottom-20 w-80 h-80 bg-amber-500/5 blur-3xl rounded-full" />
                     
                     <span className="text-xs font-mono text-amber-500 tracking-[0.3em] uppercase font-bold">O MANIFESTO INVICTUS</span>
-                    <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-black text-white italic tracking-tight leading-tight max-w-4xl">
-                      "Você não treina sozinho. Você entra em uma competição pela sua melhor versão."
+                    <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight leading-tight max-w-4xl">
+                      "Você não treina sozinho. Você entra em uma competição diária pela sua melhor versão física."
                     </h3>
-                    <div className="w-16 h-1 bg-gradient-to-r from-amber-600 to-amber-400 rounded-full mt-2" />
+                    <div className="w-16 h-[2px] bg-amber-500 mt-2" />
                   </div>
 
                   {/* Pillar 3: Desafios por Temporadas */}
-                  <div className="p-6 sm:p-8 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/20 rounded-3xl space-y-4 transition-all duration-300 flex flex-col justify-between md:col-span-4 text-left group">
+                  <div className="p-8 bg-zinc-950 border border-zinc-900 hover:border-zinc-800 rounded-3xl space-y-5 transition-all duration-300 flex flex-col justify-between md:col-span-4 text-left group">
                     <div className="space-y-4">
-                      <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-xl w-fit group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
+                      <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-2xl w-fit group-hover:bg-amber-500 group-hover:text-white transition-colors duration-300">
                         <Calendar className="w-5 h-5" />
                       </div>
-                      <h4 className="font-semibold text-white text-base sm:text-lg">Desafios por Temporadas</h4>
-                      <p className="text-xs sm:text-sm text-zinc-450 leading-relaxed">
+                      <h4 className="font-bold text-white text-base sm:text-lg font-display">Ciclos por Temporadas</h4>
+                      <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
                         Participe de ciclos de performance com metas que mudam a cada estação, garantindo estímulos novos e constância contínua.
                       </p>
                     </div>
                   </div>
 
                   {/* Pillar 4: Comunidade Fitness */}
-                  <div className="p-6 sm:p-8 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/20 rounded-3xl space-y-4 transition-all duration-300 flex flex-col justify-between md:col-span-4 text-left group">
+                  <div className="p-8 bg-zinc-950 border border-zinc-900 hover:border-zinc-800 rounded-3xl space-y-5 transition-all duration-300 flex flex-col justify-between md:col-span-4 text-left group">
                     <div className="space-y-4">
-                      <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-xl w-fit group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
+                      <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-2xl w-fit group-hover:bg-amber-500 group-hover:text-white transition-colors duration-300">
                         <Users className="w-5 h-5" />
                       </div>
-                      <h4 className="font-semibold text-white text-base sm:text-lg">Comunidade Fitness</h4>
-                      <p className="text-xs sm:text-sm text-zinc-450 leading-relaxed">
-                        Conecte-se com pessoas reais que dividem o mesmo propósito de vida física focada em saúde, superação e disciplina mútua.
+                      <h4 className="font-bold text-white text-base sm:text-lg font-display">Comunidade Ativa</h4>
+                      <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                        Conecte-se com pessoas reais que compartilham o mesmo propósito desportivo focado em superação física e saúde mental.
                       </p>
                     </div>
                   </div>
 
                   {/* Pillar 5: Sistema de Evolução */}
-                  <div className="p-6 sm:p-8 bg-zinc-950/70 border border-zinc-900 hover:border-amber-500/20 rounded-3xl space-y-4 transition-all duration-300 flex flex-col justify-between md:col-span-4 text-left group">
+                  <div className="p-8 bg-zinc-950 border border-zinc-900 hover:border-zinc-800 rounded-3xl space-y-5 transition-all duration-300 flex flex-col justify-between md:col-span-4 text-left group">
                     <div className="space-y-4">
-                      <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-xl w-fit group-hover:bg-amber-500 group-hover:text-black transition-colors duration-300">
+                      <div className="p-3 bg-zinc-900 border border-zinc-850 text-amber-500 rounded-2xl w-fit group-hover:bg-amber-500 group-hover:text-white transition-colors duration-300">
                         <Activity className="w-5 h-5" />
                       </div>
-                      <h4 className="font-semibold text-white text-base sm:text-lg">Sistema de Evolução</h4>
-                      <p className="text-xs sm:text-sm text-zinc-450 leading-relaxed">
-                        Seus dados biométricos, calorias queimadas e cargas levantadas consolidados de forma organizada e limpa no app.
+                      <h4 className="font-bold text-white text-base sm:text-lg font-display">Estatísticas Unificadas</h4>
+                      <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                        Seus dados biométricos, calorias e treinos consolidados de forma organizada, limpa e legível diretamente no celular.
                       </p>
                     </div>
                   </div>
@@ -1376,20 +1501,20 @@ export default function App() {
             {/* SEÇÃO — PERGUNTAS FREQUENTES (FAQ ACCORDION) */}
             <section
               id="faq"
-              className="py-24 sm:py-32 w-full bg-[#050505] border-b border-zinc-950"
+              className="py-32 sm:py-40 w-full bg-black border-b border-zinc-900"
             >
               <div className="max-w-4xl mx-auto px-6">
                 
                 {/* Section Header */}
-                <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-                  <span className="text-amber-500 font-mono text-xs tracking-[0.25em] font-semibold uppercase">
+                <div className="text-left mb-24 space-y-4">
+                  <span className="text-amber-500 font-mono text-xs tracking-[0.25em] font-semibold uppercase block">
                     TIRE SUAS DÚVIDAS
                   </span>
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight text-white leading-tight">
-                    Perguntas Frequentes
+                  <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold tracking-tight text-white leading-tight">
+                    Perguntas Frequentes.
                   </h2>
-                  <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                    Esclareça de forma simples qualquer dúvida referente à nossa plataforma, segurança ou diretrizes de conformidade.
+                  <p className="text-zinc-400 text-lg leading-relaxed">
+                    Esclareça de forma simples as principais dúvidas sobre nossa plataforma, segurança e conformidade desportiva.
                   </p>
                 </div>
 
@@ -1397,35 +1522,35 @@ export default function App() {
                 <div className="space-y-4 text-left">
                   {[
                     {
-                      q: "O INVICTUS é aposta?",
-                      a: "Não. O aplicativo não possui jogos de azar, apostas de cotas fixas ou sorteios em dinheiro. Nosso foco exclusivo é incentivar hábitos saudáveis através da gamificação esportiva e do reconhecimento de mérito individual por atividade física comprovada estatisticamente."
+                      q: "O Invictus é plataforma de apostas?",
+                      a: "Não. O Invictus não possui jogos de azar, apostas de cotas fixas ou sorteios em dinheiro. Nosso foco exclusivo é incentivar hábitos saudáveis por meio da gamificação esportiva e do reconhecimento de mérito individual por esforço real."
                     },
                     {
-                      q: "Preciso treinar todos os dias?",
-                      a: "Não. Nós valorizamos e consideramos o Descanso Inteligente como parte integral de sua evolução biológica e muscular. Você pode agendar de 1 a 2 dias de OFF (repouso) por semana no aplicativo para preservar seu streak de consistência intacto sem prejuízo na tabela."
+                      q: "Preciso treinar todos os dias para competir?",
+                      a: "Não. Nós valorizamos o descanso inteligente como parte vital de sua evolução física. Você pode configurar dias de OFF no aplicativo para preservar sua sequência sem sofrer penalizações nas tabelas de rankings."
                     },
                     {
-                      q: "Preciso de um relógio inteligente (smartwatch)?",
-                      a: "Não. O Plano Open rastreia suas atividades em academias credenciadas de forma simples por meio do check-in por geolocalização do próprio smartphone móvel. Já o Plano Performance é otimizado para extrair dados cardiopulmonares integrando relógios (Garmin, Apple Watch, Strava)."
+                      q: "Preciso possuir um smartwatch para participar?",
+                      a: "Não. O plano Essencial permite rastrear sessões em academias credenciadas de forma simples por meio do check-in por geolocalização do próprio celular. O plano Performance adiciona suporte detalhado a relógios inteligentes (Apple Watch, Garmin, Strava) para coletar frequência cardíaca de cardio."
                     },
                     {
-                      q: "Como as atividades físicas são validadas de forma justa?",
-                      a: "Nossa tecnologia combina diversas vedações de segurança (GPS assistido, análise em tempo real de cadência biomecânica e micro-sensores móveis) para filtrar fraudes comuns de tráfego veicular ou registros falsos, blindando a ética da nossa tabela de líderes do ranking."
+                      q: "Como os dados físicos são validados contra fraudes?",
+                      a: "Combinamos barreiras de validação física passiva (geolocalização inteligente, cadência de sensores móveis e cruzamento de frequências biológicas) para identificar registros artificiais, mantendo a integridade desportiva do ranking."
                     }
                   ].map((faq, fIdx) => {
                     const isOpen = openFaqIndex === fIdx;
                     return (
                       <div 
                         key={fIdx} 
-                        className="bg-zinc-950/80 border border-zinc-900 rounded-2xl overflow-hidden shadow-md transition-all duration-300"
+                        className="bg-zinc-950 border border-zinc-900 rounded-2xl overflow-hidden transition-all duration-300"
                       >
                         <button
                           id={`faq-accordion-${fIdx}`}
                           onClick={() => setOpenFaqIndex(isOpen ? null : fIdx)}
-                          className="w-full flex items-center justify-between p-6 hover:bg-zinc-900/50 transition-colors text-left focus:outline-none cursor-pointer"
+                          className="w-full flex items-center justify-between p-6 hover:bg-zinc-900/40 transition-colors text-left focus:outline-none cursor-pointer"
                         >
-                          <span className="font-semibold text-white text-base sm:text-lg pr-4">{faq.q}</span>
-                          <span className={`text-[#FFC107] font-mono transform transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-180' : ''}`}>
+                          <span className="font-bold text-white text-base sm:text-lg pr-4">{faq.q}</span>
+                          <span className={`text-amber-500 font-mono transform transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-180' : ''}`}>
                             ▼
                           </span>
                         </button>
@@ -1433,7 +1558,7 @@ export default function App() {
                         <div 
                           className={`overflow-hidden transition-all duration-300 ${
                             isOpen 
-                              ? 'max-h-96 opacity-100 border-t border-zinc-900 p-6 bg-[#000]/10 text-zinc-300 text-sm sm:text-base leading-relaxed antialiased' 
+                              ? 'max-h-96 opacity-100 border-t border-zinc-900 p-6 bg-black text-zinc-350 text-sm sm:text-base leading-relaxed antialiased' 
                               : 'max-h-0 opacity-0'
                           }`}
                         >
@@ -1451,56 +1576,56 @@ export default function App() {
             {/* SEÇÃO 11 — CHAMADA FINAL */}
             <section
               id="download"
-              className="py-24 sm:py-32 w-full bg-[#050505] relative overflow-hidden"
+              className="py-32 sm:py-40 w-full bg-black relative overflow-hidden"
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(229,169,60,0.03)_0%,transparent_60%)] pointer-events-none" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.02)_0%,transparent_60%)] pointer-events-none" />
               
-              <div className="max-w-4xl mx-auto px-6 text-center space-y-10 relative z-10 flex flex-col items-center">
+              <div className="max-w-4xl mx-auto px-6 text-center space-y-12 relative z-10 flex flex-col items-center">
                 
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-550/15 border border-amber-550/30 rounded-full font-mono text-xs text-amber-500 font-bold uppercase tracking-wider">
-                  <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500 animate-spin" />
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-amber-950 border border-amber-500/20 rounded-full font-mono text-xs text-amber-500 font-bold uppercase tracking-wider">
+                  <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
                   consistência é progresso
                 </div>
 
                 <div className="space-y-4">
-                  <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-semibold tracking-tight text-white leading-tight">
+                  <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold tracking-tight text-white leading-tight">
                     Pronto para evoluir de verdade?
                   </h2>
-                  <p className="text-zinc-400 text-sm sm:text-base max-w-xl mx-auto leading-relaxed antialiased">
-                    Instale o INVICTUS agora mesmo. Inicie sua jornada de hábitos fortes, conecte seus relógios e proteja sua consistência saudável.
+                  <p className="text-zinc-400 text-lg max-w-xl mx-auto leading-relaxed antialiased">
+                    Baixe o Invictus agora mesmo. Inicie sua jornada de hábitos fortes, sincronize seus dispositivos e proteja sua consistência desportiva.
                   </p>
                 </div>
 
                 {/* Android vs iOS main triggers */}
                 <div className="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-md pt-4">
-                  <div className="p-4 bg-zinc-950 rounded-2xl border border-zinc-900 flex-1 flex flex-col justify-between items-center text-center hover:border-amber-500/20 transition-all">
-                    <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">Google Android</span>
+                  <div className="p-5 bg-zinc-950 rounded-2xl border border-zinc-900 flex-1 flex flex-col justify-between items-center text-center hover:border-zinc-800 transition-all">
+                    <span className="text-[10px] font-mono text-zinc-550 uppercase tracking-widest mb-4 block">Google Android</span>
                     <button 
                       id="btn-trigger-playstore"
                       onClick={() => showToast("O download do aplicativo Android iniciou de forma segura através do Google Play Store.")}
-                      className="w-full py-3 px-4 bg-white hover:bg-zinc-200 text-black font-semibold rounded-xl text-xs tracking-wider uppercase font-mono transition-colors focus:outline-none cursor-pointer"
+                      className="w-full py-3.5 px-4 bg-white hover:bg-zinc-200 text-black font-semibold rounded-xl text-xs tracking-wider uppercase font-mono transition-colors focus:outline-none cursor-pointer"
                     >
                       Google Play
                     </button>
                   </div>
-                  <div className="p-4 bg-zinc-950 rounded-2xl border border-zinc-900 flex-1 flex flex-col justify-between items-center text-center hover:border-amber-500/20 transition-all">
-                    <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3">Apple iOS iPhone</span>
+                  <div className="p-5 bg-zinc-950 rounded-2xl border border-zinc-900 flex-1 flex flex-col justify-between items-center text-center hover:border-zinc-800 transition-all">
+                    <span className="text-[10px] font-mono text-zinc-550 uppercase tracking-widest mb-4 block">Apple iOS iPhone</span>
                     <button 
                       id="btn-trigger-appstore"
                       onClick={() => showToast("O download do aplicativo iOS iniciou de forma segura através da Apple App Store.")}
-                      className="w-full py-3 px-4 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 hover:border-zinc-700 text-white font-semibold rounded-xl text-xs tracking-wider uppercase font-mono transition-colors focus:outline-none cursor-pointer"
+                      className="w-full py-3.5 px-4 bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 hover:border-zinc-700 text-white font-semibold rounded-xl text-xs tracking-wider uppercase font-mono transition-colors focus:outline-none cursor-pointer"
                     >
                       App Store
                     </button>
                   </div>
                 </div>
 
-                <div className="space-y-2 max-w-xl mx-auto border-t border-zinc-900 pt-6">
-                  <p className="text-[11px] text-zinc-650 font-medium">
-                    As campanhas promocionais e ações de incentivo realizadas pela plataforma seguem critérios próprios definidos em regulamento específico. Consulte os regulamentos vigentes dentro do aplicativo.
+                <div className="space-y-3 max-w-xl mx-auto border-t border-zinc-900 pt-8">
+                  <p className="text-[11px] text-zinc-500 font-medium leading-relaxed">
+                    As campanhas de motivação e recompensas realizadas pela plataforma seguem critérios desportivos estabelecidos em regulamentos próprios. Consulte as diretrizes vigentes no aplicativo.
                   </p>
-                  <p className="text-[9.5px] font-mono text-zinc-600">
-                    INVICTUS é gratuito para iniciar • Atualização de ligas desportivas coletivas semanalmente aos domingos.
+                  <p className="text-[10px] font-mono text-zinc-600">
+                    Invictus é gratuito para iniciar • Atualização de ligas desportivas aos domingos às 23:59 UTC-3.
                   </p>
                 </div>
 
@@ -1532,14 +1657,14 @@ export default function App() {
             initial={{ opacity: 0, y: 50, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-6 right-6 z-50 p-4 bg-zinc-950 border-2 border-amber-500 rounded-2xl shadow-2xl flex items-center gap-3 max-w-sm"
+            className="fixed bottom-6 right-6 z-50 p-5 bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl flex items-center gap-3.5 max-w-sm"
           >
-            <div className="p-2 bg-amber-500 text-black rounded-lg">
-              <Star className="w-5 h-5 fill-black" />
+            <div className="p-2.5 bg-amber-950 text-amber-500 rounded-xl">
+              <Star className="w-5 h-5 fill-amber-500" />
             </div>
             <div className="text-left">
               <h5 className="text-white text-xs font-mono uppercase tracking-wider font-bold">Download Iniciado</h5>
-              <p className="text-zinc-400 text-xs mt-0.5 leading-normal">{toastMessage}</p>
+              <p className="text-zinc-400 text-xs mt-1 leading-normal">{toastMessage}</p>
             </div>
           </motion.div>
         )}
