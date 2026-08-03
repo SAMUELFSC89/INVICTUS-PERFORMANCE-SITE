@@ -1,6 +1,6 @@
 {
-  "name": "INVICTUS PERFORMANCE",
-  "description": "Landing Page Premium de Alta Performance do aplicativo Invictus - Treine, Evolua, Conquiste.",
+  "name": "INVICTUS - Inteligência em Saúde & Performance",
+  "description": "Plataforma inteligente de acompanhamento da saúde, desempenho esportivo e evolução pessoal baseada em dados reais com Invictus IA, Centro de Performance e integrações.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

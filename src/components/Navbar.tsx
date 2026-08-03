@@ -79,19 +79,19 @@ export default function Navbar({ onNavigateToPage, currentPage }: NavbarProps) {
 
         {/* Action Center - Desktop Links */}
         {currentPage === 'home' ? (
-          <div className="hidden md:flex items-center gap-8 text-xs font-mono tracking-wider uppercase text-zinc-400">
+          <div className="hidden md:flex items-center gap-7 text-xs font-mono tracking-wider uppercase text-zinc-400">
             {[
-              { label: 'Como Funciona', id: 'como-funciona' },
-              { label: 'Pontuação', id: 'pontuacao' },
-              { label: 'Consistência', id: 'consistencia' },
-              { label: 'Rankings', id: 'rankings' },
-              { label: 'Antifraude', id: 'antifraude' },
+              { label: 'Metodologia', id: 'metodologia' },
+              { label: 'Performance', id: 'performance-center' },
+              { label: 'Invictus IA', id: 'invictus-ia' },
+              { label: 'Integrações', id: 'integracoes' },
+              { label: 'Privacidade', id: 'privacidade' },
             ].map((link, idx) => (
               <button
                 id={`nav-link-${link.id}`}
                 key={idx}
                 onClick={() => scrollToSection(link.id)}
-                className="hover:text-red-500 transition-colors duration-200 focus:outline-none cursor-pointer"
+                className="hover:text-amber-400 transition-colors duration-200 focus:outline-none cursor-pointer"
               >
                 {link.label}
               </button>
@@ -102,16 +102,16 @@ export default function Navbar({ onNavigateToPage, currentPage }: NavbarProps) {
             <button
               id="nav-link-doc-home"
               onClick={handleLogoClick}
-              className="hover:text-red-500 transition-colors duration-200 focus:outline-none cursor-pointer"
+              className="hover:text-amber-400 transition-colors duration-200 focus:outline-none cursor-pointer"
             >
               Página Inicial
             </button>
             <button
               id="nav-link-doc-faq"
               onClick={() => onNavigateToPage('faq')}
-              className={`hover:text-red-500 transition-colors duration-200 focus:outline-none cursor-pointer ${currentPage === 'faq' ? 'text-red-500 font-bold' : ''}`}
+              className={`hover:text-amber-400 transition-colors duration-200 focus:outline-none cursor-pointer ${currentPage === 'faq' ? 'text-amber-400 font-bold' : ''}`}
             >
-              Como Funciona (FAQ)
+              Central de Ajuda (FAQ)
             </button>
           </div>
         )}
@@ -144,17 +144,21 @@ export default function Navbar({ onNavigateToPage, currentPage }: NavbarProps) {
           {currentPage === 'home' ? (
             <div className="flex flex-col gap-4 text-sm font-semibold tracking-wide text-zinc-300">
               {[
-                { label: 'Como funciona', id: 'como-funciona' },
-                { label: 'Pontuação de treino', id: 'pontuacao' },
-                { label: 'Calendário de Consistência', id: 'consistencia' },
-                { label: 'Rankings e Ligas', id: 'rankings' },
-                { label: 'Sistema Antifraude', id: 'antifraude' },
+                { label: 'Metodologia Científica', id: 'metodologia' },
+                { label: 'Centro de Performance', id: 'performance-center' },
+                { label: 'Invictus IA', id: 'invictus-ia' },
+                { label: 'Comandos por Voz', id: 'comandos-voz' },
+                { label: 'Integrações', id: 'integracoes' },
+                { label: 'Sistema IGA', id: 'sistema-iga' },
+                { label: 'Privacidade & Transparência', id: 'privacidade' },
+                { label: 'Limitações da IA', id: 'limitacoes-ia' },
+                { label: 'Roadmap (Em Breve)', id: 'roadmap' },
               ].map((link, idx) => (
                 <button
                   id={`nav-link-mob-${link.id}`}
                   key={idx}
                   onClick={() => scrollToSection(link.id)}
-                  className="text-left py-1 hover:text-red-500 transition-colors focus:outline-none cursor-pointer"
+                  className="text-left py-1 hover:text-amber-400 transition-colors focus:outline-none cursor-pointer"
                 >
                   {link.label}
                 </button>
@@ -165,7 +169,7 @@ export default function Navbar({ onNavigateToPage, currentPage }: NavbarProps) {
               <button
                 id="nav-link-mob-home"
                 onClick={handleLogoClick}
-                className="text-left py-1 hover:text-red-500 transition-colors focus:outline-none cursor-pointer"
+                className="text-left py-1 hover:text-amber-400 transition-colors focus:outline-none cursor-pointer"
               >
                 Voltar à Página Inicial
               </button>
@@ -175,9 +179,9 @@ export default function Navbar({ onNavigateToPage, currentPage }: NavbarProps) {
                   onNavigateToPage('faq');
                   setMobileMenuOpen(false);
                 }}
-                className="text-left py-1 hover:text-red-500 transition-colors focus:outline-none cursor-pointer"
+                className="text-left py-1 hover:text-amber-400 transition-colors focus:outline-none cursor-pointer"
               >
-                Perguntas Frequentes (FAQ)
+                Central de Ajuda (FAQ)
               </button>
             </div>
           )}
@@ -186,10 +190,10 @@ export default function Navbar({ onNavigateToPage, currentPage }: NavbarProps) {
             <button
               id="btn-nav-mob-download"
               onClick={() => scrollToSection('download')}
-              className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl text-center text-sm flex items-center justify-center gap-2 cursor-pointer focus:outline-none"
+              className="w-full py-3 bg-amber-400 hover:bg-amber-300 text-black font-extrabold rounded-xl text-center text-sm flex items-center justify-center gap-2 cursor-pointer focus:outline-none"
             >
               <Download className="w-4 h-4" />
-              Baixar para Android & iOS
+              Baixar App Invictus
             </button>
           </div>
         </div>

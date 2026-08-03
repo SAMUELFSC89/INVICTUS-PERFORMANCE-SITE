@@ -26,273 +26,197 @@ export type PageType = 'home' | 'terms' | 'privacy' | 'rules' | 'faq' | 'rewards
 export const FAQ_DATA: FAQItem[] = [
   {
     id: "faq-1",
-    question: "O que é o aplicativo INVICTUS PERFORMANCE?",
-    answer: "O INVICTUS PERFORMANCE é uma plataforma premium de evolução pessoal e gamificação de hábitos saudáveis. Nosso objetivo é incentivar a prática consistente de atividades físicas através de um ranking motivacional em que disciplina e regularidade são os fatores chave para a conquista de reputação e recompensas de conquistas digitais."
+    question: "O que é a plataforma INVICTUS?",
+    answer: "O INVICTUS é uma plataforma inteligente de acompanhamento da saúde, desempenho esportivo e evolução pessoal baseada em dados reais, integrações nativas e inteligência artificial. Nosso objetivo é transformar dados de atividade física em conhecimento acionável, promovendo longevidade, consistência e evolução contínua através de métricas validadas e do nosso Centro de Performance."
   },
   {
     id: "faq-2",
-    question: "Como funciona o sistema de pontuação?",
-    answer: "Você ganha pontos ao registrar atividades de treino presencial, sessões de cardio e manter sequências (streaks) ativas. Treinos completos possuem maior peso por representarem o pilar principal do ganho de força e condicionamento. Outras atividades cardiovasculares complementam sua pontuação semanal."
+    question: "O que é e como funciona a Invictus IA?",
+    answer: "A Invictus IA é uma assistente de saúde e desempenho integrada a toda a plataforma. Com autorização do usuário, ela interpreta métricas corporais e esportivas, analisa tendências do seu Centro de Performance, responde a dúvidas sobre treinos e conceitos científicos por texto e comandos por voz, e gera projeções personalizadas baseadas nos seus dados reais."
   },
   {
     id: "faq-3",
-    question: "O que acontece se eu precisar de um dia de descanso?",
-    answer: "O Invictus promove a saúde sustentável e de longo prazo. Por isso, oferecemos o Descanso Inteligente: você pode ter de 1 a 2 dias de recuperação planejada por semana sem que seu streak de consistência seja quebrado. O equilíbrio faz parte do progresso profissional."
+    question: "A Invictus IA substitui profissionais da saúde?",
+    answer: "Não. A Invictus IA possui finalidade exclusivamente educativa e informativa para apoiar a compreensão de dados e métricas. Ela não realiza diagnósticos e não substitui o acompanhamento individualizado de médicos, nutricionistas, fisioterapeutas ou profissionais de Educação Física. Sempre encorajamos e recomendamos o suporte profissional qualificado."
   },
   {
     id: "faq-4",
-    question: "O sistema de pontuação envolve apostas ou dinheiro?",
-    answer: "Absolutamente não. O INVICTUS PERFORMANCE é uma plataforma puramente focada em bem-estar, saúde e desenvolvimento humano saudável. Não há apostas, apostas financeiras, apostas contra outros usuários ou transações financeiras associadas a resultados de treinos. Focamos no desenvolvimento saudável e no reconhecimento através de medalhas, troféus digitais e conquistas internas."
+    question: "O que é o Centro de Performance?",
+    answer: "O Centro de Performance é o painel analítico do usuário no aplicativo. Ele oferece um acompanhamento longitudinal abrangente com históricos diário, semanal, mensal, anual e de longo prazo. Inclui gráficos de tendência, comparações de períodos, metas, recordes, indicadores cardiovasculares (frequência cardíaca, variabilidade), indicadores de consistência, nível de recuperação e projeções estatísticas."
   },
   {
     id: "faq-5",
-    question: "Como funciona a validação antifraude?",
-    answer: "Utilizamos tecnologias avançadas integradas com o hardware do smartphone (como geolocalização assistida por GPS no local de treino, análise estatística de dados de biometria e sensores internos) para certificar a realização legítima das atividades. Isso garante um ambiente justo, ético e motivador na tabela de lideres."
+    question: "Como funciona o novo sistema de pontuação e o IGA?",
+    answer: "Utilizamos a metodologia atual do IGA (Índice de Desempenho / Performance). O IGA é um índice equilibrado que pondera múltiplos fatores do desempenho físico do usuário, incluindo regularidade, volume biomecânico, intensidade e métricas de recuperação. O sistema avalia a evolução individual de forma justa sem expor algoritmos internos sensíveis."
   },
   {
     id: "faq-6",
-    question: "Posso conectar meu relógio Garmin, Strava ou Apple Watch?",
-    answer: "Sim! O INVICTUS PERFORMANCE possui sincronização ativa com as principais plataformas esportivas do mercado internacional, incluindo Garmin Connect, Strava e Apple Health, tornando o processo de registro de cardio e treinos totalmente automatizado e seguro."
+    question: "Quais aplicativos e dispositivos vestíveis são integrados ao Invictus?",
+    answer: "O Invictus integra-se nativamente a ecossistemas como Apple Health, Health Connect, Strava, GPS do dispositivo, monitores de frequência cardíaca e wearables compatíveis. Toda coleta de dados depende estritamente das permissões explícitas concedidas pelo usuário."
   },
   {
     id: "faq-7",
-    question: "Existem campanhas de premiação?",
-    answer: "Sim. O INVICTUS PERFORMANCE poderá promover campanhas de incentivo e reconhecimento para participantes elegíveis. Cada campanha possui regras, critérios de participação e requisitos próprios divulgados pela plataforma."
+    question: "Os dados e métricas exibi-los são fictícios?",
+    answer: "Não. O pilar fundamental do Invictus é a utilização de dados 100% reais, provenientes dos sensores do celular ou vestíveis pareados. Nenhuma análise ou estatística é gerada com base em valores fictícios ou simulados. Caso não existam dados suficientes em determinado período, algumas análises ficarão temporariamente limitadas até que novos registros sejam disponibilizados."
   }
 ];
 
 export const TERMS_DOCUMENT: LegalDocument = {
-  title: "Termos de Uso e Serviço - INVICTUS PERFORMANCE",
-  lastUpdated: "31 de Maio de 2026",
-  introduction: "Bem-vindo ao INVICTUS PERFORMANCE. Estes Termos de Uso regem o acesso e utilização da plataforma digital, aplicativo móvel e serviços relacionados ao ecossistema INVICTUS PERFORMANCE. Ao criar uma conta ou utilizar o aplicativo, você expressa sua concordância integral com estes termos.",
+  title: "Termos de Uso e Serviço - INVICTUS",
+  lastUpdated: "3 de Agosto de 2026",
+  introduction: "Bem-vindo ao INVICTUS. Estes Termos de Uso regem o acesso e a utilização da plataforma inteligente de saúde, desempenho esportivo e evolução pessoal. Ao criar uma conta ou utilizar a plataforma, você concorda expressamente com os termos estabelecidos.",
   sections: [
     {
       title: "1. Natureza da Plataforma",
       content: [
-        "O Invictus é um aplicativo voltado exclusivamente para a área de saúde, fitness, gamificação saudável de hábitos de treino e motivação de comunidade física.",
-        "Não oferecemos, promovemos ou hospedamos quaisquer serviços de apostas esportivas, apostas monetárias, jogos de azar, cassinos, investimentos financeiros ou esquemas de sorteios em dinheiro. A progressão de pontuação dá-se unicamente através da prática desportiva comprovada."
+        "O Invictus é uma plataforma tecnológica de inteligência em saúde, acompanhamento esportivo e motivação baseada em dados reais.",
+        "Não oferecemos, promovemos ou hospedamos quaisquer modalidades de apostas, jogos de azar ou transações financeiras vinculadas a resultados esportivos. A progressão no aplicativo dá-se exclusivamente através do registro autêntico de hábitos saudáveis e dados esportivos."
       ]
     },
     {
-      title: "2. Cadastro e Qualificação",
+      title: "2. Uso da Invictus IA e Limitações",
       content: [
-        "Para utilizar a plataforma, o usuário deve preencher o cadastro voluntário com dados verídicos e manter a segurança de suas credenciais de login.",
-        "Cada conta é de uso estritamente pessoal, intransferível e nominal. Contas e cadastros duplicados criados com a intenção de fraudar rankings ou tabelas competitivas estarão sujeitos à exclusão imediata sem aviso prévio."
+        "A Invictus IA é uma ferramenta de apoio analítico para interpretação de dados e esclarecimento de conceitos genéricos de saúde e treino.",
+        "A Invictus IA não emite diagnósticos médicos, prescrições de dietas ou programas de reabilitação. O usuário reconhece que suas respostas são educativas e não substituem a consulta a profissionais de saúde e educação física qualificados."
       ]
     },
     {
-      title: "3. Uso Aceitável e Antifraude",
+      title: "3. Integrações de Dados e Permissões",
       content: [
-        "A integridade dos registros físicos é a base de nossa comunidade. O usuário compromete-se a registrar apenas atividades físicas reais, executadas por si mesmo.",
-        "A plataforma utiliza mecanismos automáticos e manuais de verificação espacial e temporal (GPS, sensores e biometria). Tentativas de simular treinos por vias digitais ou simulações artificiais de deslocamento acarretarão na suspensão imediata da conta do usuário.",
-        "A coleta de dados e GPS é restrita à comprovação do início e fim das atividades nas imediações dos locais de exercício homologados, preservando a intimidade do atleta nos termos da lei aplicável."
+        "O usuário autoriza voluntariamente o acesso aos dados fornecidos por integrações de terceiros (Apple Health, Health Connect, Strava, relógios inteligentes e sensores de GPS) para alimentar seu Centro de Performance e a Invictus IA.",
+        "O usuário pode revogar tais permissões a qualquer momento através das configurações do seu dispositivo ou aplicativo."
       ]
     },
     {
-      title: "4. Direitos de Propriedade Intelectual",
+      title: "4. Propriedade Intelectual e Algoritmos",
       content: [
-        "Todos os logotipos, interfaces, códigos-fonte, algoritmos de detecção, designs, marcas registradas e materiais multimídia integrados ao Invictus são de propriedade exclusiva da nossa empresa e protegidos por leis de propriedade e direitos autorais nacionais e internacionais.",
-        "É expressamente vedada a engenharia reversa, extração de código ou cópia visual não autorizada dos nossos módulos visuais de Scrollytelling e gamificação."
+        "A arquitetura da plataforma, a metodologia do IGA, os modelos de IA, a interface visual e os elementos proprietários do Invictus são protegidos pelas leis de propriedade intelectual e direitos autorais.",
+        "É expressamente vedada a engenharia reversa, extração não autorizada de dados ou clonagem de componentes da plataforma."
       ]
     }
   ]
 };
 
 export const PRIVACY_DOCUMENT: LegalDocument = {
-  title: "Política de Privacidade - INVICTUS PERFORMANCE",
-  lastUpdated: "31 de Maio de 2026",
-  introduction: "A privacidade do usuário é um pilar insubstituível. Esta política descreve pormenorizadamente os dados pessoais que coletamos, sua finalidade, como os tratamos de forma segura e os seus direitos em estrito cumprimento à Lei Geral de Proteção de Dados (LGPD) e diretrizes globais da Google Play e Apple App Store.",
+  title: "Política de Privacidade e Proteção de Dados - INVICTUS",
+  lastUpdated: "3 de Agosto de 2026",
+  introduction: "A transparência e a segurança dos seus dados de saúde são compromissos inegociáveis do INVICTUS. Esta Política descreve como tratamos e protegemos suas informações de acordo com a Lei Geral de Proteção de Dados (LGPD) e normativas internacionais.",
   sections: [
     {
-      title: "1. Dados Coletados e Sua Finalidade",
+      title: "1. Coleta e Finalidade dos Dados",
       content: [
-        "Dados Identificativos: Nome completo, endereço de e-mail e foto de perfil opcional, coletados no momento do cadastro para personalização do perfil.",
-        "Dados de Atividade Física: Frequência cardíaca aproximada, tempos de repouso, duração do treino e calorias estimadas, sincronizadas via integrações nativas autorizadas (HealthKit, Garmin Connect ou Strava) para pontuação.",
-        "Dados de Geolocalização: Coleta de coordenadas em segundo plano estritamente durante a validação ativa de atividade de treino presencial na academia para prevenção de fraudes de presença. Nenhuma geolocalização contínua ou fora dos períodos de treino é realizada."
+        "Dados Pessoais Basais: Nome, e-mail e foto de perfil, utilizados estritamente para identificação da conta.",
+        "Métricas de Saúde e Esporte: Frequência cardíaca, variabilidade cardíaca, treinos, distância de GPS e caloria estimada obtidos com autorização explícita via Apple Health, Health Connect, Strava ou sensores vestíveis. Esses dados alimentam exclusivamente o seu Centro de Performance e personalizam a experiência da Invictus IA.",
+        "Controle do Usuário: Nenhum dado de saúde é compartilhado com terceiros, parceiros de publicidade ou seguradoras. O usuário detém controle total sobre quais integrações manter ativas."
       ]
     },
     {
-      title: "2. Compartilhamento e Exposição de Dados",
+      title: "2. Segurança e Criptografia",
       content: [
-        "Na comunidade e nos rankings públicos da plataforma, apenas o seu Nome de Exibição, foto de perfil, nível atual de streak e a pontuação são visíveis aos demais participantes.",
-        "Informações biométricas precisas, trajetos de mapas detalhados e dados sensíveis de saúde são confidenciais e jamais serão vendidos ou compartilhados com terceiros, agências de publicidade ou seguradoras de saúde."
+        "Todas as transmissões de dados são protegidas por protocolos de criptografia TLS/HTTPS de última geração.",
+        "Os registros biométricos são armazenados em infraestrutura segura com acesso restrito e protegido por autenticação em camadas."
       ]
     },
     {
-      title: "3. Armazenamento e Criptografia",
+      title: "3. Transparência na Utilização da Inteligência Artificial",
       content: [
-        "Todas as conexões e transmissões de dados são feitas sob criptografia de ponta a ponta utilizando protocolos HTTPS/TLS de última geração.",
-        "Os dados são armazenados em nuvens seguras com proteção multicamada e backups automáticos ativos."
+        "Os dados do usuário são processados pela Invictus IA única e exclusivamente para gerar respostas personalizadas e insights dentro da sessão do próprio usuário.",
+        "Os dados de saúde individuais não são comercializados ou utilizados para fins publicitários."
       ]
     }
   ]
 };
 
 export const RULES_DOCUMENT: LegalDocument = {
-  title: "Regras Gerais de Participação - INVICTUS PERFORMANCE",
-  lastUpdated: "31 de Maio de 2026",
-  introduction: "O INVICTUS PERFORMANCE é uma liga esportiva saudável de reputação. Para manter um ecossistema equilibrado, ético e inspirador, todos os usuários devem seguir ativamente as Regras de Participação abaixo:",
+  title: "Código de Conduta e Regras da Plataforma - INVICTUS",
+  lastUpdated: "3 de Agosto de 2026",
+  introduction: "O INVICTUS promove um ambiente de evolução real, integridade de dados e incentivo mútuo. Todos os membros devem seguir as diretrizes abaixo:",
   sections: [
     {
-      title: "1. Registro Honesto",
+      title: "1. Autenticidade dos Dados",
       content: [
-        "Apenas treinos realmente executados são pontuáveis.",
-        "O compartilhamento de credenciais oficiais de dispositivos vestíveis, relógios esportivos ou contas Garmin/Strava com outros indivíduos para ganho artificial de pontos é considerado violação grave deste código."
+        "Apenas dados reais originados de atividades físicas genuínas executadas pelo próprio usuário e validados por sensores são aceitos na plataforma.",
+        "Tentativas de simulação de trajetos, adulteração de arquivos de telemetria ou compartilhamento indevido de vestíveis resultarão na desqualificação das análises e possível bloqueio da conta."
       ]
     },
     {
-      title: "2. Comportamento na Comunidade",
+      title: "2. Respeito na Comunidade",
       content: [
-        "Incentivos e Apoio Mútuo: Espera-se que a comunicação na aba de comunidade seja cortês, focada no fomento saudável aos esportes, respeito mútuo e disciplina coletiva.",
-        "Qualquer conduta discriminatória, linguajar ofensivo, assédio visual ou conduta antidesportiva resultará na perda integral da pontuação da semana e possível exclusão de participação definitiva."
+        "Interações no aplicativo devem ser pautadas pelo respeito, ética e incentivo à prática de hábitos saudáveis.",
+        "Não serão toleradas condutas ofensivas, discriminatórias ou antidesportivas."
       ]
     },
     {
-      title: "3. Classificação e Ligas",
+      title: "3. Provimento e Titularidade de Vagas (Caso Geovani Augusto)",
       content: [
-        "A classificação final do ranking consolida-se semanalmente às 23:59 GMT do domingo.",
-        "Subir e descer de divisão baseia-se unicamente no esforço pessoal aferido, sem qualquer ponderação externa injustificada ou favorecimento individual."
-      ]
-    },
-    {
-      title: "4. Provimento e Titularidade de Vagas (Caso Geovani Augusto)",
-      content: [
-        "Conforme deliberação técnica e desportiva oficial: o participante Geovani Augusto ganhou a vaga de direito, porém ele não entra na vaga correspondente na condição de titular.",
-        "Esta consequência e diretriz específica estão em vigor de forma contínua desde o ano de 2024.",
-        "Esta cláusula incide unicamente sobre o caso e a respectiva vaga do referido participante, de modo que não há alterações em nenhuma outra regra geral de classificação ou elegibilidade na liga."
+        "Conforme deliberação técnica oficial mantida continuamente desde 2024: o participante Geovani Augusto obteve a vaga de direito, porém não integra a listagem na condição de titular.",
+        "Esta disposição aplica-se estritamente ao referido participante, não alterando as diretrizes gerais de classificação dos demais usuários."
       ]
     }
   ]
 };
 
 export const REWARDS_DOCUMENT: LegalDocument = {
-  title: "Política de Premiações e Conquistas - INVICTUS PERFORMANCE",
-  lastUpdated: "31 de Maio de 2026",
-  introduction: "O INVICTUS PERFORMANCE valoriza o esforço real. Esta política define as regras para a concessão de incentivos corporativos, conquistas digitais e troféus dentro da plataforma.",
+  title: "Diretrizes de Reconhecimento e Conquistas - INVICTUS",
+  lastUpdated: "3 de Agosto de 2026",
+  introduction: "O INVICTUS valoriza a consistência e a dedicação física comprovada através de um sistema meritocrático de conquistas digitais e insígnias.",
   sections: [
     {
-      title: "1. Medalhas e Títulos Digitais",
+      title: "1. Insígnias e Marcos de Evolução",
       content: [
-        "Ao alcançar marcos históricos de persistência física (ex: 50 dias seguidos de treino ou 200 cardios completados no ano), o aplicativo garante distintivos e certificados tridimensionais (badges) em sua galeria pública de atleta.",
-        "Títulos honorários de liderança são outorgados aos atletas que permanecem no topo da liga geral de forma justa."
+        "Ao alcançar marcos consistentes no seu Centro de Performance (ex: 30, 60 ou 90 dias de consistência validada no IGA), o usuário desbloqueia conquistas e selos em sua galeria de evolução.",
+        "Toda conquista é fundamentada em dados reais e auditoria algorítmica de integridade."
       ]
     },
     {
-      title: "2. Programas de Reconhecimento de Desempenho",
+      title: "2. Isenção de Mecânicas de Azar",
       content: [
-        "Empresas aliadas (marcas de suplementação, roupas esportivas e academias) podem oferecer cupons de descontos e benefícios exclusivos para participantes elegíveis correspondentes ao desempenho físico do usuário na plataforma.",
-        "Nenhum incentivo regulamentar representa resgate monetário ou financeiro de apostas. Não são oferecidas premiações garantidas de cunho especulativo ou financeiro, sendo todos os incentivos disponibilizados conforme regulamento vigente de cada campanha promovida pela plataforma."
-      ]
-    },
-    {
-      title: "3. Ausência de Dinâmica de Jogos de Azar",
-      content: [
-        "O INVICTUS PERFORMANCE reitera que sua lógica é 100% esportiva e meritocrática.",
-        "A aquisição de pontos ou resgate de conquistas não envolve elementos estocásticos artificiais como roletas, giros de sorte, compras de passes de apostas esportivas, caça-níqueis ou sorteios eletrônicos. Toda evolução depende estritamente de suor, disciplina e consistência real comprovada do atleta."
+        "A plataforma não possui roletas, sorteios especulativos ou elementos de azar.",
+        "A evolução do usuário depende estritamente do seu esforço pessoal e da regularidade de suas atividades físicas."
       ]
     }
   ]
 };
 
 export const INCENTIVES_DOCUMENT: LegalDocument = {
-  title: "Política de Incentivos e Reconhecimento",
-  lastUpdated: "31 de Maio de 2026",
-  introduction: "O INVICTUS PERFORMANCE é uma plataforma de gamificação fitness focada em consistência, evolução pessoal e reconhecimento de desempenho. Esta política estabelece as diretrizes normativas das campanhas de incentivo, critérios de classificação e procedimentos de auditoria adotados pela plataforma para garantir a lisura e a integridade de todas as atividades.",
+  title: "Política de Campanhas e Programas de Reconhecimento - INVICTUS",
+  lastUpdated: "3 de Agosto de 2026",
+  introduction: "Diretrizes regulatórias das campanhas institucionais e programas de incentivo à saúde promovidos pelo INVICTUS e parceiros homologados.",
   sections: [
     {
-      title: "1. Objetivo das Campanhas",
+      title: "1. Elegibilidade e Mérito",
       content: [
-        "As campanhas de incentivo promovidas pela plataforma visam estimular hábitos de vida saudável, incitando os participantes a alcançarem a consistência e a regularidade desportivas de forma ética.",
-        "As campanhas não contam com nenhuma modalidade de aposta, contribuição financeira prévia por parte do usuário ou dependência da sorte, sendo estritamente meritocráticas."
+        "As campanhas de reconhecimento visam incentivar a regularidade esportiva de forma ética e transparente.",
+        "Apenas usuários com dados atestados por integrações válidas e que estejam em conformidade com o Código de Conduta qualificam-se para programas de reconhecimento."
       ]
     },
     {
-      title: "2. Critérios de Elegibilidade",
+      title: "2. Auditoria e Validação IGA",
       content: [
-        "Estarão aptos a participar das campanhas apenas os usuários cadastrados que mantiverem contas regularmente validadas e em conformidade estrita com os Termos de Uso.",
-        "Somente maiores de 18 anos de idade e residentes fiscais nos territórios permitidos para as campanhas específicas podem qualificar-se para os incentivos associados."
-      ]
-    },
-    {
-      title: "3. Critérios de Classificação",
-      content: [
-        "A classificação de desempenho apoia-se unicamente no somatório de pontos gerados a partir de check-ins homologados de academias locais e registro telemétrico de atividades aeróbicas por dispositivos sincronizados.",
-        "Toda pontuação segue coeficientes técnicos invariáveis de repouso, intensidade e duração divulgados abertamente em cada campanha específica."
-      ]
-    },
-    {
-      title: "4. Critérios de Desempate",
-      content: [
-        "Na hipótese de empate absoluto de pontuação nos rankings da campanha, aplicar-se-ão os seguintes critérios sucessivos de desempate:",
-        "1º) Maior quantidade de dias ativos de streak ininterrupto de registro dentro do período específico;",
-        "2º) Menor coeficiente de variação temporal de entrada de treinos, demonstrando maior regularidade horária;",
-        "3º) Ordem cronológica de check-in na primeira atividade registrada do ciclo."
-      ]
-    },
-    {
-      title: "5. Processo de Auditoria",
-      content: [
-        "A plataforma dispõe de comitê de auditoria interna contínua apoiado em inteligência artificial para examinar todas as planilhas e telemetrias registradas.",
-        "Estão sujeitas a auditorias em profundidade todas as contas que performarem no topo do ranking ou apresentarem desvios estatísticos significativos de performance."
-      ]
-    },
-    {
-      title: "6. Procedimentos de Validação",
-      content: [
-        "Nossos protocolos exigem que o check-in presencial em estabelecimento desportivo (academia) permaneça delimitado por cerco geográfico dinâmico (GPS) por, no mínimo, 30 minutos.",
-        "As transições cardiológicas aeróbicas devem provir de sensores integrados de hardware que comprovem coerência biométrica (ritmo de batimento cardíaco em sincronia com esforço humano)."
-      ]
-    },
-    {
-      title: "7. Situações de Desclassificação",
-      content: [
-        "Será imediatamente desclassificado e banido das campanhas vigentes e futuras o usuário que:",
-        "a) Compartilhar dispositivos vestíveis com terceiros para simular acréscimo de pontuação;",
-        "b) Utilizar emuladores virtuais, mockers de GPS ou scripts automatizados de simulação de sensores;",
-        "c) Praticar condutas antidesportivas ou que violem a confidencialidade e a ética de comunidade do INVICTUS PERFORMANCE."
-      ]
-    },
-    {
-      title: "8. Forma de Divulgação dos Resultados",
-      content: [
-        "Ao encerramento de cada campanha, os resultados provisórios serão compilados de forma transparente na própria interface do usuário, abrindo-se o prazo de conformação técnica.",
-        "Os resultados definitivos e homologações de desempenho serão publicados em boletins internos oficiais da plataforma no primeiro dia útil subsequente ao fechamento do ciclo."
-      ]
-    },
-    {
-      title: "9. Procedimentos para Contestação",
-      content: [
-        "O usuário que identificar inconsistências de registros decorrentes de falhas técnicas temporárias de pareamento de sensores poderá formalizar requerimento de revisão por meio da interface de Suporte do aplicativo.",
-        "A contestação técnica deve ser acompanhada de relatórios brutos exportados do respectivo dispositivo (como arquivos .FIT do Garmin ou logs brutos de sensores)."
-      ]
-    },
-    {
-      title: "10. Prazos de Análise",
-      content: [
-        "As solicitações de contestação desportiva serão analisadas pela mesa técnica em até 5 dias úteis.",
-        "A revisão será julgada em instância única administrativa de forma irrecorrível, priorizando a segurança e o equilíbrio concorrencial de todos os atletas."
+        "A plataforma realiza auditorias automatizadas contínuas nos registros de telemetria.",
+        "O Índice de Desempenho (IGA) serve como parâmetro técnico de acompanhamento de consistência durante o ciclo."
       ]
     }
   ]
 };
 
 export const VALIDATION_DOCUMENT: LegalDocument = {
-  title: "Política de Validação de Atividades - INVICTUS PERFORMANCE",
-  lastUpdated: "31 de Maio de 2026",
-  introduction: "Como auditamos e asseguramos que o movimento físico é verídico? Esta política especifica os protocolos técnicos e de sensores que validam cada segundo do seu suor.",
+  title: "Metodologia de Validação de Dados e Sensores - INVICTUS",
+  lastUpdated: "3 de Agosto de 2026",
+  introduction: "Como asseguramos que o movimento e os dados de saúde são autênticos? Esta política detalha a validação por hardware e telemetria.",
   sections: [
     {
-      title: "1. Treinos de Musculação em Academia",
+      title: "1. Validação Multisensores",
       content: [
-        "Cerca de Presença Geográfica (Geofencing): O treino só poderá ser iniciado se o aplicativo validar que o usuário está no raio geométrico homologado do estabelecimento de treino escolhido por no mínimo 30 minutos contínuos.",
-        "Biometria: O atleta deve fazer check-in biométrico integrado pelo sistema do celular antes do início da sessão."
+        "Musculação e Treino Presencial: Validação de presença espacial por cerca geográfica (Geofencing) e biometria no dispositivo durante a permanência no local homologado.",
+        "Cardio e Atividades de Deslocamento: Verificação telemétrica de cadência, curva de aceleração humana, variação de altimetria de GPS e zonas de frequência cardíaca."
       ]
     },
     {
-      title: "2. Atividades Cardiovasculares (Corrida, Ciclismo, etc.)",
+      title: "2. Limitação por Insuficiência de Dados",
       content: [
-        "Uso de Sensores do Dispositivo: A atividade precisa conter o registro telemétrico de cadência de passos, oscilação de elevação de GPS compatível com esforço humano, e variação consistente de zonas aeróbicas cardíacas.",
-        "Filtros de Velocidade Incompatível: Registros contendo velocidades médias ou picos que fujam da física de deslocamento humano (como viagens motorizadas ou simulações via carro) serão automaticamente anulados e enviados para arbitragem administrativa."
+        "Para garantir o rigor científico, a plataforma não gera gráficos nem estimativas baseados em números fictícios.",
+        "Em caso de dados incompletos ou falta de sinal de sensores, o sistema sinalizará a limitação até a sincronização de novos dados autênticos."
       ]
     }
   ]
