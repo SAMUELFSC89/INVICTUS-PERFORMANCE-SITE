@@ -1,8 +1,22 @@
+import { useEffect } from 'react';
 import { ShieldCheck, Trophy, UserRoundSearch } from 'lucide-react';
 import AdminPanel from './AdminPanel';
 import './AdminShell.css';
 
 export default function AdminShell() {
+  useEffect(() => {
+    const redirectLegacyChampionshipTab = (event: MouseEvent) => {
+      const target = event.target instanceof Element ? event.target.closest('button') : null;
+      if (!target || target.textContent?.trim() !== 'Campeonatos') return;
+      if (!target.closest('.admin-shell-wrap')) return;
+      event.preventDefault();
+      event.stopPropagation();
+      window.location.assign('/admin/championships');
+    };
+    document.addEventListener('click', redirectLegacyChampionshipTab, true);
+    return () => document.removeEventListener('click', redirectLegacyChampionshipTab, true);
+  }, []);
+
   return <div className="admin-shell-wrap">
     <AdminPanel />
     <nav className="admin-advanced-shortcuts" aria-label="Centrais administrativas avançadas">
