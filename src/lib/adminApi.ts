@@ -1,6 +1,7 @@
 import { auth } from './firebaseClient';
 
-const API_BASE = (import.meta.env.VITE_APP_API_BASE || 'https://sem-desculpa.vercel.app').replace(/\/$/, '');
+const configuredBase = String(import.meta.env.VITE_APP_API_BASE || '').trim();
+const API_BASE = (configuredBase || window.location.origin).replace(/\/$/, '');
 
 export async function adminRequest<T = any>(
   action: string,
