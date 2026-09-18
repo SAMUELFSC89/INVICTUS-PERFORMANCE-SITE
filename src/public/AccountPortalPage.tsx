@@ -6,6 +6,7 @@ import { auth, db } from '../lib/firebaseClient';
 import { getMyChampionshipRegistrations, type ChampionshipRegistration } from '../lib/championshipApi';
 import { subscribeAdminRealtime } from '../lib/adminRealtime';
 import './PublicPortal.css';
+import './AccountPortalEnhancements.css';
 
 const money = (value: unknown) => Number(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const when = (value: unknown) => {
