@@ -24,8 +24,9 @@ export default function AccountSignupPage() {
     event.preventDefault();
     setBusy(true); setError('');
     try {
-      await createUserWithEmailAndPassword(auth, email.trim(), password);
+      const credential = await createUserWithEmailAndPassword(auth, email.trim(), password);
       sessionStorage.setItem('invictus_signup_name', name.trim());
+      sessionStorage.setItem('invictus_signup_created_uid', credential.user.uid);
       window.location.assign('/conta/completar');
     } catch (reason: any) {
       setError(authError(reason));
