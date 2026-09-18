@@ -40,12 +40,24 @@ const championshipId = path === '/campeonatos/cardio'
 function RebuildAppRouterBoundary() {
   useEffect(() => {
     const originalPushState = window.history.pushState.bind(window.history);
-    const externalPublicRoutes = new Set(['/entre-amigos', '/power-lift', '/drops']);
+    // RebuildApp permanece apenas como a Home visual. Qualquer CTA que leve a
+    // uma área funcional deve fazer uma navegação real para que `entry.tsx`
+    // monte a página canônica e nunca uma cópia demonstrativa interna.
+    const canonicalPublicRoutes = new Set([
+      '/campeonatos',
+      '/campeonatos/cardio',
+      '/campeonatos/musculacao',
+      '/entre-amigos',
+      '/power-lift',
+      '/drops',
+      '/conta',
+      '/admin',
+    ]);
     const patchedPushState: History['pushState'] = (data, unused, url) => {
       if (url !== undefined && url !== null) {
         const target = new URL(String(url), window.location.origin);
         const normalized = target.pathname.replace(/\/$/, '') || '/';
-        if (externalPublicRoutes.has(normalized)) {
+        if (canonicalPublicRoutes.has(normalized)) {
           window.location.assign(`${normalized}${target.search}${target.hash}`);
           return;
         }
