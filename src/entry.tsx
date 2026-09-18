@@ -2,12 +2,15 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import RebuildApp from './RebuildApp';
 import AdminPanel from './admin/AdminPanel';
+import PowerLiftReviewPage from './admin/PowerLiftReviewPage';
 import './RebuildApp.css';
 
-const isAdminRoute = window.location.pathname === '/admin' || window.location.pathname.startsWith('/admin/');
+const path = window.location.pathname;
+const isPowerLiftAdminRoute = path === '/admin/powerlift' || path.startsWith('/admin/powerlift/');
+const isAdminRoute = path === '/admin' || path.startsWith('/admin/');
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    {isAdminRoute ? <AdminPanel /> : <RebuildApp />}
+    {isPowerLiftAdminRoute ? <PowerLiftReviewPage /> : isAdminRoute ? <AdminPanel /> : <RebuildApp />}
   </StrictMode>,
 );
