@@ -46,6 +46,16 @@ type ChampionshipState = {
   registrations?: { total?: number; paid?: number; pending?: number; reconciliation?: number };
 };
 
+type ChampionshipSummary = {
+  total?: number;
+  paid?: number;
+  pending?: number;
+  reconciliation?: number;
+  cancelled?: number;
+  refunded?: number;
+  confirmedRevenue?: number;
+};
+
 type StatePayload = { championships?: ChampionshipState[] };
 
 const IDS = [
@@ -65,6 +75,7 @@ export default function ChampionshipOperationsPage() {
   const [ready, setReady] = useState(false);
   const [championshipId, setChampionshipId] = useState(IDS[0].id);
   const [state, setState] = useState<StatePayload | null>(null);
+  const [summary, setSummary] = useState<ChampionshipSummary | null>(null);
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [busy, setBusy] = useState(false);
@@ -77,12 +88,14 @@ export default function ChampionshipOperationsPage() {
     if (!quiet) setBusy(true);
     setFeedback(current => quiet ? current : null);
     try {
-      const [stateResponse, registrationResponse, leaderboardResponse] = await Promise.all([
+      const [stateResponse, summaryResponse, registrationResponse, leaderboardResponse] = await Promise.all([
         secureAppRequest<StatePayload>('/api/admin-championships', { query: { action: 'state' } }),
+        secureAppRequest<ChampionshipSummary>('/api/admin-championships', { query: { action: 'summary', championshipId } }),
         secureAppRequest<any>('/api/admin-championships', { query: { action: 'registrations', championshipId, limit: 250 } }),
         secureAppRequest<any>('/api/admin-championships', { query: { action: 'leaderboard', championshipId, limit: 100 } }),
       ]);
       setState(stateResponse);
+      setSummary(summaryResponse);
       setRegistrations(Array.isArray(registrationResponse?.registrations) ? registrationResponse.registrations : []);
       setLeaderboard(Array.isArray(leaderboardResponse?.leaderboard) ? leaderboardResponse.leaderboard : []);
     } catch (error: any) {
@@ -108,10 +121,11 @@ export default function ChampionshipOperationsPage() {
   }, [user, load]);
 
   const selected = useMemo(() => state?.championships?.find(item => item.runtime?.id === championshipId) || null, [state, championshipId]);
-  const paid = Number(selected?.registrations?.paid ?? registrations.filter(item => item.status === 'paga' && item.paymentStatus === 'PAID').length);
-  const pending = Number(selected?.registrations?.pending ?? registrations.filter(item => item.status === 'pendente' || item.paymentStatus === 'PENDING').length);
-  const reconciliation = Number(selected?.registrations?.reconciliation ?? registrations.filter(item => item.reconciliationRequired).length);
-  const revenue = useMemo(() => registrations.filter(item => item.status === 'paga' && item.paymentStatus === 'PAID').reduce((sum, item) => sum + Number(item.amount || 0), 0), [registrations]);
+  const paid = Number(summary?.paid ?? selected?.registrations?.paid ?? 0);
+  const pending = Number(summary?.pending ?? selected?.registrations?.pending ?? 0);
+  const reconciliation = Number(summary?.reconciliation ?? selected?.registrations?.reconciliation ?? 0);
+  const revenue = Number(summary?.confirmedRevenue || 0);
+  const totalRegistrations = Number(summary?.total ?? selected?.registrations?.total ?? registrations.length);
 
   const homologate = async () => {
     const runtime = selected?.runtime;
@@ -159,11 +173,10 @@ export default function ChampionshipOperationsPage() {
       <Metric label="Inscrições pagas" value={String(paid)}/>
       <Metric label="Pendentes" value={String(pending)} attention={pending > 0}/>
       <Metric label="Conciliação" value={String(reconciliation)} attention={reconciliation > 0}/>
-      <Metric label="Receita confirmada*" value={money(revenue)}/>
+      <Metric label="Receita confirmada" value={money(revenue)}/>
       <Metric label="Atletas no ranking" value={String(leaderboard.length)}/>
       <Metric label="Settlement" value={String(selected?.settlement?.status || 'NÃO INICIADO')}/>
     </div>
-    {registrations.length >= 250 && <small className="champ-ops-limited-note">* A tabela está limitada aos 250 registros mais recentes; os contadores de inscrição vêm do estado canônico da edição.</small>}
 
     <div className="champ-ops-two-col">
       <section className="adm-card">
@@ -182,7 +195,7 @@ export default function ChampionshipOperationsPage() {
     </div>
 
     <section className="adm-card">
-      <div className="adm-card-title"><div><small>INSCRIÇÕES</small><h2>Participantes e pagamentos</h2></div><Users/></div>
+      <div className="adm-card-title"><div><small>INSCRIÇÕES</small><h2>Participantes e pagamentos</h2><p className="champ-ops-table-note">Exibindo {registrations.length} de {totalRegistrations} inscrições. Os indicadores acima usam o total canônico completo da edição.</p></div><Users/></div>
       <div className="adm-table-wrap"><table><thead><tr><th>Atleta</th><th>Valor</th><th>Pagamento</th><th>Inscrição</th><th>Criada em</th><th>Pago em</th></tr></thead><tbody>{registrations.map(item => <tr key={item.id}><td><b>{item.userName || 'Atleta Invictus'}</b><small>{item.userId}</small></td><td>{money(item.amount)}</td><td><span className={`adm-status ${item.reconciliationRequired ? 'under_review' : ''}`}>{String(item.paymentStatus || '—').toUpperCase()}</span><small>{item.paymentMethod || '—'}</small></td><td>{String(item.status || '—').toUpperCase()}</td><td>{dateText(item.createdAt)}</td><td>{dateText(item.paidAt)}</td></tr>)}</tbody></table></div>
       {!registrations.length && <div className="adm-empty">Nenhuma inscrição encontrada na edição ativa.</div>}
     </section>
