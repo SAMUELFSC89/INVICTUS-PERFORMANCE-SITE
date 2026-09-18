@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+import { StrictMode, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import RebuildApp from './RebuildApp';
 import AdminShell from './admin/AdminShell';
@@ -34,6 +34,27 @@ const championshipId = path === '/campeonatos/cardio'
     ? 'invictus_strength_v1'
     : null;
 
+function RebuildAppRouterBoundary() {
+  useEffect(() => {
+    const originalPushState = window.history.pushState.bind(window.history);
+    const externalPublicRoutes = new Set(['/entre-amigos', '/power-lift']);
+    const patchedPushState: History['pushState'] = (data, unused, url) => {
+      if (url !== undefined && url !== null) {
+        const target = new URL(String(url), window.location.origin);
+        const normalized = target.pathname.replace(/\/$/, '') || '/';
+        if (externalPublicRoutes.has(normalized)) {
+          window.location.assign(`${normalized}${target.search}${target.hash}`);
+          return;
+        }
+      }
+      originalPushState(data, unused, url);
+    };
+    window.history.pushState = patchedPushState;
+    return () => { window.history.pushState = originalPushState; };
+  }, []);
+  return <RebuildApp />;
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     {isAthleteAuditAdminRoute
@@ -58,6 +79,6 @@ createRoot(document.getElementById('root')!).render(
                         ? <ChampionshipsLivePage />
                         : championshipId
                           ? <ChampionshipSignupPage championshipId={championshipId} />
-                          : <RebuildApp />}
+                          : <RebuildAppRouterBoundary />}
   </StrictMode>,
 );
