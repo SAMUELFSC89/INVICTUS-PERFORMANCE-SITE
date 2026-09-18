@@ -1,5 +1,6 @@
 {
   "rewrites": [
-    { "source": "/((?!assets/|favicon\\.svg|robots\\.txt|sitemap\\.xml|.*\\..*).*)", "destination": "/index.html" }
+    { "source": "/api/:path*", "destination": "https://sem-desculpa.vercel.app/api/:path*" },
+    { "source": "/((?!api/|assets/|favicon\\.svg|robots\\.txt|sitemap\\.xml|.*\\..*).*)", "destination": "/index.html" }
   ]
 }
