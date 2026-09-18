@@ -101,3 +101,9 @@ export async function getMyStoreOrders(): Promise<StoreOrder[]> {
   const payload = await storeRequest<any>('my-orders');
   return Array.isArray(payload?.orders) ? payload.orders : [];
 }
+
+export async function getStoreOrder(orderId: string): Promise<StoreOrder> {
+  const payload = await storeRequest<any>('payment-status', { query: { orderId } });
+  if (!payload?.order) throw new Error('Pedido não encontrado.');
+  return payload.order as StoreOrder;
+}
