@@ -1,7 +1,8 @@
-import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, CheckCircle2, Coins, Copy, ExternalLink, Gift, Lock, Package, RefreshCw, ShoppingBag, Truck, X } from 'lucide-react';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '../lib/firebaseClient';
+import { subscribeAdminRealtime } from '../lib/adminRealtime';
 import { createStoreOrder, getMyStoreOrders, getStoreCatalogue, redeemStoreDrop, type StoreAddress, type StoreOrder, type StorePayment, type StoreProduct } from '../lib/storePublicApi';
 import './DropsStore.css';
 
@@ -12,10 +13,19 @@ const idempotency=()=>globalThis.crypto?.randomUUID?.()||`site-store-${Date.now(
 const image=(product:StoreProduct)=>product.imageStatus==='READY'?(product.images?.thumbnail||product.images?.primary||''):'';
 
 export default function DropsStorePage(){
-  const[user,setUser]=useState<User|null>(null);const[ready,setReady]=useState(false);const[products,setProducts]=useState<StoreProduct[]>([]);const[wallet,setWallet]=useState<{balance?:number}|null>(null);const[activeDrop,setActiveDrop]=useState<Record<string,any>|null>(null);const[orders,setOrders]=useState<StoreOrder[]>([]);const[category,setCategory]=useState('Todos');const[busy,setBusy]=useState(false);const[error,setError]=useState('');const[storeDisabled,setStoreDisabled]=useState(false);const[selected,setSelected]=useState<StoreProduct|null>(null);const[mode,setMode]=useState<CheckoutMode>('money');const[quantity,setQuantity]=useState(1);const[address,setAddress]=useState<StoreAddress>(emptyAddress);const[order,setOrder]=useState<StoreOrder|null>(null);const[payment,setPayment]=useState<StorePayment|null>(null);const[copied,setCopied]=useState(false);const[showOrders,setShowOrders]=useState(false);
+  const[user,setUser]=useState<User|null>(null);const[ready,setReady]=useState(false);const[products,setProducts]=useState<StoreProduct[]>([]);const[wallet,setWallet]=useState<{balance?:number}|null>(null);const[activeDrop,setActiveDrop]=useState<Record<string,any>|null>(null);const[orders,setOrders]=useState<StoreOrder[]>([]);const[category,setCategory]=useState('Todos');const[busy,setBusy]=useState(false);const[error,setError]=useState('');const[storeDisabled,setStoreDisabled]=useState(false);const[selected,setSelected]=useState<StoreProduct|null>(null);const[mode,setMode]=useState<CheckoutMode>('money');const[quantity,setQuantity]=useState(1);const[address,setAddress]=useState<StoreAddress>(emptyAddress);const[order,setOrder]=useState<StoreOrder|null>(null);const[payment,setPayment]=useState<StorePayment|null>(null);const[copied,setCopied]=useState(false);const[showOrders,setShowOrders]=useState(false);const lastRevision=useRef<number|null>(null);
   useEffect(()=>onAuthStateChanged(auth,current=>{setUser(current);setReady(true)}),[]);
   const load=useCallback(async()=>{if(!auth.currentUser)return;setBusy(true);setError('');setStoreDisabled(false);try{const[catalogue,myOrders]=await Promise.all([getStoreCatalogue(),getMyStoreOrders()]);setProducts(catalogue.products);setWallet(catalogue.coinWallet);setActiveDrop(catalogue.activeDrop);setOrders(myOrders);}catch(err:any){if(err?.status===404){setStoreDisabled(true);setProducts([]);setOrders([]);}else setError(err?.message||'Não foi possível carregar os Drops.')}finally{setBusy(false)}},[]);
   useEffect(()=>{if(ready&&user)void load()},[ready,user,load]);
+  useEffect(()=>{
+    if(!user){lastRevision.current=null;return;}
+    return subscribeAdminRealtime(state=>{
+      if(lastRevision.current===null){lastRevision.current=state.revision;return;}
+      if(state.revision===lastRevision.current)return;
+      lastRevision.current=state.revision;
+      if(['STORE_ORDER_CHANGED','STORE_PRODUCT_CHANGED','DROP_CHANGED','SYSTEM_CHANGED'].includes(state.lastEventType))void load();
+    });
+  },[user,load]);
   const categories=useMemo(()=>['Todos',...Array.from(new Set(products.map(product=>String(product.category||'Outros')).filter(Boolean)))],[products]);
   const visible=useMemo(()=>products.filter(product=>category==='Todos'||String(product.category||'Outros')===category),[products,category]);
   const openCheckout=(product:StoreProduct,nextMode:CheckoutMode)=>{setSelected(product);setMode(nextMode);setQuantity(1);setOrder(null);setPayment(null);setError('');};
