@@ -9,6 +9,7 @@ import ChampionshipAdminNav from './admin/ChampionshipAdminNav';
 import ChampionshipOperationsPage from './admin/ChampionshipOperationsPage';
 import PowerLiftReviewPage from './admin/PowerLiftReviewPage';
 import ChampionshipSignupPage from './public/ChampionshipSignupPage';
+import ChampionshipsLivePage from './public/ChampionshipsLivePage';
 import AccountPortalPage from './public/AccountPortalPage';
 import './RebuildApp.css';
 import './admin/AdminOperational.css';
@@ -22,6 +23,7 @@ const isChampionshipAdminRoute = path === '/admin/championships' || path.startsW
 const isPowerLiftAdminRoute = path === '/admin/powerlift' || path.startsWith('/admin/powerlift/');
 const isAdminRoute = path === '/admin' || path.startsWith('/admin/');
 const isAccountRoute = path === '/conta' || path.startsWith('/conta/');
+const isChampionshipsLiveRoute = path === '/campeonatos';
 const championshipId = path === '/campeonatos/cardio'
   ? 'invictus_cardio_v1'
   : path === '/campeonatos/musculacao'
@@ -44,8 +46,10 @@ createRoot(document.getElementById('root')!).render(
                 ? <AdminShell />
                 : isAccountRoute
                   ? <AccountPortalPage />
-                  : championshipId
-                    ? <ChampionshipSignupPage championshipId={championshipId} />
-                    : <RebuildApp />}
+                  : isChampionshipsLiveRoute
+                    ? <ChampionshipsLivePage />
+                    : championshipId
+                      ? <ChampionshipSignupPage championshipId={championshipId} />
+                      : <RebuildApp />}
   </StrictMode>,
 );
