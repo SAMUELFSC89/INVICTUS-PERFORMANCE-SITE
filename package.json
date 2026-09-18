@@ -4,7 +4,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "assets": "node scripts/decode-assets.mjs",
+    "predev": "npm run assets",
     "dev": "vite --host=0.0.0.0 --port=3000",
+    "prebuild": "npm run assets",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "tsc --noEmit"
