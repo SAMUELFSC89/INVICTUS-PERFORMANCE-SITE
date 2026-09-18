@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { BarChart3, CreditCard, RefreshCw, ShoppingBag, TrendingDown, TrendingUp, Trophy, WalletCards } from 'lucide-react';
+import { BarChart3, CreditCard, RefreshCw, ShoppingBag, TrendingDown, TrendingUp, Trophy, UserCheck, WalletCards } from 'lucide-react';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { secureAppRequest } from '../lib/secureAppApi';
+import { db } from '../lib/firebaseClient';
+import { hasActiveProEntitlement } from '../lib/proEntitlement';
 
 type FeedbackSetter = (message: { type: 'success' | 'error'; text: string } | null) => void;
 type Point = { key: string; label: string; revenue: number; payments: number };
@@ -24,14 +27,22 @@ const money = (value: unknown) => Number(value || 0).toLocaleString('pt-BR', { s
 
 export function FinanceOverviewPanel({ setFeedback }: { setFeedback: FeedbackSetter }) {
   const [data, setData] = useState<FinancialOverview | null>(null);
+  const [activePro, setActivePro] = useState(0);
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<'monthly' | 'daily'>('monthly');
 
   const load = useCallback(async () => {
     setLoading(true); setFeedback(null);
     try {
-      const result = await secureAppRequest<FinancialOverview & { success?: boolean }>('/api/admin-financial-overview');
-      setData(result);
+      const [result, proResult] = await Promise.allSettled([
+        secureAppRequest<FinancialOverview & { success?: boolean }>('/api/admin-financial-overview'),
+        getDocs(query(collection(db, 'users'), where('subscriptionTier', 'in', ['performance', 'pro']))),
+      ]);
+      if (result.status === 'rejected') throw result.reason;
+      setData(result.value);
+      if (proResult.status === 'fulfilled') {
+        setActivePro(proResult.value.docs.filter(document => hasActiveProEntitlement(document.data())).length);
+      }
     } catch (err: any) {
       setFeedback({ type: 'error', text: err?.message || 'Não foi possível carregar o faturamento.' });
     } finally { setLoading(false); }
@@ -48,10 +59,11 @@ export function FinanceOverviewPanel({ setFeedback }: { setFeedback: FeedbackSet
       <div><p className="adm-kicker">FINANÇAS DA PLATAFORMA</p><h2>Faturamento e fluxo financeiro</h2><p>Assinaturas/pagamentos aprovados, inscrições pagas em campeonatos, loja física e saques em uma única central. O gráfico principal usa fontes com confirmação financeira canônica; a loja física aparece separada enquanto o modelo não possui um único timestamp imutável de liquidação.</p></div>
       <button className="adm-refresh" onClick={() => void load()} disabled={loading}><RefreshCw size={15}/>{loading ? 'Atualizando...' : 'Atualizar'}</button>
     </div>
-    <div className="adm-metrics adm-metrics-six">
+    <div className="adm-metrics adm-metrics-seven">
       <FinanceMetric label="Receita confirmada 12 meses" value={money(data?.grossRevenue)} icon={<BarChart3/>}/>
       <FinanceMetric label="Receita este mês" value={money(data?.currentMonthRevenue)} icon={growth !== null && growth !== undefined && growth < 0 ? <TrendingDown/> : <TrendingUp/>} sub={growth === null || growth === undefined ? 'Sem base anterior' : `${growth >= 0 ? '+' : ''}${growth.toFixed(1)}% vs. mês anterior`}/>
       <FinanceMetric label="Ticket médio" value={money(data?.averageTicket)} icon={<CreditCard/>} sub={`${Number(data?.approvedPayments || 0).toLocaleString('pt-BR')} cobranças confirmadas`}/>
+      <FinanceMetric label="PRO ativos" value={activePro.toLocaleString('pt-BR')} icon={<UserCheck/>} sub="Política canônica de entitlement"/>
       <FinanceMetric label="Campeonatos" value={money(data?.championships?.revenue)} icon={<Trophy/>} sub={`${Number(data?.championships?.registrations || 0).toLocaleString('pt-BR')} inscrições pagas`}/>
       <FinanceMetric label="Loja física" value={money(data?.store?.revenue)} icon={<ShoppingBag/>} sub={`${Number(data?.store?.orders || 0).toLocaleString('pt-BR')} pedidos faturados`}/>
       <FinanceMetric label="Saques pagos" value={money(data?.payouts?.paidAmount)} icon={<WalletCards/>} sub={`${Number(data?.payouts?.paidCount || 0).toLocaleString('pt-BR')} pagos · ${Number(data?.payouts?.inFlowCount || 0).toLocaleString('pt-BR')} em fluxo`}/>
@@ -64,7 +76,7 @@ export function FinanceOverviewPanel({ setFeedback }: { setFeedback: FeedbackSet
 
     <div className="adm-two-col">
       <section className="adm-card"><div className="adm-card-title"><div><small>COMPOSIÇÃO</small><h2>Receita por produto/origem</h2></div></div>{data?.byCategory?.length ? <div className="adm-category-bars">{data.byCategory.map(item => <div key={item.category}><header><b>{item.category}</b><span>{money(item.revenue)} · {item.payments} pgto.</span></header><div><i style={{width:`${Math.max(2,(item.revenue/maxCategory)*100)}%`}}/></div></div>)}</div> : <div className="adm-empty">Sem categorias financeiras no período.</div>}</section>
-      <section className="adm-card"><div className="adm-card-title"><div><small>RESUMO</small><h2>Leitura operacional</h2></div></div><div className="adm-finance-summary"><p><span>Receita do mês anterior</span><b>{money(data?.previousMonthRevenue)}</b></p><p><span>Cobranças confirmadas</span><b>{Number(data?.approvedPayments||0).toLocaleString('pt-BR')}</b></p><p><span>Inscrições de campeonatos</span><b>{Number(data?.championships?.registrations||0).toLocaleString('pt-BR')}</b></p><p><span>Saques em processamento</span><b>{Number(data?.payouts?.inFlowCount||0).toLocaleString('pt-BR')}</b></p><p><span>Última atualização</span><b>{data?.generatedAt ? new Date(data.generatedAt).toLocaleString('pt-BR') : '—'}</b></p></div></section>
+      <section className="adm-card"><div className="adm-card-title"><div><small>RESUMO</small><h2>Leitura operacional</h2></div></div><div className="adm-finance-summary"><p><span>Receita do mês anterior</span><b>{money(data?.previousMonthRevenue)}</b></p><p><span>Cobranças confirmadas</span><b>{Number(data?.approvedPayments||0).toLocaleString('pt-BR')}</b></p><p><span>PRO ativos</span><b>{activePro.toLocaleString('pt-BR')}</b></p><p><span>Inscrições de campeonatos</span><b>{Number(data?.championships?.registrations||0).toLocaleString('pt-BR')}</b></p><p><span>Saques em processamento</span><b>{Number(data?.payouts?.inFlowCount||0).toLocaleString('pt-BR')}</b></p><p><span>Última atualização</span><b>{data?.generatedAt ? new Date(data.generatedAt).toLocaleString('pt-BR') : '—'}</b></p></div></section>
     </div>
   </>;
 }
