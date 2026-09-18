@@ -11,6 +11,8 @@ import PowerLiftReviewPage from './admin/PowerLiftReviewPage';
 import ChampionshipSignupPage from './public/ChampionshipSignupPage';
 import ChampionshipsLivePage from './public/ChampionshipsLivePage';
 import AccountPortalPage from './public/AccountPortalPage';
+import AccountSignupPage from './public/AccountSignupPage';
+import AccountOnboardingPage from './public/AccountOnboardingPage';
 import PrivateChallengesPortalPage from './public/PrivateChallengesPortalPage';
 import PowerLiftPortalPage from './public/PowerLiftPortalPage';
 import DropsStorePage from './public/DropsStorePage';
@@ -26,6 +28,8 @@ const isChampionshipOperationsAdminRoute = path === '/admin/championships/operat
 const isChampionshipAdminRoute = path === '/admin/championships' || path.startsWith('/admin/championships/');
 const isPowerLiftAdminRoute = path === '/admin/powerlift' || path.startsWith('/admin/powerlift/');
 const isAdminRoute = path === '/admin' || path.startsWith('/admin/');
+const isAccountSignupRoute = path === '/conta/cadastro';
+const isAccountOnboardingRoute = path === '/conta/completar';
 const isAccountRoute = path === '/conta' || path.startsWith('/conta/');
 const isPrivateChallengesRoute = path === '/entre-amigos' || path.startsWith('/entre-amigos/');
 const isPowerLiftRoute = path === '/power-lift' || path.startsWith('/power-lift/');
@@ -40,9 +44,6 @@ const championshipId = path === '/campeonatos/cardio'
 function RebuildAppRouterBoundary() {
   useEffect(() => {
     const originalPushState = window.history.pushState.bind(window.history);
-    // RebuildApp permanece apenas como a Home visual. Qualquer CTA que leve a
-    // uma área funcional deve fazer uma navegação real para que `entry.tsx`
-    // monte a página canônica e nunca uma cópia demonstrativa interna.
     const canonicalPublicRoutes = new Set([
       '/campeonatos',
       '/campeonatos/cardio',
@@ -51,6 +52,8 @@ function RebuildAppRouterBoundary() {
       '/power-lift',
       '/drops',
       '/conta',
+      '/conta/cadastro',
+      '/conta/completar',
       '/admin',
     ]);
     const patchedPushState: History['pushState'] = (data, unused, url) => {
@@ -84,18 +87,22 @@ createRoot(document.getElementById('root')!).render(
               ? <PowerLiftReviewPage />
               : isAdminRoute
                 ? <AdminShell />
-                : isAccountRoute
-                  ? <AccountPortalPage />
-                  : isPrivateChallengesRoute
-                    ? <PrivateChallengesPortalPage />
-                    : isPowerLiftRoute
-                      ? <PowerLiftPortalPage />
-                      : isDropsRoute
-                        ? <DropsStorePage />
-                        : isChampionshipsLiveRoute
-                          ? <ChampionshipsLivePage />
-                          : championshipId
-                            ? <ChampionshipSignupPage championshipId={championshipId} />
-                            : <RebuildAppRouterBoundary />}
+                : isAccountSignupRoute
+                  ? <AccountSignupPage />
+                  : isAccountOnboardingRoute
+                    ? <AccountOnboardingPage />
+                    : isAccountRoute
+                      ? <AccountPortalPage />
+                      : isPrivateChallengesRoute
+                        ? <PrivateChallengesPortalPage />
+                        : isPowerLiftRoute
+                          ? <PowerLiftPortalPage />
+                          : isDropsRoute
+                            ? <DropsStorePage />
+                            : isChampionshipsLiveRoute
+                              ? <ChampionshipsLivePage />
+                              : championshipId
+                                ? <ChampionshipSignupPage championshipId={championshipId} />
+                                : <RebuildAppRouterBoundary />}
   </StrictMode>,
 );
