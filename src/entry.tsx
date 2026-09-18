@@ -4,6 +4,7 @@ import RebuildApp from './RebuildApp';
 import AdminShell from './admin/AdminShell';
 import AuditCenterPage from './admin/AuditCenterPage';
 import ChampionshipAdminPage from './admin/ChampionshipAdminPage';
+import ChampionshipAdminNav from './admin/ChampionshipAdminNav';
 import ChampionshipOperationsPage from './admin/ChampionshipOperationsPage';
 import PowerLiftReviewPage from './admin/PowerLiftReviewPage';
 import ChampionshipSignupPage from './public/ChampionshipSignupPage';
@@ -30,9 +31,9 @@ createRoot(document.getElementById('root')!).render(
     {isAuditAdminRoute
       ? <AuditCenterPage />
       : isChampionshipOperationsAdminRoute
-        ? <ChampionshipOperationsPage />
+        ? <><ChampionshipOperationsPage /><ChampionshipAdminNav mode="operations" /></>
         : isChampionshipAdminRoute
-          ? <ChampionshipAdminPage />
+          ? <><ChampionshipAdminPage /><ChampionshipAdminNav mode="config" /></>
           : isPowerLiftAdminRoute
             ? <PowerLiftReviewPage />
             : isAdminRoute
