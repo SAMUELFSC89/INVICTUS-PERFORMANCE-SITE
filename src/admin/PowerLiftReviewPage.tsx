@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, CheckCircle2, Dumbbell, ExternalLink, RefreshCw, ShieldCheck, XCircle } from 'lucide-react';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '../lib/firebaseClient';
 import { adminRequest } from '../lib/adminApi';
+import { subscribeAdminRealtime } from '../lib/adminRealtime';
 import './AdminPanel.css';
 
 type RecordRow = {
@@ -25,10 +26,12 @@ export default function PowerLiftReviewPage() {
   const [status, setStatus] = useState<'manual_review'|'approved'|'rejected'>('manual_review');
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
+  const [live, setLive] = useState<'connecting'|'live'|'offline'>('connecting');
+  const lastRevision = useRef<number | null>(null);
 
   useEffect(() => onAuthStateChanged(auth, current => { setUser(current); setReady(true); }), []);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     if (!auth.currentUser) return;
     setBusy(true); setMessage('');
     try {
@@ -37,9 +40,23 @@ export default function PowerLiftReviewPage() {
     } catch (err: any) {
       setMessage(err?.message || 'Falha ao carregar revisões Power Lift.');
     } finally { setBusy(false); }
-  };
+  }, [status]);
 
-  useEffect(() => { if (user) void load(); }, [user, status]);
+  useEffect(() => { if (user) void load(); }, [user, load]);
+
+  useEffect(() => {
+    if (!user) { lastRevision.current = null; setLive('connecting'); return; }
+    setLive('connecting');
+    return subscribeAdminRealtime(state => {
+      setLive('live');
+      if (lastRevision.current === null) { lastRevision.current = state.revision; return; }
+      if (state.revision === lastRevision.current) return;
+      lastRevision.current = state.revision;
+      if (!state.lastEventType || state.lastEventType.startsWith('POWERLIFT_') || state.lastEventType === 'SYSTEM_CHANGED') {
+        void load();
+      }
+    }, () => setLive('offline'));
+  }, [user, load]);
 
   const openVideo = async (recordId: string) => {
     setBusy(true); setMessage('');
@@ -70,10 +87,13 @@ export default function PowerLiftReviewPage() {
     return <div className="adm-loading">Redirecionando para o login administrativo...</div>;
   }
 
+  const liveColor = live === 'live' ? '#34d399' : live === 'offline' ? '#fb7185' : '#facc15';
+  const liveText = live === 'live' ? 'AO VIVO' : live === 'offline' ? 'SEM TEMPO REAL' : 'CONECTANDO';
+
   return <main className="adm-content" style={{minHeight:'100vh',background:'#060606',color:'#f5f1e8',padding:'24px'}}>
     <div className="adm-topbar">
       <div><p className="adm-kicker">INVICTUS POWER LIFT</p><h1>Revisão de levantamentos</h1></div>
-      <div style={{display:'flex',gap:8}}><button className="adm-secondary" onClick={() => window.location.assign('/admin')}><ArrowLeft size={16}/>Painel</button><button className="adm-refresh" disabled={busy} onClick={() => void load()}><RefreshCw size={16}/>Atualizar</button></div>
+      <div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap'}}><span style={{display:'inline-flex',alignItems:'center',gap:7,padding:'8px 11px',borderRadius:999,border:'1px solid rgba(255,255,255,.09)',background:'rgba(255,255,255,.035)',fontSize:10,fontWeight:900,letterSpacing:'.08em',color:liveColor}}><span style={{width:7,height:7,borderRadius:'50%',background:liveColor,boxShadow:live==='live'?`0 0 12px ${liveColor}`:'none'}}/>{liveText}</span><button className="adm-secondary" onClick={() => window.location.assign('/admin')}><ArrowLeft size={16}/>Painel</button><button className="adm-refresh" disabled={busy} onClick={() => void load()}><RefreshCw size={16}/>Atualizar</button></div>
     </div>
 
     {message && <div className="adm-feedback success"><span><ShieldCheck size={17}/>{message}</span><button onClick={() => setMessage('')}><XCircle size={16}/></button></div>}
