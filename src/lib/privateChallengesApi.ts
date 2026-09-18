@@ -1,6 +1,16 @@
 import { auth } from './firebaseClient';
 import { API_BASE } from './adminApi';
 
+export type PrivateChallengeMember = {
+  userId?: string;
+  userName?: string;
+  userPhoto?: string;
+  points?: number;
+  workoutsCount?: number;
+  stakePaid?: number;
+  joinedAt?: unknown;
+};
+
 export type PrivateChallenge = Record<string, any> & {
   id?: string;
   title?: string;
@@ -11,7 +21,18 @@ export type PrivateChallenge = Record<string, any> & {
   participantsCount?: number;
   participantCount?: number;
   createdAt?: unknown;
+  startDate?: unknown;
+  endDate?: unknown;
   endsAt?: unknown;
+  winnerId?: string | null;
+  winnerName?: string | null;
+  winnerPhoto?: string | null;
+  resultStatus?: string | null;
+  resultReason?: string | null;
+  stakeAmount?: number;
+  potTotal?: number;
+  extendedOnce?: boolean;
+  members?: PrivateChallengeMember[];
 };
 
 type ChallengeListResponse = {
@@ -47,7 +68,12 @@ export async function listPrivateChallenges(): Promise<PrivateChallenge[]> {
   return Array.isArray(result?.challenges) ? result.challenges : [];
 }
 
-export async function createPrivateChallenge(input: { title: string; description: string; durationDays: 7 | 15 | 30 }): Promise<Record<string, any>> {
+export async function createPrivateChallenge(input: {
+  title: string;
+  description: string;
+  durationDays: 7 | 15 | 30;
+  stakeAmount?: number;
+}): Promise<Record<string, any>> {
   return challengeRequest<Record<string, any>>('create', { method: 'POST', body: input });
 }
 
