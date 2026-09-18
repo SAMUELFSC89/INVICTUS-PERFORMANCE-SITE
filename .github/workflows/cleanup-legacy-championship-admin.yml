@@ -1,0 +1,29 @@
+name: Cleanup legacy championship admin tab
+
+on:
+  push:
+    branches:
+      - feat/site-rebuild-approved-v2
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: feat/site-rebuild-approved-v2
+          fetch-depth: 0
+      - name: Replace dead championship placeholder
+        shell: bash
+        run: |
+          node -e "const fs=require('fs');const p='src/admin/AdminPanel.tsx';let s=fs.readFileSync(p,'utf8');const o=\"{tab==='championships'&&<section className=\\\"adm-module-grid\\\"><article className=\\\"adm-module\\\"><Trophy/><h2>Campeonatos oficiais</h2><p>A área fica no site administrativo. Criação, datas, preço, inscrições, categorias, regras e publicação de resultados serão centralizadas aqui, sem depender do aplicativo.</p><span className=\\\"adm-badge\\\">BACKOFFICE WEB</span></article><article className=\\\"adm-module\\\"><FileCheck2/><h2>Regulamentos e inscrições</h2><p>Esta etapa é adicional à migração das funções atuais do app e será ligada ao motor de campeonatos já existente.</p></article></section>}\";const n=\"{tab==='championships'&&<section className=\\\"adm-card\\\"><div className=\\\"adm-card-title\\\"><div><small>CAMPEONATOS OFICIAIS</small><h2>Central canônica de campeonatos</h2></div><Trophy/></div><p>Calendário, configuração, publicação, inscrições e operação da edição oficial ficam na central dedicada.</p><a className=\\\"adm-primary\\\" href=\\\"/admin/championships\\\">Abrir central de campeonatos</a></section>}\";if(!s.includes(o))process.exit(2);fs.writeFileSync(p,s.replace(o,n));"
+          git diff --check
+          git add src/admin/AdminPanel.tsx
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "fix: remove legacy championship admin placeholder"
+          git push origin HEAD:feat/site-rebuild-approved-v2
