@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   AlertTriangle,
   ArrowLeft,
@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '../lib/firebaseClient';
+import { subscribeAdminRealtime } from '../lib/adminRealtime';
 import { secureAppRequest } from '../lib/secureAppApi';
 import './AdminPanel.css';
 import './AthleteAuditPage.css';
@@ -54,23 +55,45 @@ export default function AthleteAuditPage() {
   const [target, setTarget] = useState('');
   const [audit, setAudit] = useState<AthleteAudit | null>(null);
   const [busy, setBusy] = useState(false);
+  const [live, setLive] = useState<'connecting' | 'live' | 'offline'>('connecting');
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => onAuthStateChanged(auth, current => { setUser(current); setReady(true); }), []);
 
-  const search = async (event?: FormEvent) => {
-    event?.preventDefault();
-    const normalized = target.trim();
+  const loadTarget = useCallback(async (searchTarget: string, quiet = false) => {
+    const normalized = searchTarget.trim();
     if (!normalized) return;
-    setBusy(true); setFeedback(null);
+    if (!quiet) setBusy(true);
+    if (!quiet) setFeedback(null);
     try {
       const response = await secureAppRequest<{ audit: AthleteAudit }>('/api/admin-audit', { query: { action: 'athlete', target: normalized, limit: 75 } });
       setAudit(response.audit);
+      if (!quiet && response.audit?.user?.uid) setTarget(String(response.audit.user.uid));
     } catch (error: any) {
-      setAudit(null);
+      if (!quiet) setAudit(null);
       setFeedback({ type: 'error', text: error?.message || 'Não foi possível auditar este atleta.' });
-    } finally { setBusy(false); }
+    } finally { if (!quiet) setBusy(false); }
+  }, []);
+
+  const search = async (event?: FormEvent) => {
+    event?.preventDefault();
+    await loadTarget(target);
   };
+
+  const activeUid = String(audit?.user?.uid || '');
+  useEffect(() => {
+    if (!user || !activeUid) return;
+    let revision: number | null = null;
+    setLive('connecting');
+    return subscribeAdminRealtime(state => {
+      setLive('live');
+      if (revision === null) { revision = state.revision; return; }
+      if (revision !== state.revision) {
+        revision = state.revision;
+        void loadTarget(activeUid, true);
+      }
+    }, () => setLive('offline'));
+  }, [user, activeUid, loadTarget]);
 
   const activities = audit?.activities || [];
   const suspicious = useMemo(() => activities.filter(item => Number(item.riskScore || 0) >= 60 || ['BLOCKED', 'UNDER_REVIEW', 'PARTIALLY_APPROVED'].includes(String(item.decision || '').toUpperCase())), [activities]);
@@ -81,7 +104,7 @@ export default function AthleteAuditPage() {
   return <main className="athlete-audit-page">
     <header className="athlete-audit-top">
       <div><p className="adm-kicker">INVICTUS FORENSICS</p><h1>Auditoria por atleta</h1><p>Visão consolidada de confiança, antifraude, atividades, pontuação, campeonatos e revisões administrativas.</p></div>
-      <div className="adm-actions"><button onClick={() => window.location.assign('/admin/audit')}><ArrowLeft size={14}/>Auditoria geral</button></div>
+      <div className="adm-actions">{audit && <span className={`athlete-live ${live}`}>{live === 'live' ? 'AO VIVO' : live === 'offline' ? 'SEM TEMPO REAL' : 'CONECTANDO'}</span>}<button onClick={() => window.location.assign('/admin/audit')}><ArrowLeft size={14}/>Auditoria geral</button></div>
     </header>
 
     {feedback && <div className={`adm-feedback ${feedback.type}`}><span>{feedback.type === 'success' ? <CheckCircle2 size={16}/> : <AlertTriangle size={16}/>} {feedback.text}</span><button onClick={() => setFeedback(null)}><XCircle size={15}/></button></div>}
