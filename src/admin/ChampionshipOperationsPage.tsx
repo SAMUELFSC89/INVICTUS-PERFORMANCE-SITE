@@ -120,6 +120,16 @@ export default function ChampionshipOperationsPage() {
     }, () => setLive('offline'));
   }, [user, load]);
 
+  // O sinal realtime é o caminho principal. Este refresh silencioso funciona
+  // como rede de segurança para qualquer atualização de ranking originada em
+  // um fluxo legado que ainda não publique revisão administrativa. Assim o
+  // painel nunca depende de F5 e converge sozinho mesmo se um evento se perder.
+  useEffect(() => {
+    if (!user) return;
+    const timer = window.setInterval(() => void load(true), 15_000);
+    return () => window.clearInterval(timer);
+  }, [user, load]);
+
   const selected = useMemo(() => state?.championships?.find(item => item.runtime?.id === championshipId) || null, [state, championshipId]);
   const paid = Number(summary?.paid ?? selected?.registrations?.paid ?? 0);
   const pending = Number(summary?.pending ?? selected?.registrations?.pending ?? 0);
