@@ -9,7 +9,7 @@ on:
 
 jobs:
   verify:
-    name: Type Check & Build
+    name: Type Check, Build & Smoke
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -29,3 +29,6 @@ jobs:
 
       - name: Production build
         run: npm run build
+
+      - name: Production route smoke
+        run: npm run smoke
