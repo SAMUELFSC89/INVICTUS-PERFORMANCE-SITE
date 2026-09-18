@@ -171,11 +171,40 @@ export default function ChampionshipAdminPage() {
   };
 
   const publish = async () => {
+    if (!form || !state?.migration?.publishEnabled) return;
+    const confirmation = [
+      'PUBLICAR ESTA EDIÇÃO AGORA?',
+      '',
+      `${form.title} · ${form.edition || 'Nova edição'}`,
+      `Inscrições: ${displayDate(form.registrationOpensAt)} → ${displayDate(form.registrationClosesAt)}`,
+      `Competição: ${displayDate(form.startAt)} → ${displayDate(form.endAt)}`,
+      `Homologação: ${displayDate(form.settlementAt)}`,
+      `Inscrição: ${money(form.registrationPrice)}`,
+      `Premiação configurada: ${money(prizePool)}`,
+      `Inscrições ao publicar: ${form.registrationEnabled ? 'HABILITADAS' : 'BLOQUEADAS'}`,
+      '',
+      'A publicação cria uma edição imutável. Uma edição ativa não pode ser substituída antes de sua homologação/finalização.',
+    ].join('\n');
+    if (!window.confirm(confirmation)) return;
+
     setBusy(true); setFeedback(null);
     try {
-      await secureAppRequest('/api/admin-championships', { method: 'POST', query: { action: 'publish' }, body: { championshipId: form?.championshipId } });
+      // Persiste exatamente o formulário revisado antes de promover a edição.
+      await secureAppRequest('/api/admin-championships', {
+        method: 'POST', query: { action: 'save-draft' }, body: { draft: form as any },
+      });
+      const response = await secureAppRequest<any>('/api/admin-championships', {
+        method: 'POST', query: { action: 'publish' }, body: { championshipId: form.championshipId },
+      });
+      await load();
+      const editionId = String(response?.championship?.editionId || 'edição publicada');
+      const digest = String(response?.championship?.publishedConfigDigest || '');
+      setFeedback({
+        type: 'success',
+        text: `Edição publicada com snapshot imutável: ${editionId}${digest ? ` · digest ${digest}` : ''}.`,
+      });
     } catch (error: any) {
-      setFeedback({ type: 'error', text: error?.message || 'Publicação ainda protegida durante a migração.' });
+      setFeedback({ type: 'error', text: error?.message || 'A publicação foi bloqueada pelo controle de integridade da edição.' });
     } finally { setBusy(false); }
   };
 
@@ -204,7 +233,7 @@ export default function ChampionshipAdminPage() {
       </aside>
 
       {selected && form && <div className="champ-admin-editor">
-        <section className="adm-card champ-runtime-card"><div className="adm-card-title"><div><small>EDIÇÃO LIVE ATUAL</small><h2>{selected.runtime.title}</h2></div><span className="adm-badge">{String(selected.runtime.status || '').toUpperCase()}</span></div><div className="champ-runtime-grid"><Info icon={<CalendarDays/>} label="Período" value={`${displayDate(selected.runtime.startAt)} → ${displayDate(selected.runtime.endAt)}`}/><Info icon={<Coins/>} label="Preço" value={money(selected.runtime.registrationPrice)}/><Info icon={<Trophy/>} label="Premiação mínima" value={money(selected.runtime.prizePool)}/><Info icon={<Users/>} label="Inscrições pagas" value={String(selected.registrations?.paid || 0)}/><Info icon={<FileCheck2/>} label="Edition ID" value={String(selected.runtime.editionId || '—')}/><Info icon={<ShieldCheck/>} label="Settlement" value={String(selected.settlement?.status || 'Ainda não iniciado')}/></div></section>
+        <section className="adm-card champ-runtime-card"><div className="adm-card-title"><div><small>EDIÇÃO LIVE ATUAL</small><h2>{selected.runtime.title}</h2></div><span className="adm-badge">{String(selected.runtime.status || '').toUpperCase()}</span></div><div className="champ-runtime-grid"><Info icon={<CalendarDays/>} label="Período" value={`${displayDate(selected.runtime.startAt)} → ${displayDate(selected.runtime.endAt)}`}/><Info icon={<Coins/>} label="Preço" value={money(selected.runtime.registrationPrice)}/><Info icon={<Trophy/>} label="Premiação mínima" value={money(selected.runtime.prizePool)}/><Info icon={<Users/>} label="Inscrições pagas" value={String(selected.registrations?.paid || 0)}/><Info icon={<FileCheck2/>} label="Edition ID" value={String(selected.runtime.editionId || '—')}/><Info icon={<ShieldCheck/>} label="Settlement" value={String(selected.settlement?.status || 'Ainda não iniciado')}/><Info icon={<FileCheck2/>} label="Config digest" value={String(selected.runtime.publishedConfigDigest || '—')}/></div></section>
 
         <section className="adm-card"><div className="adm-card-title"><div><small>PRÓXIMA EDIÇÃO</small><h2>Configuração administrativa</h2></div><Save/></div><div className="champ-form-grid"><Field label="Título" value={form.title} onChange={value => setField('title', value)}/><Field label="Edição" value={form.edition} onChange={value => setField('edition', value)}/><DateField label="Abertura das inscrições" value={form.registrationOpensAt} onChange={value => setField('registrationOpensAt', value)}/><DateField label="Fechamento das inscrições" value={form.registrationClosesAt} onChange={value => setField('registrationClosesAt', value)}/><DateField label="Início" value={form.startAt} onChange={value => setField('startAt', value)}/><DateField label="Fim" value={form.endAt} onChange={value => setField('endAt', value)}/><DateField label="Homologação" value={form.settlementAt} onChange={value => setField('settlementAt', value)}/><NumberField label="Preço da inscrição" value={form.registrationPrice} onChange={value => setField('registrationPrice', value)}/></div><label className="champ-textarea">Descrição<textarea value={form.description} onChange={event => setField('description', event.target.value)}/></label>
         </section>
@@ -213,7 +242,7 @@ export default function ChampionshipAdminPage() {
 
         <section className="adm-card"><div className="adm-card-title"><div><small>PREMIAÇÃO</small><h2>Distribuição oficial</h2></div><Trophy/></div><div className="champ-prize-total"><small>POTE CONFIGURADO</small><strong>{money(prizePool)}</strong></div><div className="champ-prize-list">{form.prizes.map((prize, index) => <div key={index}><b>#{index + 1}</b><input value={prize.label || ''} onChange={event => setPrize(index, 'label', event.target.value)} placeholder="Rótulo"/><input type="number" min="0" step="0.01" value={prize.amount} onChange={event => setPrize(index, 'amount', event.target.value)}/><button disabled={form.prizes.length <= 1} onClick={() => removePrize(index)}><Trash2 size={14}/></button></div>)}</div><button className="adm-secondary" onClick={addPrize}>+ Adicionar posição</button></section>
 
-        <section className="adm-card champ-publish-card"><div><small className="adm-kicker">PUBLICAÇÃO</small><h2>Salvar agora, publicar somente com runtime atômico</h2><p>O rascunho já pode ser preparado e auditado no site. A ativação live continua fail-closed até o backend terminar de trocar inscrição, scoring e settlement para a mesma fonte publicada.</p></div><div className="champ-publish-actions"><label className="champ-check"><input type="checkbox" checked={form.registrationEnabled} onChange={event => setField('registrationEnabled', event.target.checked)}/>Abrir inscrições quando a edição for publicada</label><div className="adm-actions"><button className="danger" disabled={busy || !selected.draft} onClick={() => void discard()}><Trash2 size={14}/>Descartar rascunho</button><button disabled={busy} onClick={() => void save()}><Save size={14}/>Salvar rascunho</button><button className="gold" disabled={busy || !state?.migration?.publishEnabled} onClick={() => void publish()}><ShieldCheck size={14}/>Publicar edição</button></div>{!state?.migration?.publishEnabled && <small className="champ-publish-lock"><AlertTriangle size={13}/>Publicação live bloqueada por segurança até a conclusão da migração atômica.</small>}</div></section>
+        <section className="adm-card champ-publish-card"><div><small className="adm-kicker">PUBLICAÇÃO</small><h2>Publicação atômica e edição imutável</h2><p>Ao publicar, o formulário revisado é salvo e promovido como um snapshot único. Inscrição, pagamento, política competitiva, scoring, ranking e settlement passam a resolver exatamente esse mesmo Edition ID. Uma edição ativa não pode ser substituída antes da finalização.</p></div><div className="champ-publish-actions"><label className="champ-check"><input type="checkbox" checked={form.registrationEnabled} onChange={event => setField('registrationEnabled', event.target.checked)}/>Abrir inscrições quando a edição for publicada</label><div className="adm-actions"><button className="danger" disabled={busy || !selected.draft} onClick={() => void discard()}><Trash2 size={14}/>Descartar rascunho</button><button disabled={busy} onClick={() => void save()}><Save size={14}/>Salvar rascunho</button><button className="gold" disabled={busy || !state?.migration?.publishEnabled} onClick={() => void publish()}><ShieldCheck size={14}/>Publicar edição</button></div>{!state?.migration?.publishEnabled && <small className="champ-publish-lock"><AlertTriangle size={13}/>Publicação live bloqueada pelo backend até que a integridade da migração esteja garantida.</small>}{state?.migration?.publishEnabled && <small className="champ-publish-lock"><ShieldCheck size={13}/>Runtime atômico pronto. A publicação exige confirmação explícita e gera log administrativo de alto risco.</small>}</div></section>
       </div>}
     </div>
   </main>;
@@ -222,4 +251,5 @@ export default function ChampionshipAdminPage() {
 function Info({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) { return <article>{icon}<small>{label}</small><b>{value}</b></article>; }
 function Field({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) { return <label><span>{label}</span><input value={value} onChange={event => onChange(event.target.value)}/></label>; }
 function DateField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) { return <label><span>{label}</span><input type="datetime-local" value={value} onChange={event => onChange(event.target.value)}/></label>; }
-function NumberField({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) { return <label><span>{label}</span><input type="number" step="0.01" value={value} onChange={event => onChange(Number(event.target.value))}/></label>; }
+function NumberField({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) { return <label><span>{label}</span><input type="number" step="0.01" value={value} onChange={event => onChange(Number(event.target.value))}/></label>;
+}
