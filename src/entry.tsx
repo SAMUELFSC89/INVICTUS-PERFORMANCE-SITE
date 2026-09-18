@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import RebuildApp from './RebuildApp';
-import AdminPanel from './admin/AdminPanel';
+import AdminShell from './admin/AdminShell';
 import AuditCenterPage from './admin/AuditCenterPage';
 import ChampionshipAdminPage from './admin/ChampionshipAdminPage';
 import PowerLiftReviewPage from './admin/PowerLiftReviewPage';
@@ -32,7 +32,7 @@ createRoot(document.getElementById('root')!).render(
         : isPowerLiftAdminRoute
           ? <PowerLiftReviewPage />
           : isAdminRoute
-            ? <AdminPanel />
+            ? <AdminShell />
             : isAccountRoute
               ? <AccountPortalPage />
               : championshipId
