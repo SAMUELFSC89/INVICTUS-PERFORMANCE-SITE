@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { ArrowLeft, CheckCircle2, ShieldCheck } from 'lucide-react';
-import { onAuthStateChanged, type User } from 'firebase/auth';
+import { deleteUser, onAuthStateChanged, signOut, type User } from 'firebase/auth';
 import { auth } from '../lib/firebaseClient';
 import { checkCpfInUse, CURRENT_LEGAL_VERSION, onboardAccount, runIdentityAction } from '../lib/accountApi';
 import './AccountAccess.css';
@@ -26,6 +26,11 @@ export default function AccountOnboardingPage() {
 
   useEffect(() => onAuthStateChanged(auth, current => { setUser(current); setReady(true); }), []);
 
+  const clearSignupMarkers = () => {
+    sessionStorage.removeItem('invictus_signup_name');
+    sessionStorage.removeItem('invictus_signup_created_uid');
+  };
+
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     if (!user) { setError('Sua sessão expirou. Entre novamente para concluir o cadastro.'); return; }
@@ -38,7 +43,21 @@ export default function AccountOnboardingPage() {
 
     setBusy(true); setError('');
     try {
-      if (await checkCpfInUse(user, normalizedCpf)) throw new Error('Este CPF já está em uso por outra conta.');
+      const cpfAlreadyInUse = await checkCpfInUse(user, normalizedCpf);
+      if (cpfAlreadyInUse) {
+        const createdUid = sessionStorage.getItem('invictus_signup_created_uid');
+        if (createdUid === user.uid) {
+          try {
+            await deleteUser(user);
+          } catch {
+            await signOut(auth).catch(() => undefined);
+          }
+          clearSignupMarkers();
+          throw new Error('Este CPF já está em uso por outra conta. A identidade recém-criada foi descartada; entre com a conta que já possui este CPF.');
+        }
+        throw new Error('Este CPF já está em uso por outra conta. Nenhuma alteração foi feita nesta conta.');
+      }
+
       await onboardAccount(user, {
         displayName: name.trim(),
         cpf: normalizedCpf,
@@ -60,7 +79,7 @@ export default function AccountOnboardingPage() {
       // Receita/Serpro está temporariamente suspensa por decisão de produto.
       // Mantemos o CPF cadastrado e único, mas não chamamos verify-cpf aqui.
       try { await runIdentityAction('send-verification-email'); } catch { /* a conta continua válida e o e-mail pode ser reenviado depois */ }
-      sessionStorage.removeItem('invictus_signup_name');
+      clearSignupMarkers();
       setSuccess(true);
       window.setTimeout(() => window.location.assign('/conta'), 900);
     } catch (reason: any) {
