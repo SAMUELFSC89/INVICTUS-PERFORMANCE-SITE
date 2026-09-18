@@ -4,129 +4,108 @@ Este checklist registra o estado real da reconstrução e evita considerar o sit
 
 > Atualização de 18/09/2026: por decisão de produto, os assets visuais finais ficam para a última etapa. O trabalho segue primeiro nos fluxos funcionais, integração, Admin, realtime e E2E.
 
-## Já implementado
+## Já implementado e validado
 
 - Nova base visual e responsiva preto/grafite/dourado.
-- Home, Campeonatos, Entre Amigos, Power Lift, Drops e Minha Conta como rotas públicas.
+- Home, Campeonatos, Entre Amigos, Power Lift, Drops e Minha Conta como rotas públicas canônicas.
 - Catálogo oficial de campeonatos ligado ao backend canônico do app.
 - Detalhes de Cardio e Musculação ligados ao runtime publicado da edição.
 - Login Firebase compartilhado entre app e site.
 - Recuperação de senha por Firebase Auth no site.
-- Cadastro web em duas etapas usando o mesmo Firebase Auth do app e `/api/profile?action=onboard` server-authoritative para concluir o perfil.
-- CPF continua obrigatório no cadastro e com checagem de unicidade, porém a consulta/selagem Receita Federal via Serpro está temporariamente suspensa por decisão de produto e não bloqueia o onboarding do site.
+- Cadastro web em duas etapas usando o mesmo Firebase Auth do app e `/api/profile?action=onboard` server-authoritative.
+- CPF continua obrigatório e com checagem de unicidade, mas Receita/Serpro está temporariamente suspenso por decisão de produto e não bloqueia onboarding.
+- Caso de CPF duplicado após criação do Auth protegido: somente o UID recém-criado por aquele fluxo pode ser excluído, evitando identidade órfã sem risco para conta existente.
 - Aceite de regulamento e checkout oficial de campeonato pelo site.
 - Confirmação financeira server-authoritative via Asaas/webhook.
-- Minha Conta sincronizada com as inscrições reais do atleta.
-- Entre Amigos comunicado e preparado no site como benefício PRO com disputa por IGA e prêmio opcional em Invictus Coins: valor por participante, pote, líder, extensão de 1 dia em empate, divisão se o empate persistir e devolução quando não houver participantes suficientes.
-- O cliente web de Entre Amigos já aceita `stakeAmount` e exibe os novos campos de pote/resultado quando o backend os retorna.
-- Power Lift público ligado ao motor sazonal: temporada, categorias, Power Volume, Power Points, Elite, Geral, opt-in e defesa de título; envio/homologação de marca permanece no app.
-- Power Lift já é comunicado em toda a experiência pública como benefício Invictus PRO. O gate técnico definitivo fica para quando a mudança correspondente terminar no backend/app.
-- Drops público substituído por catálogo oficial, saldo de Coins, pedidos reais, compra em dinheiro, desconto com Coins, resgate em Drop, endereço e geração de PIX; quando `PUBLIC_STORE_ENABLED` estiver desligado, exibe pré-lançamento em vez de catálogo fictício.
-- Busca decorativa do cabeçalho removida.
-- Navegação da Home força entrada nas rotas funcionais canônicas de Campeonatos, Cardio, Musculação, Entre Amigos, Power Lift, Drops, Conta e Admin, evitando as telas demonstrativas antigas internas do `RebuildApp`.
-- Central Admin com visão geral, faturamento, saques, pendências, atividades, antifraude, usuários, academias, produtos, Drops, pedidos, Power Lift e configurações.
-- Central forense de antifraude/IGA por atividade e por atleta.
-- Administração de campeonatos: rascunho, publicação imutável, Edition ID, digest, regras, datas, preço, premiação e antifraude.
-- Operação de campeonatos: resumo canônico sem limite da tabela, inscrições, ranking, conciliação, vencedores e homologação.
-- O tab legado `Campeonatos` do `AdminPanel` redireciona para `/admin/championships`, eliminando o placeholder como destino operacional.
-- Realtime administrativo pelo documento `system_stats/admin_realtime`, com listener no site e refresh silencioso de segurança na operação de campeonatos.
-- Backend da PR #190 já emite sinais de realtime para confirmação/conciliação de campeonato, eventos financeiros Asaas, saques, loja, várias ações administrativas, revisão de atividade e Power Lift.
-- CI do SITE com TypeScript + build de produção; checkpoint atual com cadastro, recuperação, Entre Amigos IGA/Coins, Power Lift PRO e roteamento canônico está verde, com preview Vercel criado.
+- Minha Conta sincronizada com inscrições reais do atleta.
+- Entre Amigos comunicado e preparado no site como PRO + IGA + prêmio opcional em Invictus Coins.
+- Cliente web de Entre Amigos aceita `stakeAmount` e exibe pote/resultado quando o backend retorna esses campos.
+- Power Lift público ligado ao motor sazonal e comunicado como benefício PRO; gate técnico definitivo aguarda conclusão da mudança correspondente no APP/backend.
+- Drops público usa catálogo oficial, Coins, pedidos, PIX e resgate; sem catálogo fictício quando `PUBLIC_STORE_ENABLED=false`.
+- Drops público escuta realtime e atualiza pedido aberto quando pagamento/status muda.
+- Home não contém mais as páginas-demo antigas do `RebuildApp`; todos os CTAs navegam para páginas canônicas.
+- Dados demonstrativos antigos de campeonatos/rankings/datas foram removidos do bundle da Home.
+- Central Admin, auditoria antifraude/IGA, administração e operação de campeonatos estão conectadas às APIs canônicas.
+- Realtime administrativo usa `system_stats/admin_realtime` e o site recarrega módulos relevantes por revisão/evento.
+- Backend da PR #190 agora publica realtime para: inscrição pendente, pagamento confirmado/conciliação, score/ranking automático, invalidação após revisão, settlement, saques, loja, revisões administrativas e Power Lift.
+- Teste de contrato `admin-realtime-producers-contract.test.ts` impede regressão da cobertura de inscrição/score/settlement.
+- PR #190 passou TypeScript, Firebase Rules, unit tests, build web e Android debug APK no workflow #1446.
+- SITE CI executa TypeScript + build + smoke de produção.
+- Smoke de produção valida 16 rotas, shell React, bundles JS/CSS, contratos de fonte e ausência de dados-demo antigos na Home.
+- A falha inicial do smoke foi identificada como falso negativo do harness: o teste concluía `Smoke OK`, encerrava o Vite intencionalmente com SIGTERM e tratava o código 143 como erro. O harness foi corrigido e o workflow atual está verde.
 
 ## Divergências conhecidas entre SITE e APP durante a implementação
 
-### Entre Amigos — contrato novo preparado, handler ativo ainda precisa convergir
+### Entre Amigos — implementação existe como patch, mas ainda não está materializada no handler ativo
 
-A regra nova existe no repositório do APP no patch `0002-feat-challenges-add-Invictus-Coins-wagering-to-priva.patch` e é a regra de produto adotada pelo site:
+A regra nova está integralmente versionada no repositório do APP em `0002-feat-challenges-add-Invictus-Coins-wagering-to-priva.patch` e corresponde ao produto aprovado:
 
-- PRO;
-- prêmio opcional em Invictus Coins;
+- exclusivo PRO;
+- aposta opcional em Invictus Coins;
 - mesmo valor por participante;
-- score calculado pelo IGA na janela do desafio;
+- débito atômico no wallet ao criar/entrar;
+- score calculado pelo IGA canônico na janela do desafio;
 - líder único leva o pote;
 - empate no topo estende 1 dia uma única vez;
 - empate persistente divide o pote;
 - menos de 2 participantes devolve as Coins;
-- settlement idempotente.
+- settlement idempotente;
+- testes próprios de débito, saldo insuficiente, payout, extensão, divisão e não duplicação.
 
-O arquivo ativo `api/_handlers/private-challenges.ts` da `main` consultada ainda corresponde ao contrato anterior sem stake/IGA. Não considerar o E2E de Entre Amigos concluído até o patch novo estar efetivamente aplicado ao handler implantado.
+A conferência de 18/09/2026 mostrou que `api/_handlers/private-challenges.ts` tanto na `main` quanto na branch `feat/site-admin-powerlift-20260918` ainda contém o contrato anterior sem stake/IGA. Portanto o patch está versionado, mas ainda não foi aplicado ao código executável. Não considerar o E2E de Entre Amigos concluído até essa materialização passar CI e estar implantada.
 
 ### Power Lift — comunicação PRO antecipada
 
-O site já posiciona Power Lift como benefício PRO. A implementação de entitlement/gate definitivo está sendo concluída no APP/backend; por enquanto o site não adicionou um bloqueio técnico independente para não divergir da fonte canônica.
+O site já posiciona Power Lift como benefício PRO. A implementação de entitlement/gate definitivo está sendo concluída no APP/backend; o site não cria um bloqueio técnico independente para não divergir da fonte canônica.
 
-## Bloqueadores para chamar o SITE inteiro de finalizado
+## Bloqueadores restantes para chamar o SITE inteiro de finalizado
 
-### 1. Realtime completo de negócio
+### 1. E2E live com sessão real e dados controlados
 
-A auditoria dos produtores confirmou cobertura para pagamentos/inscrições confirmadas, reconciliação financeira, saques, loja, ações administrativas, revisões de atividade e Power Lift.
+A camada automatizada de rotas/build está verde. O preview do backend da PR #190 também está `READY`, porém protegido pelo SSO da Vercel. Falta executar a camada live autenticada sem confundir proteção do preview com erro de API.
 
-Gaps concretos encontrados no backend de suporte da PR #190:
-
-- `submitActivityToActiveChampionships()` grava/atualiza `championship_scores` após atividade validada, mas não publica o sinal central de realtime; o ranking pode mudar sem invalidar imediatamente o cache do site;
-- a invalidação de score em `syncReviewedActivityCompetitionScores()` também deve publicar alteração competitiva quando zerar/rejeitar scores;
-- `finalizePaidChampionship()` e o caminho de retomada de settlement gravam vencedores, resultados e estado `FINALIZED`, mas o serviço de settlement não publica por conta própria um sinal específico de fechamento/vencedores.
-
-Correção prevista: publicar eventos explícitos como `CHAMPIONSHIP_SCORE_CHANGED` e `CHAMPIONSHIP_SETTLEMENT_CHANGED` no produtor server-side, mantendo a verdade de negócio nas coleções/APIs canônicas. Polling continua apenas como segurança e não substitui esses eventos.
-
-### 2. E2E funcional com sessão real
-
-O CI e o build de produção estão verdes e o preview Vercel é criado com sucesso. Porém o preview do SITE está protegido e não pôde ser aberto pelo navegador/fetch disponível neste ambiente com uma sessão real autenticada. Portanto não marcar como executado aquilo que ainda não foi testado interativamente.
-
-Executar com contas de teste e dados reais controlados:
+Executar com contas de teste e dados controlados:
 
 1. criar conta pelo site;
-2. confirmar que o mesmo UID/perfil abre no app;
+2. confirmar o mesmo UID/perfil no app;
 3. recuperar senha;
-4. abrir uma edição pelo Admin;
-5. publicar edição;
-6. catálogo público atualizar;
-7. aceitar regulamento;
-8. gerar checkout;
-9. confirmar pagamento Asaas;
-10. app reconhecer a mesma inscrição;
-11. registrar atividade no app;
-12. score/ranking atualizar automaticamente no site;
-13. forçar caso antifraude/revisão;
-14. auditar atividade e atleta pelo site;
-15. invalidar/aprovar e confirmar atualização imediata do ranking;
-16. encerrar edição;
-17. homologar e confirmar vencedores/premiação;
-18. testar refund/chargeback/conciliação;
-19. testar saques e loja/Drops administrativos;
-20. testar catálogo/compra/resgate do Drops público com `PUBLIC_STORE_ENABLED=true`;
-21. testar `PUBLIC_STORE_ENABLED=false` e confirmar ausência de produtos fictícios;
-22. após convergência do handler de Entre Amigos, testar criação com e sem stake, entrada, débito de Coins, IGA, vencedor, empate, extensão, divisão e reembolso.
+4. abrir e publicar edição pelo Admin;
+5. confirmar atualização do catálogo público;
+6. aceitar regulamento;
+7. gerar checkout;
+8. confirmar pagamento Asaas em ambiente de teste/controlado;
+9. confirmar a mesma inscrição no app e no site;
+10. registrar atividade no app;
+11. confirmar score/ranking realtime no site;
+12. forçar revisão antifraude;
+13. aprovar/rejeitar e confirmar invalidação/atualização realtime;
+14. homologar edição e conferir vencedores/premiação;
+15. testar refund/chargeback/conciliação;
+16. testar saques e loja/Drops administrativos;
+17. testar `PUBLIC_STORE_ENABLED=true` e `false`;
+18. após materializar o patch de Entre Amigos, testar criação com/sem stake, entrada, débito, IGA, vencedor, empate, extensão, divisão e reembolso.
 
-### 3. Conta/identidade — acabamentos
+### 2. Entre Amigos — aplicar o patch já aprovado
 
-- Cadastro e recuperação já existem no SITE.
-- CPF é coletado e checado quanto à unicidade, mas `verify-cpf` não é chamado enquanto Receita/Serpro estiver temporariamente suspenso.
-- E-mail de verificação Invictus é disparado best-effort após onboarding; confirmação por telefone/SMS continua pertencendo à central canônica de identidade.
-- Revisar o caso excepcional em que o Firebase Auth é criado e a segunda etapa encontra CPF duplicado, para evitar deixar identidade órfã sem perfil concluído.
-- Checkout não deve criar atalhos que contornem validações exigidas pelo backend vigente.
+Materializar o patch versionado no handler/IGA/wallet/tipos/testes, resolver eventuais conflitos com o código mais novo e passar o CI completo. Só então o contrato servido pelo APP estará igual à comunicação do SITE.
 
-### 4. Navegação/limpeza final de ações
+### 3. Power Lift — gate PRO definitivo
 
-- O tab legado de Campeonatos já redireciona para a central nova.
-- A lupa decorativa foi removida.
-- As rotas funcionais públicas saem da Home por navegação real.
-- Falta a última varredura de dados de demonstração e ações sem handler na árvore legada do `RebuildApp`, removendo código morto onde for seguro sem alterar a Home aprovada.
+Concluir o entitlement PRO no backend/app e depois alinhar o gate do site à mesma fonte canônica. A comunicação pública já está pronta.
 
-### 5. Backend e produção
+### 4. Backend e produção
 
-- PR #190 do APP contém o backend de suporte do Admin/realtime e precisa estar integrada/implantada antes da dependência definitiva do SITE.
-- O motor sazonal novo do Power Lift e o entitlement PRO precisam convergir no backend implantado antes do gate técnico final no site.
-- O contrato novo de Entre Amigos precisa sair do patch e estar aplicado no handler efetivamente implantado.
-- Conferir variáveis Firebase públicas, proxy `/api`, domínio oficial, CORS, robots/sitemap e ambiente Asaas correto.
-- Conferir `PUBLIC_STORE_ENABLED` no ambiente correto antes de liberar Drops ao público.
-- SITE PR permanece draft até E2E, auditoria funcional e, por último, assets + auditoria visual final.
-- Validar Vercel preview/produção após o merge.
+- Integrar e implantar a PR #190 antes de o SITE depender definitivamente dos novos produtores realtime/APIs administrativas.
+- Materializar e implantar o contrato novo de Entre Amigos.
+- Concluir o gate PRO do Power Lift.
+- Conferir Firebase público, proxy `/api`, CORS, domínio oficial, robots/sitemap e ambiente Asaas.
+- Conferir `PUBLIC_STORE_ENABLED` no ambiente correto.
+- SITE PR permanece draft até E2E live, auditoria funcional e assets/auditoria visual final.
 - Só depois remover as telas administrativas do aplicativo, em PR separada.
 
-### 6. Assets visuais finais — DEIXAR POR ÚLTIMO
+### 5. Assets visuais finais — DEIXAR POR ÚLTIMO
 
-Os componentes já apontam para `/public/assets/invictus`, mas os arquivos binários finais ainda não estão versionados nessa pasta. Precisam entrar os exports aprovados, sem stock e sem aproximações:
+Os componentes apontam para `/public/assets/invictus`, mas os binários finais ainda precisam entrar com os exports aprovados, sem stock e sem aproximações:
 
 - `home-hero.webp`
 - `championships-hero.webp`
@@ -139,7 +118,7 @@ Os componentes já apontam para `/public/assets/invictus`, mas os arquivos biná
 - produtos individuais do Drops quando necessário;
 - logos/marks oficiais Invictus usados pela interface.
 
-Depois da inclusão: conferir cada página desktop + mobile lado a lado com as referências aprovadas.
+Depois da inclusão: conferir desktop + mobile lado a lado com as referências aprovadas.
 
 ## Critério de conclusão
 
@@ -148,7 +127,7 @@ O site só deve ser chamado de finalizado quando:
 - nenhum CTA visível estiver sem função;
 - dados financeiros/competitivos vierem de fonte canônica;
 - app e site convergirem automaticamente para o mesmo estado;
-- produtores críticos de realtime estiverem fechados;
+- produtores críticos de realtime estiverem implantados;
 - Admin tiver paridade operacional validada;
 - E2E financeiro, competitivo, conta e loja estiver verde;
 - contrato novo de Entre Amigos e gate PRO do Power Lift estiverem implantados;
