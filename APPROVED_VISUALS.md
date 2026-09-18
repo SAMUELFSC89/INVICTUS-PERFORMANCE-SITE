@@ -1,11 +1,15 @@
 # Referências visuais aprovadas
 
-A reconstrução deve seguir exclusivamente as telas aprovadas no chat de setembro de 2026: Home, Campeonatos, Cardio, Entre Amigos, Power Lift, Drops, Minha Conta e Admin.
+Esta reconstrução parte exclusivamente das telas e assets aprovados nesta conversa.
 
-Regras fixas:
-- não reutilizar a UI antiga;
-- não substituir imagem aprovada por stock/asset aproximado;
-- homens e mulheres aparecem naturalmente no produto;
-- preto, grafite, dourado e branco;
-- texto e UI em HTML/CSS, não embutidos nos assets gerados;
-- componentes responsivos para desktop, tablet e mobile.
+## Regras fixas
+1. Não reutilizar layout visual do site antigo.
+2. Não substituir asset aprovado por stock ou por uma imagem apenas semelhante.
+3. Toda criação visual deve ser conferida antes de entrar no site.
+4. Homens e mulheres devem estar representados naturalmente no ecossistema.
+5. Logos presentes em roupas, aparelhos, produtos e cenário devem seguir a identidade Invictus aprovada — nunca marca genérica.
+6. Texto de interface, preço, status e botões são HTML/CSS, não texto gerado dentro da fotografia.
+7. `/admin` não possui hero promocional: é uma ferramenta operacional privada e funcional.
+
+## Assets aprovados nesta etapa
+O primeiro e o segundo set cinematográfico preto/dourado foram aprovados pelo usuário para uso no projeto, cobrindo Home, Campeonatos, Cardio, Entre Amigos, Power Lift e cards de competição.
