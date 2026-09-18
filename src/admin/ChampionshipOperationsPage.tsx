@@ -3,7 +3,6 @@ import {
   AlertTriangle,
   ArrowLeft,
   CheckCircle2,
-  CreditCard,
   RefreshCw,
   ShieldCheck,
   Trophy,
@@ -12,6 +11,7 @@ import {
 } from 'lucide-react';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '../lib/firebaseClient';
+import { subscribeAdminRealtime } from '../lib/adminRealtime';
 import { secureAppRequest } from '../lib/secureAppApi';
 import './AdminPanel.css';
 import './ChampionshipOperationsPage.css';
@@ -68,12 +68,14 @@ export default function ChampionshipOperationsPage() {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [busy, setBusy] = useState(false);
+  const [live, setLive] = useState<'connecting' | 'live' | 'offline'>('connecting');
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => onAuthStateChanged(auth, current => { setUser(current); setReady(true); }), []);
 
-  const load = useCallback(async () => {
-    setBusy(true); setFeedback(null);
+  const load = useCallback(async (quiet = false) => {
+    if (!quiet) setBusy(true);
+    setFeedback(current => quiet ? current : null);
     try {
       const [stateResponse, registrationResponse, leaderboardResponse] = await Promise.all([
         secureAppRequest<StatePayload>('/api/admin-championships', { query: { action: 'state' } }),
@@ -86,16 +88,29 @@ export default function ChampionshipOperationsPage() {
     } catch (error: any) {
       setFeedback({ type: 'error', text: error?.message || 'Não foi possível carregar a operação do campeonato.' });
     } finally {
-      setBusy(false);
+      if (!quiet) setBusy(false);
     }
   }, [championshipId]);
 
   useEffect(() => { if (user) void load(); }, [user, load]);
+  useEffect(() => {
+    if (!user) return;
+    let revision: number | null = null;
+    setLive('connecting');
+    return subscribeAdminRealtime(state => {
+      setLive('live');
+      if (revision === null) { revision = state.revision; return; }
+      if (revision !== state.revision) {
+        revision = state.revision;
+        void load(true);
+      }
+    }, () => setLive('offline'));
+  }, [user, load]);
 
   const selected = useMemo(() => state?.championships?.find(item => item.runtime?.id === championshipId) || null, [state, championshipId]);
-  const paid = useMemo(() => registrations.filter(item => item.status === 'paga' && item.paymentStatus === 'PAID').length, [registrations]);
-  const pending = useMemo(() => registrations.filter(item => item.status === 'pendente' || item.paymentStatus === 'PENDING').length, [registrations]);
-  const reconciliation = useMemo(() => registrations.filter(item => item.reconciliationRequired).length, [registrations]);
+  const paid = Number(selected?.registrations?.paid ?? registrations.filter(item => item.status === 'paga' && item.paymentStatus === 'PAID').length);
+  const pending = Number(selected?.registrations?.pending ?? registrations.filter(item => item.status === 'pendente' || item.paymentStatus === 'PENDING').length);
+  const reconciliation = Number(selected?.registrations?.reconciliation ?? registrations.filter(item => item.reconciliationRequired).length);
   const revenue = useMemo(() => registrations.filter(item => item.status === 'paga' && item.paymentStatus === 'PAID').reduce((sum, item) => sum + Number(item.amount || 0), 0), [registrations]);
 
   const homologate = async () => {
@@ -118,7 +133,7 @@ export default function ChampionshipOperationsPage() {
       });
       const status = String(result?.settlement?.status || 'processado');
       setFeedback({ type: 'success', text: `Homologação executada com segurança. Estado: ${status}.` });
-      await load();
+      await load(true);
     } catch (error: any) {
       setFeedback({ type: 'error', text: error?.message || 'A homologação foi bloqueada pelo backend.' });
     } finally { setBusy(false); }
@@ -130,7 +145,7 @@ export default function ChampionshipOperationsPage() {
   return <main className="champ-ops-page">
     <header className="champ-ops-top">
       <div><p className="adm-kicker">INVICTUS BACKOFFICE</p><h1>Operação dos campeonatos</h1><p>Inscrições, conciliação, ranking, vencedores e homologação da edição publicada.</p></div>
-      <div className="adm-actions"><button onClick={() => window.location.assign('/admin/championships')}><ArrowLeft size={14}/>Configuração</button><button className="gold" disabled={busy} onClick={() => void load()}><RefreshCw size={14}/>Atualizar</button></div>
+      <div className="adm-actions"><span className={`champ-ops-live ${live}`}>{live === 'live' ? 'AO VIVO' : live === 'offline' ? 'SEM TEMPO REAL' : 'CONECTANDO'}</span><button onClick={() => window.location.assign('/admin/championships')}><ArrowLeft size={14}/>Configuração</button><button className="gold" disabled={busy} onClick={() => void load()}><RefreshCw size={14}/>Atualizar</button></div>
     </header>
 
     {feedback && <div className={`adm-feedback ${feedback.type}`}><span>{feedback.type === 'success' ? <CheckCircle2 size={16}/> : <AlertTriangle size={16}/>} {feedback.text}</span><button onClick={() => setFeedback(null)}><XCircle size={15}/></button></div>}
@@ -144,10 +159,11 @@ export default function ChampionshipOperationsPage() {
       <Metric label="Inscrições pagas" value={String(paid)}/>
       <Metric label="Pendentes" value={String(pending)} attention={pending > 0}/>
       <Metric label="Conciliação" value={String(reconciliation)} attention={reconciliation > 0}/>
-      <Metric label="Receita confirmada" value={money(revenue)}/>
+      <Metric label="Receita confirmada*" value={money(revenue)}/>
       <Metric label="Atletas no ranking" value={String(leaderboard.length)}/>
       <Metric label="Settlement" value={String(selected?.settlement?.status || 'NÃO INICIADO')}/>
     </div>
+    {registrations.length >= 250 && <small className="champ-ops-limited-note">* A tabela está limitada aos 250 registros mais recentes; os contadores de inscrição vêm do estado canônico da edição.</small>}
 
     <div className="champ-ops-two-col">
       <section className="adm-card">
