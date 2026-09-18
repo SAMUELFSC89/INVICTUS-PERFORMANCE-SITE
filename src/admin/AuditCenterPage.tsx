@@ -66,6 +66,13 @@ type SecurityReportRow = {
   rulesVersion?: string;
 };
 
+type IgaDrift = {
+  persisted?: number;
+  expected?: number;
+  difference?: number;
+  matches?: boolean;
+};
+
 type AuditPayload = Record<string, any>;
 type View = 'reports' | 'engines' | 'activity';
 
@@ -84,6 +91,17 @@ function Status({ value }: { value: unknown }) {
 
 function Metric({ label, value, attention = false }: { label: string; value: string; attention?: boolean }) {
   return <article className={`adm-metric ${attention ? 'attention' : ''}`}><small>{label}</small><strong>{value}</strong></article>;
+}
+
+function IgaComparison({ label, drift }: { label: string; drift?: IgaDrift | null }) {
+  const hasPreview = Boolean(drift);
+  const matches = drift?.matches === true;
+  const difference = Number(drift?.difference || 0);
+  const differenceLabel = hasPreview ? `${difference > 0 ? '+' : ''}${score(difference)}` : '—';
+  return <article className={`audit-iga-comparison ${!hasPreview ? 'unknown' : matches ? 'synced' : 'drift'}`}>
+    <div className="audit-iga-comparison-head"><div><small>JANELA</small><h3>{label}</h3></div><span>{!hasPreview ? 'SEM PREVIEW' : matches ? 'SINCRONIZADO' : 'DIVERGENTE'}</span></div>
+    <dl><div><dt>Persistido</dt><dd>{hasPreview ? score(drift?.persisted) : '—'}</dd></div><div><dt>Esperado</dt><dd>{hasPreview ? score(drift?.expected) : '—'}</dd></div><div><dt>Diferença</dt><dd>{differenceLabel}</dd></div></dl>
+  </article>;
 }
 
 function JsonBlock({ title, value }: { title: string; value: unknown }) {
@@ -156,8 +174,9 @@ export default function AuditCenterPage() {
         query: { action: 'reconcile-iga' },
         body: { userId },
       });
-      setMessage({ type: 'success', text: `IGA reconciliado: semana ${score(response.after?.weeklyScore)}, mês ${score(response.after?.monthlyScore)}, temporada ${score(response.after?.seasonScore)}.` });
+      const successText = `IGA reconciliado: semana ${score(response.after?.weeklyScore)}, mês ${score(response.after?.monthlyScore)}, temporada ${score(response.after?.seasonScore)}.`;
       await openActivity(audit?.activityId);
+      setMessage({ type: 'success', text: successText });
     } catch (error: any) {
       setMessage({ type: 'error', text: error?.message || 'Não foi possível reconciliar o IGA.' });
     } finally { setBusy(false); }
@@ -178,6 +197,8 @@ export default function AuditCenterPage() {
   const securityReport = audit?.securityReport || {};
   const workout = audit?.workout || {};
   const weekly = audit?.iga?.weeklyAudit || {};
+  const igaAudit = audit?.iga || {};
+  const igaDrift = igaAudit?.drift || {};
 
   return <main className="audit-page">
     <header className="audit-topbar">
@@ -214,10 +235,16 @@ export default function AuditCenterPage() {
     {view === 'activity' && <>
       <section className="adm-card audit-search-card"><div><small className="adm-kicker">AUDITORIA FORENSE</small><h2>Atividade específica</h2><p>Informe o ID da atividade para cruzar treino, SecurityPipeline, evidências competitivas, campeonato, revisão humana, IGA e ledger de recompensa.</p></div><div className="adm-inline"><input value={activityId} onChange={event => setActivityId(event.target.value)} onKeyDown={event => { if (event.key === 'Enter') void openActivity(); }} placeholder="activity_..., workout ID..."/><button className="adm-primary" disabled={busy || !activityId.trim()} onClick={() => void openActivity()}><Search size={14}/>Auditar</button></div></section>
       {audit && <>
-        <div className="adm-metrics audit-metrics"><Metric label="Decisão antifraude" value={String(securityReport.decision || workout.securityDecision || '—')}/><Metric label="Risk Score" value={score(securityReport.risk?.riskScore ?? workout.securityRiskScore)}/><Metric label="IGA semanal" value={score(audit.iga?.persistedScores?.weeklyScore)}/><Metric label="Sessão conta no IGA atual" value={audit.iga?.activityIncludedInCurrentWeeklyAudit ? 'SIM' : 'NÃO'} attention={!audit.iga?.activityIncludedInCurrentWeeklyAudit}/></div>
-        <section className="adm-card"><div className="adm-card-title"><div><small>RESUMO</small><h2>{audit.activityId}</h2></div><Status value={securityReport.decision || workout.competitionReviewStatus || workout.validationStatus}/></div><div className="audit-summary-grid"><article><Activity/><small>Tipo</small><b>{workout.cardioType || workout.type || securityReport.activityType || '—'}</b></article><article><UserRound/><small>Atleta</small><b>{workout.userId || securityReport.userId || '—'}</b></article><article><ShieldCheck/><small>Integridade</small><b>{score(securityReport.integrity?.integrityScore)}</b></article><article><Gauge/><small>Risco</small><b>{score(securityReport.risk?.riskScore)}</b></article><article><HeartPulse/><small>FC média</small><b>{score(securityReport.heartRate?.avgHeartRate || weekly.avgHeartRate)} bpm</b></article><article><BarChart3/><small>IGA</small><b>{score(weekly.igaRanking)} pts</b></article></div><div className="adm-actions audit-reconcile"><button className="gold" disabled={busy || !(workout.userId || securityReport.userId)} onClick={() => void reconcileIga()}><RefreshCw size={14}/>Recalcular IGA pela fonte canônica</button></div></section>
+        <div className="adm-metrics audit-metrics"><Metric label="Decisão antifraude" value={String(securityReport.decision || workout.securityDecision || '—')}/><Metric label="Risk Score" value={score(securityReport.risk?.riskScore ?? workout.securityRiskScore)}/><Metric label="IGA semanal persistido" value={score(igaAudit?.persistedScores?.weeklyScore)}/><Metric label="Sincronia IGA" value={igaAudit?.inSync === true ? 'OK' : igaAudit?.inSync === false ? 'DIVERGENTE' : 'SEM PREVIEW'} attention={igaAudit?.inSync === false}/></div>
+        <section className={`adm-card audit-iga-card ${igaAudit?.inSync === false ? 'has-drift' : ''}`}>
+          <div className="adm-card-title"><div><small>CONTRATO CANÔNICO DO RANKING</small><h2>IGA persistido × esperado × diferença</h2><p className="audit-iga-intro">O esperado é calculado em dry-run pela mesma fonte canônica usada para o ranking. A diferença mostra exatamente se o valor salvo no usuário está coerente com o que deveria estar persistido agora.</p></div><span className={`audit-sync-pill ${igaAudit?.inSync === true ? 'synced' : igaAudit?.inSync === false ? 'drift' : 'unknown'}`}>{igaAudit?.inSync === true ? 'SINCRONIZADO' : igaAudit?.inSync === false ? 'DIVERGÊNCIA DETECTADA' : 'PREVIEW INDISPONÍVEL'}</span></div>
+          <div className="audit-iga-grid"><IgaComparison label="Semana" drift={igaDrift?.weekly}/><IgaComparison label="Mês" drift={igaDrift?.monthly}/><IgaComparison label="Temporada" drift={igaDrift?.season}/></div>
+          {igaAudit?.dryRunError && <div className="audit-iga-warning"><AlertTriangle size={16}/><span>Não foi possível concluir o dry-run do IGA: {String(igaAudit.dryRunError)}</span></div>}
+          <div className="audit-iga-footer"><div><small>SESSÃO AUDITADA</small><b>{igaAudit?.activityIncludedInCurrentWeeklyAudit ? 'Incluída no IGA semanal atual' : 'Não incluída no IGA semanal atual'}</b></div><button className="gold" disabled={busy || !(workout.userId || securityReport.userId)} onClick={() => void reconcileIga()}><RefreshCw size={14}/>Reconciliar IGA canônico</button></div>
+        </section>
+        <section className="adm-card"><div className="adm-card-title"><div><small>RESUMO</small><h2>{audit.activityId}</h2></div><Status value={securityReport.decision || workout.competitionReviewStatus || workout.validationStatus}/></div><div className="audit-summary-grid"><article><Activity/><small>Tipo</small><b>{workout.cardioType || workout.type || securityReport.activityType || '—'}</b></article><article><UserRound/><small>Atleta</small><b>{workout.userId || securityReport.userId || '—'}</b></article><article><ShieldCheck/><small>Integridade</small><b>{score(securityReport.integrity?.integrityScore)}</b></article><article><Gauge/><small>Risco</small><b>{score(securityReport.risk?.riskScore)}</b></article><article><HeartPulse/><small>FC média</small><b>{score(securityReport.heartRate?.avgHeartRate || weekly.avgHeartRate)} bpm</b></article><article><BarChart3/><small>IGA</small><b>{score(weekly.igaRanking)} pts</b></article></div></section>
         <div className="audit-engine-detail-grid"><JsonBlock title="1 · Validation" value={securityReport.validation}/><JsonBlock title="2 · Integrity" value={securityReport.integrity}/><JsonBlock title="3 · Behavior" value={securityReport.behavior}/><JsonBlock title="4 · Device Fingerprint" value={securityReport.deviceFingerprint}/><JsonBlock title="5 · Network" value={securityReport.network}/><JsonBlock title="6 · Fraud" value={securityReport.fraud}/><JsonBlock title="7 · Reputation" value={securityReport.reputation}/><JsonBlock title="8 · Trust" value={securityReport.trust}/><JsonBlock title="9 · Risk" value={securityReport.risk}/><JsonBlock title="10 · Explainability" value={securityReport.explanation}/></div>
-        <section className="adm-card"><div className="adm-card-title"><div><small>PONTUAÇÃO</small><h2>Auditoria do IGA e competição</h2></div><BarChart3/></div><JsonBlock title="IGA semanal" value={audit.iga?.weeklyAudit}/><JsonBlock title="IGA mensal" value={audit.iga?.monthlyAudit}/><JsonBlock title="IGA da temporada" value={audit.iga?.seasonAudit}/><JsonBlock title="Auditoria desta sessão no IGA" value={audit.iga?.sessionAudit}/><JsonBlock title="Entradas competitivas" value={audit.competition?.entries}/><JsonBlock title="Pontuações de campeonatos" value={audit.competition?.championshipScores}/><JsonBlock title="Ledger de XP/recompensa da atividade" value={audit.economy?.activityRewardLedger}/></section>
+        <section className="adm-card"><div className="adm-card-title"><div><small>PONTUAÇÃO</small><h2>Auditoria do IGA e competição</h2></div><BarChart3/></div><JsonBlock title="IGA esperado em dry-run" value={audit.iga?.expectedAudit}/><JsonBlock title="IGA semanal persistido" value={audit.iga?.weeklyAudit}/><JsonBlock title="IGA mensal persistido" value={audit.iga?.monthlyAudit}/><JsonBlock title="IGA da temporada persistido" value={audit.iga?.seasonAudit}/><JsonBlock title="Auditoria desta sessão no IGA" value={audit.iga?.sessionAudit}/><JsonBlock title="Entradas competitivas" value={audit.competition?.entries}/><JsonBlock title="Pontuações de campeonatos" value={audit.competition?.championshipScores}/><JsonBlock title="Ledger de XP/recompensa da atividade" value={audit.economy?.activityRewardLedger}/></section>
         <section className="adm-card"><div className="adm-card-title"><div><small>EVIDÊNCIA BRUTA DE AUDITORIA</small><h2>Rastreabilidade completa</h2></div><ShieldAlert/></div><JsonBlock title="Workout canônico" value={audit.workout}/><JsonBlock title="Security report completo" value={audit.securityReport}/><JsonBlock title="Audit log imutável" value={audit.securityAudit}/><JsonBlock title="Trust profile" value={audit.trustProfile}/><JsonBlock title="Revisões administrativas" value={audit.adminReviews}/></section>
       </>}
     </>}
