@@ -28,7 +28,7 @@ const sourceContracts = [
   ['src/RebuildApp.tsx', ['window.location.assign(route)', 'PRO · IGA + PRÊMIO EM COINS', 'BENEFÍCIO PRO']],
   ['src/entry.tsx', ['ChampionshipsLivePage', 'PrivateChallengesPortalPage', 'PowerLiftPortalPage', 'DropsStorePage', 'AccountSignupPage', 'AccountOnboardingPage']],
   ['src/public/DropsStorePage.tsx', ['subscribeAdminRealtime', 'getStoreOrder', 'STORE_ORDER_CHANGED']],
-  ['src/public/PrivateChallengesPortalPage.tsx', ['RESULTADO POR IGA', 'PRÊMIO EM COINS', 'stakeAmount']],
+  ['src/public/PrivateChallengesPortalPage.tsx', ['RANKING POR IGA', 'COINS OPCIONAIS', 'stakeAmount', 'igaScore']],
 ];
 
 function fail(message) {
