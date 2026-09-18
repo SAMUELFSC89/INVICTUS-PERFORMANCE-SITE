@@ -1,3 +1,6 @@
 .adm-metrics-six{grid-template-columns:repeat(6,1fr)}
+.adm-metrics-seven{grid-template-columns:repeat(7,1fr)}
+@media(max-width:1500px){.adm-metrics-seven{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:1400px){.adm-metrics-six{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:700px){.adm-metrics-six{grid-template-columns:1fr 1fr}}
+@media(max-width:1000px){.adm-metrics-seven{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.adm-metrics-six,.adm-metrics-seven{grid-template-columns:1fr 1fr}}
