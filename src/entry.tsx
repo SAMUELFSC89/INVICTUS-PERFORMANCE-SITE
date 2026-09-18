@@ -4,6 +4,7 @@ import RebuildApp from './RebuildApp';
 import AdminPanel from './admin/AdminPanel';
 import PowerLiftReviewPage from './admin/PowerLiftReviewPage';
 import './RebuildApp.css';
+import './admin/AdminOperational.css';
 
 const path = window.location.pathname;
 const isPowerLiftAdminRoute = path === '/admin/powerlift' || path.startsWith('/admin/powerlift/');
