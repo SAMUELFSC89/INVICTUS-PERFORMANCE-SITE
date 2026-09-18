@@ -1,6 +1,6 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowLeft, BadgeCheck, CreditCard, LogIn, LogOut, RefreshCw, Trophy, UserRound } from 'lucide-react';
-import { onAuthStateChanged, signInWithEmailAndPassword, signOut, type User } from 'firebase/auth';
+import { ArrowLeft, BadgeCheck, CheckCircle2, CreditCard, KeyRound, LogIn, LogOut, RefreshCw, Trophy, UserRound } from 'lucide-react';
+import { onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, type User } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebaseClient';
 import { getMyChampionshipRegistrations, type ChampionshipRegistration } from '../lib/championshipApi';
@@ -14,6 +14,14 @@ const when = (value: unknown) => {
   return Number.isFinite(raw.getTime()) ? raw.toLocaleString('pt-BR', { dateStyle: 'medium', timeStyle: 'short' }) : '—';
 };
 
+function friendlyAuthError(err: any) {
+  const code = String(err?.code || '');
+  if (code.includes('invalid-credential') || code.includes('wrong-password') || code.includes('user-not-found')) return 'E-mail ou senha inválidos.';
+  if (code.includes('invalid-email')) return 'Informe um e-mail válido.';
+  if (code.includes('too-many-requests')) return 'Muitas tentativas. Aguarde alguns instantes e tente novamente.';
+  return err?.message || 'Não foi possível concluir esta ação.';
+}
+
 export default function AccountPortalPage() {
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
@@ -23,6 +31,8 @@ export default function AccountPortalPage() {
   const [error, setError] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [recovering, setRecovering] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
   const lastRevision = useRef<number | null>(null);
 
   useEffect(() => onAuthStateChanged(auth, current => { setUser(current); setReady(true); }), []);
@@ -54,17 +64,38 @@ export default function AccountPortalPage() {
   }, [user, load]);
 
   const login = async (event: FormEvent) => {
-    event.preventDefault(); setBusy(true); setError('');
+    event.preventDefault(); setBusy(true); setError(''); setResetSent(false);
     try { await signInWithEmailAndPassword(auth, email.trim(), password); }
-    catch (err: any) { setError(err?.code === 'auth/invalid-credential' ? 'E-mail ou senha inválidos.' : (err?.message || 'Não foi possível entrar.')); }
+    catch (err: any) { setError(friendlyAuthError(err)); }
     finally { setBusy(false); }
+  };
+
+  const recoverPassword = async (event: FormEvent) => {
+    event.preventDefault();
+    if (!email.trim()) { setError('Informe seu e-mail para recuperar a senha.'); return; }
+    setBusy(true); setError(''); setResetSent(false);
+    try {
+      const continueUrl = `${window.location.origin}/conta`;
+      try {
+        await sendPasswordResetEmail(auth, email.trim(), { url: continueUrl, handleCodeInApp: false });
+      } catch (resetError: any) {
+        if (String(resetError?.code || '').includes('unauthorized-continue-uri')) {
+          await sendPasswordResetEmail(auth, email.trim());
+        } else {
+          throw resetError;
+        }
+      }
+      setResetSent(true);
+    } catch (err: any) {
+      setError(friendlyAuthError(err));
+    } finally { setBusy(false); }
   };
 
   if (!ready) return <main className="pub-page"><div className="pub-loading" style={{padding:40}}><RefreshCw className="spin" size={18}/> Sincronizando conta Invictus...</div></main>;
 
   if (!user) return <main className="pub-page account-portal">
     <header className="pub-header"><a href="/"><ArrowLeft size={17}/> Voltar</a><a href="/" className="pub-logo">INVICTUS <span>PERFORMANCE</span></a><span/></header>
-    <section className="account-login-wrap"><form onSubmit={login} className="account-login-card"><UserRound size={30}/><p className="pub-eyebrow">CONTA ÚNICA INVICTUS</p><h1>ENTRAR</h1><p>Use a mesma conta do aplicativo. Seus campeonatos, pagamentos e status ficam sincronizados entre app e site.</p>{error&&<div className="pub-alert error">{error}</div>}<label>E-mail<input type="email" value={email} onChange={event=>setEmail(event.target.value)} autoComplete="email" required/></label><label>Senha<input type="password" value={password} onChange={event=>setPassword(event.target.value)} autoComplete="current-password" required/></label><button disabled={busy}><LogIn size={16}/>{busy?'Entrando...':'Entrar na conta'}</button></form></section>
+    <section className="account-login-wrap"><form onSubmit={recovering ? recoverPassword : login} className="account-login-card">{recovering ? <KeyRound size={30}/> : <UserRound size={30}/>}<p className="pub-eyebrow">CONTA ÚNICA INVICTUS</p><h1>{recovering ? 'RECUPERAR SENHA' : 'ENTRAR'}</h1><p>{recovering ? 'Informe o e-mail da sua conta Invictus. Você receberá o link oficial para definir uma nova senha.' : 'Use a mesma conta do aplicativo. Seus campeonatos, pagamentos e status ficam sincronizados entre app e site.'}</p>{error&&<div className="pub-alert error">{error}</div>}{resetSent&&<div className="pub-alert success"><CheckCircle2 size={16}/>E-mail de recuperação enviado. Confira sua caixa de entrada e spam.</div>}<label>E-mail<input type="email" value={email} onChange={event=>setEmail(event.target.value)} autoComplete="email" required/></label>{!recovering&&<label>Senha<input type="password" value={password} onChange={event=>setPassword(event.target.value)} autoComplete="current-password" required/></label>}<button disabled={busy}>{recovering ? <KeyRound size={16}/> : <LogIn size={16}/>} {busy ? 'Processando...' : recovering ? 'Enviar recuperação' : 'Entrar na conta'}</button><div className="account-login-secondary">{recovering ? <button type="button" onClick={()=>{setRecovering(false);setError('');setResetSent(false);}}>Voltar ao login</button> : <><button type="button" onClick={()=>{setRecovering(true);setError('');setResetSent(false);}}>Esqueci minha senha</button><a href="/conta/cadastro">Criar conta</a></>}</div></form></section>
   </main>;
 
   const paid = registrations.filter(item => item.paymentStatus === 'PAID' || item.status === 'paga' || item.status === 'ACTIVE');
