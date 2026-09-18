@@ -124,7 +124,7 @@ export default function PrivateChallengesPortalPage() {
     <header className="friends-live-header"><a href="/"><ArrowLeft size={17}/> Início</a><a className="friends-live-logo" href="/">INVICTUS <span>PERFORMANCE</span></a><a href="/conta">Minha conta</a></header>
 
     <section className="friends-live-hero" style={{backgroundImage:'linear-gradient(90deg,rgba(4,4,4,.97),rgba(4,4,4,.42)),url(/assets/invictus/friends-hero.webp)'}}>
-      <div><p>BENEFÍCIO EXCLUSIVO INVICTUS PRO</p><h1>ENTRE <em>AMIGOS</em></h1><h2>Seu treino vira uma disputa de verdade.</h2><span>Crie um desafio privado, convide seus amigos e, se quiser, defina um valor em Invictus Coins por participante. Nos desafios com prêmio, o resultado é calculado pelo IGA dentro da janela oficial do desafio.</span><div className="friends-live-chips"><b><BarChart3 size={14}/> RESULTADO POR IGA</b><b><Coins size={14}/> PRÊMIO EM COINS</b><b><Users size={14}/> GRUPO PRIVADO</b></div></div>
+      <div><p>BENEFÍCIO EXCLUSIVO INVICTUS PRO</p><h1>ENTRE <em>AMIGOS</em></h1><h2>Seu treino vira uma disputa de verdade.</h2><span>Crie um desafio privado, convide seus amigos e acompanhe a classificação pelo IGA dentro da janela oficial do desafio. Se o grupo quiser, cada participante pode colocar Invictus Coins para formar um pote interno para o vencedor.</span><div className="friends-live-chips"><b><BarChart3 size={14}/> RANKING POR IGA</b><b><Coins size={14}/> COINS OPCIONAIS</b><b><Users size={14}/> GRUPO PRIVADO</b></div></div>
     </section>
 
     <div className="friends-live-shell">
@@ -141,13 +141,32 @@ export default function PrivateChallengesPortalPage() {
             const stake=Math.max(0,Number(challenge.stakeAmount)||0);
             const pot=Math.max(0,Number(challenge.potTotal)||0);
             const result=resultCopy(challenge);
-            return <article key={String(challenge.id||`${challenge.title}-${index}`)}><div><span className="friends-live-status">{statusLabel(challenge.status)}</span><h3>{String(challenge.title||'Desafio privado')}</h3><p>{String(challenge.description||'Disputa privada entre atletas Invictus.')}</p>{result&&<small className="friends-live-result"><Crown size={13}/>{result}</small>}</div><div className="friends-live-meta"><span><Users size={14}/>{count || '—'} participantes</span>{challenge.durationDays&&<span>{challenge.durationDays} dias</span>}{stake>0&&<span className="friends-live-coin"><Coins size={14}/>{stake} Coins / atleta</span>}{pot>0&&<span className="friends-live-coin"><Trophy size={14}/>Pote {pot} Coins</span>}{challenge.extendedOnce&&<span>+1 dia de desempate</span>}{code&&<button onClick={()=>void copyCode(code)}><Copy size={14}/>{copied===code?'Copiado':code}</button>}</div></article>}) : <div className="friends-live-empty"><Trophy size={30}/><h3>Nenhum desafio por aqui</h3><p>Crie o primeiro desafio, escolha se haverá prêmio em Coins e compartilhe o código.</p><button onClick={()=>setMode('criar')}>Criar desafio</button></div>}</div>}
+            const members=Array.isArray(challenge.members)?challenge.members:[];
+            const usesIga=String(challenge.scoringMode||'IGA').toUpperCase()==='IGA'&&!challenge.isLegacyMoneyChallenge;
+            const isLive=['active','forming'].includes(String(challenge.status||'').toLowerCase());
+            return <article key={String(challenge.id||`${challenge.title}-${index}`)}>
+              <div className="friends-live-card-copy"><span className="friends-live-status">{statusLabel(challenge.status)}</span><h3>{String(challenge.title||'Desafio privado')}</h3><p>{String(challenge.description||'Disputa privada entre atletas Invictus.')}</p>{result&&<small className="friends-live-result"><Crown size={13}/>{result}</small>}</div>
+              <div className="friends-live-meta"><span><Users size={14}/>{count || '—'} participantes</span>{challenge.durationDays&&<span>{challenge.durationDays} dias</span>}{stake>0&&<span className="friends-live-coin"><Coins size={14}/>{stake} Coins / atleta</span>}{pot>0&&<span className="friends-live-coin"><Trophy size={14}/>Pote {pot} Coins</span>}{challenge.extendedOnce&&<span>+1 dia de desempate</span>}{code&&<button onClick={()=>void copyCode(code)}><Copy size={14}/>{copied===code?'Copiado':code}</button>}</div>
+              {members.length>0&&<div className="friends-live-ranking">
+                <div className="friends-live-ranking-head"><div><BarChart3 size={15}/><span>{usesIga?'CLASSIFICAÇÃO POR IGA':'CLASSIFICAÇÃO LEGADA'}</span></div><small>{usesIga?(isLive?'IGA calculado do início do desafio até agora':'IGA final da janela oficial'):'Registro histórico'}</small></div>
+                <div className="friends-live-ranking-rows">{members.slice(0,10).map((member,memberIndex)=>{
+                  const score=Math.max(0,Number(member.igaScore ?? member.points)||0);
+                  const isMe=member.userId===user.uid;
+                  return <div className={`friends-live-ranking-row${isMe?' me':''}`} key={String(member.userId||memberIndex)}>
+                    <strong>{memberIndex+1}º</strong>
+                    <span className="friends-live-ranking-name">{String(member.userName||'Atleta')}{isMe?' · você':''}</span>
+                    <span>{Math.max(0,Number(member.workoutsCount)||0)} atividades</span>
+                    <b>{usesIga?`${score.toFixed(2)} IGA`:`${score.toFixed(2)} pts`}</b>
+                  </div>;
+                })}</div>
+              </div>}
+            </article>}) : <div className="friends-live-empty"><Trophy size={30}/><h3>Nenhum desafio por aqui</h3><p>Crie o primeiro desafio, escolha se haverá prêmio em Coins e compartilhe o código.</p><button onClick={()=>setMode('criar')}>Criar desafio</button></div>}</div>}
 
           {mode==='criar' && <form className="friends-live-form" onSubmit={create}>
             <label>Nome do desafio<input value={title} onChange={e=>setTitle(e.target.value)} maxLength={80} placeholder="Ex.: Consistência de Setembro" required/></label>
             <label>Descrição<textarea value={description} onChange={e=>setDescription(e.target.value)} maxLength={240} placeholder="Objetivo do grupo"/></label>
             <label>Duração<select value={durationDays} onChange={e=>setDurationDays(Number(e.target.value) as 7|15|30)}><option value={7}>7 dias</option><option value={15}>15 dias</option><option value={30}>30 dias</option></select></label>
-            <div className="friends-live-stake"><span>COINS POR PARTICIPANTE <small>Opcional · máximo 2.000</small></span><div>{STAKE_PRESETS.map(amount=><button key={amount} type="button" className={stakeAmount===amount?'active':''} onClick={()=>setStakeAmount(amount)}>{amount===0?'Sem prêmio':`${amount} Coins`}</button>)}</div><input type="number" min={0} max={2000} step={1} value={stakeAmount===0?'':stakeAmount} onChange={e=>setStakeAmount(Math.max(0,Math.min(2000,Math.floor(Number(e.target.value)||0))))} placeholder="Outro valor"/><p><Coins size={13}/>{stakeAmount>0?`Cada participante coloca ${stakeAmount} Coins. O líder pelo IGA leva o pote; empate aplica a regra automática de desempate.`:'Sem Coins, o desafio continua disponível como disputa privada simbólica.'}</p></div>
+            <div className="friends-live-stake"><span>COINS POR PARTICIPANTE <small>Opcional · máximo 2.000</small></span><div>{STAKE_PRESETS.map(amount=><button key={amount} type="button" className={stakeAmount===amount?'active':''} onClick={()=>setStakeAmount(amount)}>{amount===0?'Sem prêmio':`${amount} Coins`}</button>)}</div><input type="number" min={0} max={2000} step={1} value={stakeAmount===0?'':stakeAmount} onChange={e=>setStakeAmount(Math.max(0,Math.min(2000,Math.floor(Number(e.target.value)||0))))} placeholder="Outro valor"/><p><Coins size={13}/>{stakeAmount>0?`Cada participante coloca ${stakeAmount} Coins. O líder pelo IGA leva o pote; empate aplica a regra automática de desempate.`:'Sem Coins, o desafio continua disponível como disputa privada simbólica, ainda classificada pelo IGA.'}</p></div>
             <button disabled={busy}><Plus size={16}/>{busy?'Criando...':'Criar desafio privado'}</button>
           </form>}
 
@@ -155,7 +174,7 @@ export default function PrivateChallengesPortalPage() {
         </section>
       </>}
 
-      <section className="friends-live-rules"><article><BarChart3/><h3>IGA decide a disputa premiada</h3><p>O motor calcula o IGA de cada participante dentro do período do próprio desafio. A classificação não depende de um placar manual.</p></article><article><Coins/><h3>Prêmio em Invictus Coins</h3><p>O valor por participante é opcional. Quando ativado, as Coins formam um pote interno do ecossistema e não representam dinheiro sacável.</p></article><article><Crown/><h3>Desempate automático</h3><p>Empate no topo estende o desafio por 1 dia uma única vez. Se persistir, o pote é dividido entre os líderes; com menos de 2 participantes, as Coins são devolvidas.</p></article></section>
+      <section className="friends-live-rules"><article><BarChart3/><h3>IGA decide a disputa</h3><p>O motor calcula o IGA de cada participante dentro do período do próprio desafio, com atualização da classificação durante a janela. O placar não depende de pontuação manual.</p></article><article><Coins/><h3>Prêmio em Invictus Coins</h3><p>O valor por participante é opcional. Quando ativado, as Coins formam um pote interno do ecossistema e não representam dinheiro sacável.</p></article><article><Crown/><h3>Desempate automático</h3><p>Empate no topo estende o desafio por 1 dia uma única vez. Se persistir, o pote é dividido entre os líderes; com menos de 2 participantes, as Coins são devolvidas.</p></article></section>
     </div>
   </main>;
 }
