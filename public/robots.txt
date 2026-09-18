@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://invictusperformance.app.br/sitemap.xml
