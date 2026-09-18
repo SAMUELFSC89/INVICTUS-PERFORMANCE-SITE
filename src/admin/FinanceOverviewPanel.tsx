@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BarChart3, CreditCard, RefreshCw, ShoppingBag, TrendingDown, TrendingUp, Trophy, UserCheck, WalletCards } from 'lucide-react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, limit, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import { secureAppRequest } from '../lib/secureAppApi';
 import { db } from '../lib/firebaseClient';
 import { hasActiveProEntitlement } from '../lib/proEntitlement';
@@ -30,6 +30,7 @@ export function FinanceOverviewPanel({ setFeedback }: { setFeedback: FeedbackSet
   const [activePro, setActivePro] = useState(0);
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState<'monthly' | 'daily'>('monthly');
+  const refreshTimer = useRef<number | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true); setFeedback(null);
@@ -48,6 +49,39 @@ export function FinanceOverviewPanel({ setFeedback }: { setFeedback: FeedbackSet
     } finally { setLoading(false); }
   }, [setFeedback]);
   useEffect(() => { void load(); }, [load]);
+
+  useEffect(() => {
+    let firstPaymentSnapshot = true;
+    let firstUserSnapshot = true;
+    const scheduleReload = () => {
+      if (refreshTimer.current !== null) window.clearTimeout(refreshTimer.current);
+      refreshTimer.current = window.setTimeout(() => void load(), 350);
+    };
+
+    const unsubscribePayments = onSnapshot(
+      query(collection(db, 'payment_orders'), orderBy('updatedAt', 'desc'), limit(1)),
+      () => {
+        if (firstPaymentSnapshot) { firstPaymentSnapshot = false; return; }
+        scheduleReload();
+      },
+      () => undefined,
+    );
+    const unsubscribeUsers = onSnapshot(
+      query(collection(db, 'users'), where('subscriptionTier', 'in', ['performance', 'pro'])),
+      snapshot => {
+        setActivePro(snapshot.docs.filter(document => hasActiveProEntitlement(document.data())).length);
+        if (firstUserSnapshot) { firstUserSnapshot = false; return; }
+        scheduleReload();
+      },
+      () => undefined,
+    );
+
+    return () => {
+      unsubscribePayments();
+      unsubscribeUsers();
+      if (refreshTimer.current !== null) window.clearTimeout(refreshTimer.current);
+    };
+  }, [load]);
 
   const points = mode === 'monthly' ? data?.monthly || [] : data?.daily || [];
   const max = useMemo(() => Math.max(1, ...points.map(point => point.revenue)), [points]);
