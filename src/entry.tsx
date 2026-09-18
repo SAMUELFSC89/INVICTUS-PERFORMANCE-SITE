@@ -20,6 +20,7 @@ import './RebuildApp.css';
 import './admin/AdminOperational.css';
 import './admin/FinanceOverviewPanel.css';
 import './public/PublicCleanup.css';
+import './public/PrivateChallengesRewards.css';
 
 const path = window.location.pathname.replace(/\/$/, '') || '/';
 const isAthleteAuditAdminRoute = path === '/admin/audit/athlete' || path.startsWith('/admin/audit/athlete/');
