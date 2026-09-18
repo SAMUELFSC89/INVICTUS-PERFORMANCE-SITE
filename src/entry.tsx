@@ -13,6 +13,7 @@ import ChampionshipsLivePage from './public/ChampionshipsLivePage';
 import AccountPortalPage from './public/AccountPortalPage';
 import PrivateChallengesPortalPage from './public/PrivateChallengesPortalPage';
 import PowerLiftPortalPage from './public/PowerLiftPortalPage';
+import DropsStorePage from './public/DropsStorePage';
 import './RebuildApp.css';
 import './admin/AdminOperational.css';
 import './admin/FinanceOverviewPanel.css';
@@ -27,6 +28,7 @@ const isAdminRoute = path === '/admin' || path.startsWith('/admin/');
 const isAccountRoute = path === '/conta' || path.startsWith('/conta/');
 const isPrivateChallengesRoute = path === '/entre-amigos' || path.startsWith('/entre-amigos/');
 const isPowerLiftRoute = path === '/power-lift' || path.startsWith('/power-lift/');
+const isDropsRoute = path === '/drops' || path.startsWith('/drops/');
 const isChampionshipsLiveRoute = path === '/campeonatos';
 const championshipId = path === '/campeonatos/cardio'
   ? 'invictus_cardio_v1'
@@ -37,7 +39,7 @@ const championshipId = path === '/campeonatos/cardio'
 function RebuildAppRouterBoundary() {
   useEffect(() => {
     const originalPushState = window.history.pushState.bind(window.history);
-    const externalPublicRoutes = new Set(['/entre-amigos', '/power-lift']);
+    const externalPublicRoutes = new Set(['/entre-amigos', '/power-lift', '/drops']);
     const patchedPushState: History['pushState'] = (data, unused, url) => {
       if (url !== undefined && url !== null) {
         const target = new URL(String(url), window.location.origin);
@@ -75,10 +77,12 @@ createRoot(document.getElementById('root')!).render(
                     ? <PrivateChallengesPortalPage />
                     : isPowerLiftRoute
                       ? <PowerLiftPortalPage />
-                      : isChampionshipsLiveRoute
-                        ? <ChampionshipsLivePage />
-                        : championshipId
-                          ? <ChampionshipSignupPage championshipId={championshipId} />
-                          : <RebuildAppRouterBoundary />}
+                      : isDropsRoute
+                        ? <DropsStorePage />
+                        : isChampionshipsLiveRoute
+                          ? <ChampionshipsLivePage />
+                          : championshipId
+                            ? <ChampionshipSignupPage championshipId={championshipId} />
+                            : <RebuildAppRouterBoundary />}
   </StrictMode>,
 );
