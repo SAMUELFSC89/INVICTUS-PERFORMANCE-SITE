@@ -6,6 +6,7 @@ export type PrivateChallengeMember = {
   userName?: string;
   userPhoto?: string;
   points?: number;
+  igaScore?: number | null;
   workoutsCount?: number;
   stakePaid?: number;
   joinedAt?: unknown;
@@ -32,6 +33,10 @@ export type PrivateChallenge = Record<string, any> & {
   stakeAmount?: number;
   potTotal?: number;
   extendedOnce?: boolean;
+  scoringMode?: 'IGA' | 'LEGACY' | string;
+  isLegacyMoneyChallenge?: boolean;
+  entryFee?: number;
+  netPrizePool?: number;
   members?: PrivateChallengeMember[];
 };
 
