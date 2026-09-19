@@ -13,6 +13,8 @@ const routes = [
   '/entre-amigos',
   '/power-lift',
   '/drops',
+  '/treino-inteligente',
+  '/economia-invictus',
   '/conta',
   '/conta/cadastro',
   '/conta/completar',
@@ -50,11 +52,14 @@ const approvedAssets = [
 ];
 
 const sourceContracts = [
-  ['src/RebuildApp.tsx', ['window.location.assign(route)', 'logo-invictus.png', 'home-hero-mobile.webp', 'approvedInstitutional', 'Crie uma disputa privada', 'Prove sua evolução em Supino']],
-  ['src/entry.tsx', ['ChampionshipsLivePage', 'AccountDeletionPage', 'LegalPage', "path === '/conta/excluir'", "path === '/termos'", "path === '/privacidade'"]],
+  ['src/RebuildApp.tsx', ['window.location.assign(route)', 'logo-invictus.png', 'home-hero-mobile.webp', 'approvedInstitutional', 'Crie uma disputa privada', 'Prove sua evolução em Supino', 'SUA ATIVIDADE RECENTE', 'RECOMENDADO PARA VOCÊ', 'APROVEITE SEU PLANO PRO']],
+  ['src/entry.tsx', ['ChampionshipsLivePage', 'AccountDeletionPage', 'LegalPage', "path === '/conta/excluir'", "path === '/termos'", "path === '/privacidade'", 'SmartTrainingPage', 'InvictusEconomyPage', "path === '/treino-inteligente'", "path === '/economia-invictus'"]],
   ['src/public/DropsStorePage.tsx', ['AppDownloadPanel', 'DISPONÍVEL NO APLICATIVO', 'Catálogo, compra e resgate acontecem no app', 'Invictus Coins']],
   ['src/public/PrivateChallengesPortalPage.tsx', ['AppDownloadPanel', 'DISPONÍVEL NO APLICATIVO', 'RANKING POR IGA', 'COINS OPCIONAIS', 'Invictus PRO']],
   ['src/public/PowerLiftPortalPage.tsx', ['AppDownloadPanel', 'DISPONÍVEL NO APLICATIVO', 'BENEFÍCIO PRO', 'Validação por IA e equipe técnica']],
+  ['src/public/SmartTrainingPage.tsx', ['AppDownloadPanel', 'Motor de prescrição', 'Refinamento por IA', 'Nenhum plano usa idade, peso ou sexo', '/termos#sec-4']],
+  ['src/public/InvictusEconomyPage.tsx', ['Invictus Coins', 'Premiação em dinheiro', 'não podem ser sacadas via PIX', '/termos#sec-8']],
+  ['src/public/LegalPage.tsx', ['sec-${sectionMatch[1]}', 'sectionMatch']],
   ['src/public/ChampionshipsLivePage.tsx', ['cardio-card.webp', 'strength-card.webp', "import './ChampionshipsLive.css';", '<b>Entre Amigos</b>', '<b>Power Lift</b>']],
   ['src/public/AccountPortalPage.tsx', ['getChampionships()', 'Campeonatos disponíveis', 'Minhas inscrições', 'Baixar aplicativo', 'Alterar senha', 'Entrar em contato', '/conta/excluir', 'AppDownloadPanel']],
   ['src/public/AppDownloadPanel.tsx', ['VITE_APP_STORE_URL', 'VITE_GOOGLE_PLAY_URL', 'App Store', 'Google Play']],

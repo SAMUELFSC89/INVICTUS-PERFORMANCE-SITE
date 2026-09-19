@@ -44,6 +44,17 @@ const groups: Group[] = [
       { q: 'O que são os Drops?', a: 'Lançamentos limitados de produtos e recompensas do universo Invictus, com estoque próprio e reservado por janela — quando esgota, só retorna na próxima janela de lançamento.' },
       { q: 'O que são as Invictus Coins?', a: 'Uma recompensa interna do ecossistema Invictus, ganha em recursos elegíveis do app. Coins não são moeda, dinheiro eletrônico ou investimento: não têm valor em dinheiro, não são vendidas e não podem ser sacadas via PIX, transferidas ou convertidas em dinheiro.' },
       { q: 'Onde eu vejo o catálogo e faço o resgate?', a: 'O catálogo completo, a compra e o resgate com Coins acontecem dentro do aplicativo Invictus, na sua conta.' },
+      { q: 'Invictus Coins são a mesma coisa que o prêmio em dinheiro dos campeonatos pagos?', a: 'Não. São dois saldos completamente separados. Invictus Coins não têm valor em dinheiro e só servem para resgates na Loja. Já a premiação de um campeonato pago é dinheiro real (R$), publicada no regulamento da edição e paga aos colocados após a homologação — um saldo nunca vira o outro.' },
+    ],
+  },
+  {
+    title: 'Treino inteligente e assinatura',
+    items: [
+      { q: 'Como o Invictus monta meu treino de musculação?', a: 'Todo atleta recebe um plano gerado por um motor de prescrição próprio, com exercícios do catálogo oficial Invictus, a partir do seu objetivo, experiência, tempo disponível e equipamento. É a base do plano em qualquer assinatura, Free ou PRO.' },
+      { q: 'Qual a diferença entre o treino Free e o treino PRO?', a: 'No PRO, o mesmo plano passa por uma camada adicional de inteligência artificial, que pode ajustar exercícios, séries e repetições dentro do catálogo oficial e de limites seguros, com justificativa explicada. Se a IA estiver indisponível, seu treino do dia continua vindo do motor de prescrição automaticamente — você nunca fica sem plano.' },
+      { q: 'O Invictus usa minha idade, peso ou sexo para definir a carga inicial?', a: 'Não. Nenhum plano, Free ou PRO, usa esses dados para definir carga inicial. O Invictus não é um dispositivo médico, não diagnostica lesões e não substitui avaliação de médico, nutricionista ou profissional de educação física.' },
+      { q: 'O Invictus se conecta com Apple Health, Google Health Connect ou Strava?', a: 'Sim. Você pode sincronizar essas fontes para enriquecer suas métricas de atividade. A Jornada Cardio usa esses dados para propor metas semanais que se adaptam ao seu progresso, diretamente no aplicativo.' },
+      { q: 'Como funciona a cobrança e o cancelamento da assinatura PRO?', a: 'A assinatura é gerenciada pela App Store ou pelo Google Play, que mostram preço, período, renovação e eventual teste antes da compra. O cancelamento é feito na sua conta da loja, não dentro do app; ao cancelar, o acesso PRO continua até o fim do período já pago.' },
     ],
   },
   {
@@ -67,13 +78,13 @@ const groups: Group[] = [
 export default function FaqPage() {
   return <main className="pub-page faq-public-page">
     <header className="pub-header"><a href="/"><ArrowLeft size={17} /> Início</a><a href="/" className="pub-logo">INVICTUS <span>PERFORMANCE</span></a><a href="/conta">Minha conta</a></header>
-    <section className="legal-public-hero"><div><HelpCircle /><p className="pub-eyebrow">CENTRAL DE AJUDA</p><h1>Perguntas Frequentes</h1><p>Como funciona cada recurso do Invictus, explicado por tópico: Campeonatos, Entre Amigos, Power Lift, Drops, integridade e sua conta.</p></div></section>
+    <section className="legal-public-hero"><div><HelpCircle /><p className="pub-eyebrow">CENTRAL DE AJUDA</p><h1>Perguntas Frequentes</h1><p>Como funciona cada recurso do Invictus, explicado por tópico: Campeonatos, Entre Amigos, Power Lift, Drops e Coins, treino inteligente e assinatura, integridade e sua conta.</p></div></section>
     <div className="legal-public-shell">
       {groups.map(group => <section className="pub-card faq-group" key={group.title}>
         <p className="pub-eyebrow">{group.title.toUpperCase()}</p>
         {group.items.map(item => <details key={item.q}><summary><HelpCircle size={15} />{item.q}</summary><p>{item.a}</p></details>)}
       </section>)}
-      <section className="pub-card faq-contact"><Mail size={20} /><div><b>Não encontrou o que precisava?</b><span>Fale com a gente em <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.</span></div></section>
+      <section id="contato" className="pub-card faq-contact"><Mail size={20} /><div><b>Não encontrou o que precisava?</b><span>Fale com a gente em <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.</span></div></section>
     </div>
   </main>;
 }

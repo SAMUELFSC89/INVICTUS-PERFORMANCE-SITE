@@ -19,6 +19,8 @@ import FaqPage from './public/FaqPage';
 import PrivateChallengesPortalPage from './public/PrivateChallengesPortalPage';
 import PowerLiftPortalPage from './public/PowerLiftPortalPage';
 import DropsStorePage from './public/DropsStorePage';
+import SmartTrainingPage from './public/SmartTrainingPage';
+import InvictusEconomyPage from './public/InvictusEconomyPage';
 import './RebuildApp.css';
 import './admin/AdminOperational.css';
 import './admin/FinanceOverviewPanel.css';
@@ -43,6 +45,8 @@ const isAccountRoute = path === '/conta' || path.startsWith('/conta/');
 const isPrivateChallengesRoute = path === '/entre-amigos' || path.startsWith('/entre-amigos/');
 const isPowerLiftRoute = path === '/power-lift' || path.startsWith('/power-lift/');
 const isDropsRoute = path === '/drops' || path.startsWith('/drops/');
+const isSmartTrainingRoute = path === '/treino-inteligente';
+const isInvictusEconomyRoute = path === '/economia-invictus';
 const isChampionshipsLiveRoute = path === '/campeonatos';
 const championshipId = path === '/campeonatos/cardio'
   ? 'invictus_cardio_v1'
@@ -84,7 +88,11 @@ createRoot(document.getElementById('root')!).render(
                                 ? <PowerLiftPortalPage />
                                 : isDropsRoute
                                   ? <DropsStorePage />
-                                  : isChampionshipsLiveRoute
+                                  : isSmartTrainingRoute
+                                    ? <SmartTrainingPage />
+                                    : isInvictusEconomyRoute
+                                      ? <InvictusEconomyPage />
+                                      : isChampionshipsLiveRoute
                                     ? <ChampionshipsLivePage />
                                     : championshipId
                                       ? <ChampionshipSignupPage championshipId={championshipId} />
