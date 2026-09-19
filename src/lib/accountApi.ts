@@ -58,3 +58,24 @@ export async function getIdentityState(): Promise<{ identity: IdentityState; pro
 export async function runIdentityAction(action: 'sync-email' | 'sync-phone' | 'send-verification-email' | 'verify-cpf'): Promise<Record<string, any>> {
   return authenticatedJson('/api/identity-verification', { method: 'POST', body: { action } });
 }
+
+export type AccountDeletionStatus = {
+  requested: boolean;
+  status: string;
+  requestedAt?: string | null;
+  completedAt?: string | null;
+};
+
+export async function getAccountDeletionStatus(): Promise<AccountDeletionStatus> {
+  return authenticatedJson<AccountDeletionStatus>('/api/account-deletion');
+}
+
+export async function requestAccountDeletion(): Promise<{
+  success: boolean;
+  status: string;
+  message: string;
+  subscriptionNotice?: string;
+  requestedAt?: string;
+}> {
+  return authenticatedJson('/api/account-deletion', { method: 'POST', body: { source: 'site_account' } });
+}
