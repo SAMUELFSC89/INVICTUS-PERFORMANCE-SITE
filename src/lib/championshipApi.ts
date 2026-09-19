@@ -1,5 +1,10 @@
 import { auth } from './firebaseClient';
 import { API_BASE } from './adminApi';
+import {
+  COMPETITIVE_HR_ACKNOWLEDGEMENT_VERSION,
+  PRIVACY_POLICY_VERSION,
+  TERMS_VERSION,
+} from './publicLegal';
 
 export type Championship = {
   id: string;
@@ -51,10 +56,7 @@ export type ChampionshipRegistration = {
   pagaEm?: string;
 };
 
-const HR_ACK_VERSION = 'competitive-hr-v1';
 const HR_CONSENT_TYPE = 'competitive_hr_measurement_acknowledgement';
-const TERMS_VERSION = '5.0.0';
-const PRIVACY_VERSION = '5.0.0';
 
 async function tokenHeaders(): Promise<Record<string, string>> {
   const user = auth.currentUser;
@@ -105,8 +107,8 @@ export async function acceptChampionshipRegulation(championship: Championship): 
         consentType: HR_CONSENT_TYPE,
         competitionId: championship.id,
         competitionRulesVersion: championship.regulationVersion,
-        hrAcknowledgementVersion: HR_ACK_VERSION,
-        privacyPolicyVersion: PRIVACY_VERSION,
+        hrAcknowledgementVersion: COMPETITIVE_HR_ACKNOWLEDGEMENT_VERSION,
+        privacyPolicyVersion: PRIVACY_POLICY_VERSION,
         termsVersion: TERMS_VERSION,
         platform: 'web',
         appVersion: String(import.meta.env.VITE_APP_VERSION || 'site'),
