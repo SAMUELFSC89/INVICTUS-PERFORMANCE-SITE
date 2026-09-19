@@ -1,6 +1,5 @@
 {
-  "name": "INVICTUS - Inteligência em Saúde & Performance",
-  "description": "Plataforma inteligente de acompanhamento da saúde, desempenho esportivo e evolução pessoal baseada em dados reais com Invictus IA, Centro de Performance e integrações.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "name": "Invictus Performance",
+  "description": "Ecossistema Invictus para campeonatos oficiais, desafios entre amigos, Power Lift, Drops e área do atleta.",
+  "requestFramePermissions": []
 }
