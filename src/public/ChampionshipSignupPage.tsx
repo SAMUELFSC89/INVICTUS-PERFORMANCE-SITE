@@ -89,7 +89,13 @@ export default function ChampionshipSignupPage({ championshipId }: { championshi
 
   const isPaid = registration?.paymentStatus === 'PAID' || registration?.status === 'paga' || registration?.status === 'ACTIVE';
   const pending = !isPaid && Boolean(registration);
-  const hero = championship?.type === 'arena_musculacao' ? 'powerlift-hero.webp' : 'cardio-hero.webp';
+  const strength = championship?.type === 'arena_musculacao' || championshipId.includes('strength');
+  const desktopHero = strength ? 'strength-hero.webp' : 'cardio-hero.webp';
+  const mobileHero = strength ? 'strength-hero.webp' : 'cardio-hero-mobile.webp';
+  const heroStyle = {
+    '--champ-hero': `url(/assets/invictus/${desktopHero})`,
+    '--champ-hero-mobile': `url(/assets/invictus/${mobileHero})`,
+  } as any;
   const prize = championship?.revealedPrizePool ?? championship?.prizePool ?? 0;
   const statusText = championship?.registrationOpen ? 'INSCRIÇÕES ABERTAS' : (championship?.registrationReadinessReason || 'INSCRIÇÕES INDISPONÍVEIS');
   const category = championship?.categoryLabel || (championshipId.includes('strength') ? 'MUSCULAÇÃO' : 'CARDIO');
@@ -109,7 +115,7 @@ export default function ChampionshipSignupPage({ championshipId }: { championshi
 
   return <main className="pub-page">
     <header className="pub-header"><button onClick={() => window.location.assign('/campeonatos')}><ArrowLeft size={17}/> Campeonatos</button><a href="/" className="pub-logo">INVICTUS <span>PERFORMANCE</span></a><a href="/conta">Minha conta</a></header>
-    <section className="pub-hero" style={{backgroundImage:`linear-gradient(90deg,rgba(3,3,3,.97),rgba(3,3,3,.28)),url(/assets/invictus/${hero})`}}>
+    <section className="pub-hero championship-detail-hero" style={heroStyle}>
       <div><p>{category} · CAMPEONATO OFICIAL</p><h1>{title}</h1><span className={championship?.registrationOpen ? 'open' : 'closed'}>{statusText}</span><p className="pub-desc">{championship?.description || 'Competição oficial Invictus com validação, ranking e regras publicadas.'}</p></div>
     </section>
 
