@@ -1,5 +1,5 @@
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, BadgeCheck, CalendarDays, CheckCircle2, Clock3, CreditCard, LogIn, RefreshCw, ShieldCheck, Trophy, Users, XCircle } from 'lucide-react';
+import { ArrowLeft, BadgeCheck, CalendarDays, CheckCircle2, Clock3, CreditCard, LogIn, RefreshCw, ShieldCheck, Trophy, UserPlus, Users, XCircle } from 'lucide-react';
 import { onAuthStateChanged, signInWithEmailAndPassword, type User } from 'firebase/auth';
 import { auth } from '../lib/firebaseClient';
 import {
@@ -12,6 +12,7 @@ import {
 } from '../lib/championshipApi';
 import { subscribeAdminRealtime } from '../lib/adminRealtime';
 import './PublicPortal.css';
+import './AccountPortalEnhancements.css';
 
 const money = (value: unknown) => Number(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const date = (value?: string) => value ? new Date(value).toLocaleString('pt-BR', { dateStyle: 'medium', timeStyle: 'short' }) : 'A definir';
@@ -139,9 +140,9 @@ export default function ChampionshipSignupPage({ championshipId }: { championshi
       <aside className="pub-checkout">
         <p className="pub-eyebrow">GARANTA SUA VAGA</p>
         <h2>{money(championship?.registrationPrice)}</h2>
-        <small>Pagamento processado no fluxo oficial Invictus.</small>
+        <small>Para se inscrever, use ou crie sua conta Invictus. O pagamento é processado no fluxo oficial.</small>
 
-        {!authReady || loading ? <div className="pub-loading"><RefreshCw className="spin" size={18}/> Sincronizando...</div> : !user ? <form onSubmit={login} className="pub-login"><p>Use a mesma conta do aplicativo Invictus.</p><label>E-mail<input type="email" value={email} onChange={event=>setEmail(event.target.value)} autoComplete="email" required/></label><label>Senha<input type="password" value={password} onChange={event=>setPassword(event.target.value)} autoComplete="current-password" required/></label><button disabled={busy}><LogIn size={16}/>{busy?'Entrando...':'Entrar e continuar'}</button></form> : isPaid ? <div className="pub-confirmed"><BadgeCheck size={30}/><b>Inscrição confirmada</b><p>Sua vaga desta edição já está ativa. O aplicativo enxergará a mesma inscrição.</p><a href="/conta">Ver na minha conta</a></div> : <>
+        {!authReady || loading ? <div className="pub-loading"><RefreshCw className="spin" size={18}/> Sincronizando...</div> : !user ? <form onSubmit={login} className="pub-login"><p>Entre com a mesma conta do aplicativo ou crie sua conta para continuar.</p><label>E-mail<input type="email" value={email} onChange={event=>setEmail(event.target.value)} autoComplete="email" required/></label><label>Senha<input type="password" value={password} onChange={event=>setPassword(event.target.value)} autoComplete="current-password" required/></label><button disabled={busy}><LogIn size={16}/>{busy?'Entrando...':'Entrar e continuar'}</button><a className="championship-auth-create" href="/conta/cadastro"><UserPlus size={15}/> Criar conta Invictus</a></form> : isPaid ? <div className="pub-confirmed"><BadgeCheck size={30}/><b>Inscrição confirmada</b><p>Sua vaga desta edição já está ativa. O aplicativo enxergará a mesma inscrição.</p><a href="/conta">Ver na minha conta</a></div> : <>
           <div className="pub-user"><span>{(user.displayName || user.email || 'A').slice(0,1).toUpperCase()}</span><div><b>{user.displayName || 'Atleta Invictus'}</b><small>{user.email}</small></div></div>
           {pending && <div className="pub-alert pending"><CreditCard size={17}/><span>Existe uma inscrição desta edição aguardando confirmação financeira. Você pode reabrir o checkout com segurança.</span></div>}
           <label className="pub-consent"><input type="checkbox" checked={accepted} onChange={event=>setAccepted(event.target.checked)}/><span>Li as regras da edição e reconheço que dados de frequência cardíaca e sensores possuem limitações técnicas e poderão ser usados conforme os critérios competitivos publicados.</span></label>

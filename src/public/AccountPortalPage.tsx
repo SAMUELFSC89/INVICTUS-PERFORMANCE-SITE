@@ -1,11 +1,12 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowLeft, BadgeCheck, CheckCircle2, CreditCard, KeyRound, LogIn, LogOut, RefreshCw, Trophy, UserRound } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BadgeCheck, CalendarDays, CheckCircle2, CreditCard, Dumbbell, Footprints, KeyRound, LogIn, LogOut, RefreshCw, Trophy, UserRound } from 'lucide-react';
 import { onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, type User } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebaseClient';
-import { getMyChampionshipRegistrations, type ChampionshipRegistration } from '../lib/championshipApi';
+import { getChampionships, getMyChampionshipRegistrations, type Championship, type ChampionshipRegistration } from '../lib/championshipApi';
 import { subscribeAdminRealtime } from '../lib/adminRealtime';
 import './PublicPortal.css';
+import './ChampionshipsLive.css';
 import './AccountPortalEnhancements.css';
 
 const money = (value: unknown) => Number(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -13,6 +14,12 @@ const when = (value: unknown) => {
   if (!value) return '—';
   const raw = typeof (value as any)?.toDate === 'function' ? (value as any).toDate() : new Date(String(value));
   return Number.isFinite(raw.getTime()) ? raw.toLocaleString('pt-BR', { dateStyle: 'medium', timeStyle: 'short' }) : '—';
+};
+const period = (start?: string, end?: string) => {
+  if (!start || !end) return 'Calendário em publicação';
+  const a = new Date(start); const b = new Date(end);
+  if (!Number.isFinite(a.getTime()) || !Number.isFinite(b.getTime())) return 'Calendário em publicação';
+  return `${a.toLocaleDateString('pt-BR', { day:'2-digit', month:'short' })} — ${b.toLocaleDateString('pt-BR', { day:'2-digit', month:'short' })}`;
 };
 
 function friendlyAuthError(err: any) {
@@ -27,6 +34,7 @@ export default function AccountPortalPage() {
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
   const [profile, setProfile] = useState<Record<string, any> | null>(null);
+  const [championships, setChampionships] = useState<Championship[]>([]);
   const [registrations, setRegistrations] = useState<ChampionshipRegistration[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -39,14 +47,16 @@ export default function AccountPortalPage() {
   useEffect(() => onAuthStateChanged(auth, current => { setUser(current); setReady(true); }), []);
 
   const load = useCallback(async () => {
-    if (!auth.currentUser) { setProfile(null); setRegistrations([]); return; }
+    if (!auth.currentUser) { setProfile(null); setChampionships([]); setRegistrations([]); return; }
     setBusy(true); setError('');
     try {
-      const [profileSnap, registrationList] = await Promise.all([
+      const [profileSnap, championshipList, registrationList] = await Promise.all([
         getDoc(doc(db, 'users', auth.currentUser.uid)),
+        getChampionships(),
         getMyChampionshipRegistrations(),
       ]);
       setProfile(profileSnap.exists() ? profileSnap.data() : null);
+      setChampionships(championshipList);
       setRegistrations(registrationList);
     } catch (err: any) {
       setError(err?.message || 'Não foi possível sincronizar sua conta.');
@@ -110,7 +120,24 @@ export default function AccountPortalPage() {
     <div className="account-live-shell">
       {error&&<div className="pub-alert error">{error}</div>}
       <div className="account-live-metrics"><article><Trophy/><small>Inscrições ativas</small><b>{paid.length}</b></article><article><CreditCard/><small>Aguardando pagamento</small><b>{pending.length}</b></article><article><BadgeCheck/><small>Conta</small><b>Sincronizada</b></article></div>
-      <section className="pub-card"><div className="account-section-head"><div><p className="pub-eyebrow">CAMPEONATOS</p><h2>Minhas inscrições</h2></div><button onClick={()=>void load()} disabled={busy}><RefreshCw className={busy?'spin':''} size={15}/> Atualizar</button></div>{registrations.length ? <div className="account-registration-list">{registrations.map((item,index)=>{const isPaid=item.paymentStatus==='PAID'||item.status==='paga'||item.status==='ACTIVE';return <article key={`${item.championshipId}-${item.editionId}-${index}`}><div><b>{item.championshipId==='invictus_cardio_v1'?'Campeonato de Cardio':item.championshipId==='invictus_strength_v1'?'Campeonato de Musculação':item.championshipId}</b><small>Edição {item.editionId || 'atual'} · {when(item.pagaEm || item.criadaEm)}</small></div><div className="account-registration-status"><span className={isPaid?'paid':'pending'}>{isPaid?'ATIVA':'PENDENTE'}</span><strong>{money(item.valor ?? item.amount)}</strong></div></article>})}</div> : <div className="pub-loading">Você ainda não possui inscrição em campeonato nesta conta.</div>}</section>
+
+      <section className="pub-card account-championships-section">
+        <div className="account-section-head"><div><p className="pub-eyebrow">CAMPEONATOS OFICIAIS</p><h2>Campeonatos disponíveis</h2><p className="account-section-copy">Escolha uma modalidade e conclua sua inscrição usando esta mesma conta Invictus.</p></div><button onClick={()=>void load()} disabled={busy}><RefreshCw className={busy?'spin':''} size={15}/> Atualizar</button></div>
+        {championships.length ? <div className="live-champs-grid account-championship-grid">{championships.map(champ => {
+          const cardio = champ.type === 'run_elite_corrida';
+          const href = cardio ? '/campeonatos/cardio' : '/campeonatos/musculacao';
+          const hero = cardio ? 'cardio-card.webp' : 'strength-card.webp';
+          const registration = registrations.find(item => item.championshipId === champ.id && item.editionId === champ.editionId);
+          const registrationPaid = registration?.paymentStatus === 'PAID' || registration?.status === 'paga' || registration?.status === 'ACTIVE';
+          const cta = registrationPaid ? 'Inscrição confirmada' : registration ? 'Continuar inscrição' : champ.registrationOpen ? 'Inscrever-se' : 'Ver campeonato';
+          return <a className="live-champ-card" href={href} key={`${champ.id}-${champ.editionId}`}>
+            <div className="live-champ-img" style={{backgroundImage:`linear-gradient(0deg,rgba(4,4,4,.92),rgba(4,4,4,.08)),url(/assets/invictus/${hero})`}}><span className={champ.registrationOpen?'open':'closed'}>{champ.registrationOpen?'INSCRIÇÕES ABERTAS':'INDISPONÍVEL'}</span>{cardio?<Footprints/>:<Dumbbell/>}</div>
+            <div className="live-champ-body"><small>{champ.categoryLabel} · {champ.edition}</small><h3>{champ.title}</h3><p>{champ.subtitle || champ.description}</p><div className="live-champ-meta"><span><CalendarDays/> {period(champ.startAt,champ.endAt)}</span><span><Trophy/> {money(champ.registrationPrice)}</span></div>{registrationPaid&&<em className="account-registration-inline paid">Sua inscrição nesta edição já está ativa.</em>}{registration&&!registrationPaid&&<em className="account-registration-inline pending">Você possui uma inscrição aguardando conclusão.</em>}{!champ.registrationOpen&&!registration&&<em>{champ.registrationReadinessReason || 'Inscrições ainda não abertas.'}</em>}<b>{cta} <ArrowRight size={14}/></b></div>
+          </a>;
+        })}</div> : <div className="pub-loading">Nenhum campeonato está publicado no catálogo oficial neste momento.</div>}
+      </section>
+
+      <section className="pub-card"><div className="account-section-head"><div><p className="pub-eyebrow">MINHA PARTICIPAÇÃO</p><h2>Minhas inscrições</h2></div><button onClick={()=>void load()} disabled={busy}><RefreshCw className={busy?'spin':''} size={15}/> Atualizar</button></div>{registrations.length ? <div className="account-registration-list">{registrations.map((item,index)=>{const isPaid=item.paymentStatus==='PAID'||item.status==='paga'||item.status==='ACTIVE';return <article key={`${item.championshipId}-${item.editionId}-${index}`}><div><b>{item.championshipId==='invictus_cardio_v1'?'Campeonato de Cardio':item.championshipId==='invictus_strength_v1'?'Campeonato de Musculação':item.championshipId}</b><small>Edição {item.editionId || 'atual'} · {when(item.pagaEm || item.criadaEm)}</small></div><div className="account-registration-status"><span className={isPaid?'paid':'pending'}>{isPaid?'ATIVA':'PENDENTE'}</span><strong>{money(item.valor ?? item.amount)}</strong></div></article>})}</div> : <div className="pub-loading">Você ainda não possui inscrição em campeonato nesta conta.</div>}</section>
     </div>
   </main>;
 }
