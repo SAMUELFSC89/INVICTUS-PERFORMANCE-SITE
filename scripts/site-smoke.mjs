@@ -51,7 +51,8 @@ const sourceContracts = [
   ['src/public/DropsStorePage.tsx', ['subscribeAdminRealtime', 'getStoreOrder', 'STORE_ORDER_CHANGED']],
   ['src/public/PrivateChallengesPortalPage.tsx', ['RANKING POR IGA', 'COINS OPCIONAIS', 'stakeAmount', 'igaScore']],
   ['src/public/ChampionshipsLivePage.tsx', ['cardio-card.webp', 'strength-card.webp', "import './ChampionshipsLive.css';", '<b>Entre Amigos</b>', '<b>Power Lift</b>']],
-  ['src/public/ChampionshipSignupPage.tsx', ['cardio-hero-mobile.webp', 'strength-hero.webp', 'championship-detail-hero']],
+  ['src/public/AccountPortalPage.tsx', ['getChampionships()', 'Campeonatos disponíveis', 'cardio-card.webp', 'strength-card.webp', 'Continuar inscrição', 'Inscrição confirmada']],
+  ['src/public/ChampionshipSignupPage.tsx', ['cardio-hero-mobile.webp', 'strength-hero.webp', 'championship-detail-hero', 'Criar conta Invictus']],
   ['index.html', ['favicon-invictus.png', 'og-invictus.jpg', 'twitter:image']],
 ];
 
