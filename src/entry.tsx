@@ -36,6 +36,7 @@ const isChampionshipOperationsAdminRoute = path === '/admin/championships/operat
 const isChampionshipAdminRoute = path === '/admin/championships' || path.startsWith('/admin/championships/');
 const isPowerLiftAdminRoute = path === '/admin/powerlift' || path.startsWith('/admin/powerlift/');
 const isAdminRoute = path === '/admin' || path.startsWith('/admin/');
+document.documentElement.classList.toggle('invictus-public-site', !isAdminRoute);
 const isAccountSignupRoute = path === '/conta/cadastro';
 const isAccountOnboardingRoute = path === '/conta/completar';
 const isAccountDeletionRoute = path === '/conta/excluir';
