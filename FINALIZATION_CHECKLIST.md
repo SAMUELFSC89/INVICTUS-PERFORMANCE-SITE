@@ -30,13 +30,16 @@ Este checklist registra o estado real da reconstrução e evita considerar o sit
 - Home não contém mais as páginas-demo antigas do `RebuildApp`; todos os CTAs navegam para páginas canônicas.
 - Dados demonstrativos antigos de campeonatos/rankings/datas foram removidos do bundle da Home.
 - Central Admin, auditoria antifraude/IGA, administração e operação de campeonatos estão conectadas às APIs canônicas.
+- O placeholder legado de Campeonatos no `AdminPanel` foi removido; qualquer acesso residual aponta explicitamente para `/admin/championships`.
 - Realtime administrativo usa `system_stats/admin_realtime` e o site recarrega módulos relevantes por revisão/evento.
 - Backend da PR #190 publica realtime para: inscrição pendente, pagamento confirmado/conciliação, score/ranking automático, invalidação após revisão, settlement, saques, loja, revisões administrativas e Power Lift.
 - Teste de contrato `admin-realtime-producers-contract.test.ts` impede regressão da cobertura de inscrição/score/settlement.
 - SITE CI executa TypeScript + build + smoke de produção.
 - Smoke de produção valida 16 rotas, shell React, bundles JS/CSS, contratos de fonte e ausência de dados-demo antigos na Home.
 - A falha inicial do smoke foi identificada como falso negativo do harness: o teste concluía `Smoke OK`, encerrava o Vite intencionalmente com SIGTERM e tratava o código 143 como erro. O harness foi corrigido.
-- SITE CI #156 passou TypeScript, build e smoke com o ranking IGA de Entre Amigos já integrado.
+- SITE CI #163 passou TypeScript, build e smoke no head limpo após a remoção do placeholder administrativo.
+- APP CI #1472 passou TypeScript, validação das regras Firebase, todos os testes unitários, build web/ESM e compilação do Android debug APK no head `6b38414` da PR #190.
+- Preview Vercel do mesmo head está `READY`.
 
 ## Divergências conhecidas entre SITE e APP durante a implementação
 
@@ -59,7 +62,7 @@ O patch histórico `0002-feat-challenges-add-Invictus-Coins-wagering-to-priva.pa
 - caminho sem stake também resolve vencedor por IGA;
 - dinheiro real legado continua apenas como histórico e não é reativado.
 
-Falta somente o CI final do head atual da PR #190 e a implantação dessa PR antes de considerar o E2E live de Entre Amigos concluído.
+O CI final da PR #190 está verde. Falta integrar/implantar essa PR antes de considerar o E2E live de Entre Amigos concluído.
 
 ### Power Lift — comunicação PRO antecipada
 
@@ -69,9 +72,9 @@ O site já posiciona Power Lift como benefício PRO. A implementação de entitl
 
 ### 1. E2E live com sessão real e dados controlados
 
-A camada automatizada de rotas/build está verde. O preview do backend da PR #190 também está `READY`, porém protegido pelo SSO da Vercel. Falta executar a camada live autenticada sem confundir proteção do preview com erro de API.
+A camada automatizada de rotas/build está verde e o preview do backend da PR #190 está `READY`. Foram tentados tanto o fetch autenticado da integração Vercel quanto um link compartilhado em navegador real; em ambos os casos a camada SSO da Vercel interceptou a requisição antes do backend, inclusive em `/api/championships`. Portanto isso é um bloqueio de acesso ao preview, não uma falha da API Invictus, e não deve ser marcado como E2E aprovado nem como erro do backend.
 
-Executar com contas de teste e dados controlados:
+Executar com sessão Vercel autorizada ou após a implantação em ambiente acessível, usando contas de teste e dados controlados:
 
 1. criar conta pelo site;
 2. confirmar o mesmo UID/perfil no app;
