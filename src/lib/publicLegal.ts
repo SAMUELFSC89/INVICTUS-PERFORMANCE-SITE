@@ -2,7 +2,7 @@ import type { Championship } from './championshipApi';
 
 export const TERMS_VERSION = '5.0.0';
 export const PRIVACY_POLICY_VERSION = '5.0.0';
-export const COMPETITIVE_HR_ACKNOWLEDGEMENT_VERSION = 'competitive-hr-v1';
+export const COMPETITIVE_HR_ACKNOWLEDGEMENT_VERSION = 'competitive-hr-v2-zone2-fallback';
 export const SUPPORT_EMAIL = 'contato@invictusperformance.app.br';
 export const COMPANY = {
   legalName: 'INVICTUS PERFORMANCE E SOLUÇÕES LTDA.',
@@ -58,7 +58,7 @@ GPS, sensores, mapas, notificações, serviços de saúde, autenticação, pagam
 Marca, software, modelos, textos e assets do INVICTUS são protegidos. O usuário mantém direitos sobre seu conteúdo e concede licença limitada para operar os recursos escolhidos. Alterações materiais serão apresentadas em nova versão. Contato: ${SUPPORT_EMAIL}. Aplicam-se as leis brasileiras e os direitos obrigatórios do consumidor e do titular de dados.
 
 14. FREQUÊNCIA CARDÍACA EM COMPETIÇÕES
-Quando a frequência cardíaca influenciar validação, intensidade, métricas, pontuação, desempate ou classificação, a participação exige ciência competitiva específica e destacada, separada das permissões e bases legais para tratamento de saúde. A leitura depende de sensores e serviços externos sujeitos a variação, ausência, atraso e descarte legítimo de amostras. O usuário pode não participar sem perder os recursos não competitivos e pode solicitar revisão nos casos previstos. O aceite não implica renúncia a direitos.`;
+Quando a frequência cardíaca influenciar validação, intensidade, métricas, pontuação, desempate ou classificação, a participação exige ciência competitiva específica e destacada, separada das permissões e bases legais para tratamento de saúde. O uso de relógio ou sensor não é obrigatório para inscrição. Quando uma sessão válida não possuir frequência cardíaca medida e aceita, o componente de intensidade do IGA utiliza o fator fixo correspondente à Z2 da regra vigente, atualmente 75% (0,75), sem estimar ou inventar BPM. Sessões inexistentes, inválidas ou abaixo dos critérios mínimos continuam sem pontuar. Dados medidos por sensores e serviços externos podem sofrer variação, ausência, atraso e descarte legítimo de amostras. O usuário pode solicitar revisão nos casos previstos. O aceite não implica renúncia a direitos.`;
 
 export const LEGAL_PRIVACY_POLICY = `POLÍTICA DE PRIVACIDADE E PROTEÇÃO DE DADOS
 
@@ -91,9 +91,15 @@ O titular pode solicitar confirmação e acesso; correção; informação sobre 
 O serviço não é destinado a menores de 18 anos. Mudanças relevantes serão comunicadas e a versão vigente permanecerá disponível nos canais oficiais do Invictus.`;
 
 export const COMPETITIVE_HR_TITLE = 'CIÊNCIA SOBRE FREQUÊNCIA CARDÍACA E PONTUAÇÃO COMPETITIVA';
-export const COMPETITIVE_HR_SUMMARY = 'Relógios e sensores de frequência cardíaca possuem limitações de medição. Pequenas variações nos dados registrados podem influenciar métricas e pontuação.';
-export const COMPETITIVE_HR_CHECKBOX = 'Li, compreendi e aceito as condições relativas às limitações da medição de frequência cardíaca e sua utilização na pontuação competitiva.';
-export const COMPETITIVE_HR_FULL_TEXT = `Declaro estar ciente de que dados de frequência cardíaca obtidos por relógios, pulseiras, sensores, plataformas de saúde e demais dispositivos ou serviços conectados estão sujeitos a limitações técnicas, variações de medição, diferenças entre fabricantes, perda ou atraso de amostras e demais fatores inerentes à tecnologia utilizada.
+export const COMPETITIVE_HR_SUMMARY = 'O IGA usa frequência cardíaca para medir intensidade. Você pode participar sem relógio ou sensor, mas uma sessão válida sem FC medida recebe somente o fator padrão da Z2 e não recebe os bônus das zonas superiores.';
+export const COMPETITIVE_HR_CHECKBOX = 'Entendi que, sem frequência cardíaca medida, meus treinos válidos usarão a intensidade padrão da Z2 e poderão gerar pontuação menor do que treinos equivalentes com intensidade superior medida por sensor.';
+export const COMPETITIVE_HR_FULL_TEXT = `Declaro estar ciente de que o IGA utiliza a frequência cardíaca como um dos elementos do cálculo de intensidade competitiva.
+
+A utilização de relógio, pulseira ou sensor compatível não é condição para realizar a inscrição. Quando uma sessão válida não possuir qualquer frequência cardíaca medida e aceita pelo sistema, o Invictus não inventará nem estimará um valor de BPM. Nessa situação será aplicado exclusivamente ao componente de intensidade o fator fixo correspondente à Z2 da configuração oficial vigente do IGA, atualmente 75% (0,75). A origem dessa intensidade permanecerá identificada no sistema como padrão sem sensor.
+
+Compreendo que esse padrão permite que o treino continue pontuando por frequência e tempo quando cumprir as demais regras, mas não concede os bônus de intensidade das zonas superiores que dependem de frequência cardíaca efetivamente medida. Sessões inexistentes, inválidas, reprovadas ou abaixo dos critérios mínimos continuam sem pontuar, independentemente do fallback de intensidade.
+
+Quando houver dados de frequência cardíaca medidos, a série validada tem prioridade e, quando ela não estiver disponível, a FC média medida poderá ser utilizada. Esses dados podem ser obtidos por relógios, pulseiras, sensores, plataformas de saúde e demais dispositivos ou serviços conectados e estão sujeitos a limitações técnicas, variações de medição, diferenças entre fabricantes, perda ou atraso de amostras e demais fatores inerentes à tecnologia utilizada.
 
 Compreendo que tais dados podem ser utilizados pelo Invictus, conforme as Regras da Competição e os critérios publicados, para validação da atividade, determinação de intensidade, cálculo de métricas, pontuação, desempate e classificação.
 
@@ -101,7 +107,7 @@ Reconheço que a frequência cardíaca registrada pelo dispositivo ou recebida p
 
 Fatores como movimento, intensidade, posição e contato do dispositivo com a pele, ajuste da pulseira, suor, características individuais, ambiente, qualidade e algoritmo do sensor, frequência de amostragem, bateria, conexão, sincronização, HealthKit, Health Connect, Strava, APIs e serviços de terceiros podem alterar a disponibilidade ou a leitura. Amostras podem chegar atrasadas, faltar ou ser descartadas de forma legítima pelos critérios publicados.
 
-Declaro que fui informado dessa característica antes de participar e, estando de acordo com as Regras da Competição, opto voluntariamente por participar da modalidade competitiva utilizando os dados efetivamente recebidos, aceitos e validados pelo sistema. O algoritmo não acrescenta uma margem artificial: aplica as regras oficiais aos dados considerados válidos.
+Declaro que fui informado dessa característica antes de participar e, estando de acordo com as Regras da Competição, opto voluntariamente por participar utilizando os dados efetivamente recebidos, aceitos e validados pelo sistema ou, na ausência de FC medida em sessão válida, o fallback fixo de Z2 descrito acima.
 
 Este aceite não representa consentimento genérico para tratamento de dados de saúde, não substitui as permissões e bases legais descritas na Política de Privacidade e não representa renúncia a direitos. Posso apresentar contestação ou solicitar revisão quando houver indício de erro técnico, falha de processamento, inconsistência de dados ou aplicação incorreta das regras.`;
 
@@ -119,7 +125,7 @@ export function getChampionshipRuleSections(championship: Championship): Champio
     { id: 'performance', title: '4. DESEMPENHO E ATIVIDADES VÁLIDAS', body: `${performance} Somente atividades concluídas dentro do período oficial e compatíveis com a modalidade publicada entram na classificação. Atividades fora do período ou da modalidade da edição não pontuam.` },
     { id: 'scoring', title: '5. PONTUAÇÃO, CLASSIFICAÇÃO E DESEMPATE', body: 'A classificação considera apenas resultados validados pelo Invictus. Em igualdade de pontuação total, o desempate segue, nesta ordem: maior número de atividades válidas; maior total de minutos válidos; e, persistindo igualdade, quem atingiu a pontuação final primeiro. Se ainda existir empate técnico em posição premiada, o resultado é encaminhado para revisão antes da homologação.' },
     { id: 'integrity', title: '6. INTEGRIDADE, ANTIFRAUDE E REVISÃO', body: 'Podem ser analisados duração, distância, ritmo, GPS, frequência cardíaca, origem do registro, duplicidade, aparelho, presença, foto, vídeo e outros sinais compatíveis com a modalidade. Uma atividade pode ser aprovada, rejeitada ou enviada para revisão. Tentativa de fraude pode causar invalidação da atividade, retirada da classificação, suspensão da participação ou encerramento da conta, preservado o direito de contestação pelo suporte.' },
-    { id: 'health', title: '7. SAÚDE E FREQUÊNCIA CARDÍACA', body: 'O Invictus não é dispositivo médico. Sensores e plataformas de saúde podem apresentar atraso, lacunas ou imprecisão. Quando frequência cardíaca influenciar validação, intensidade, pontuação ou desempate, o participante deverá aceitar separadamente a ciência competitiva vigente. A participação não substitui avaliação médica nem orientação profissional.' },
+    { id: 'health', title: '7. SAÚDE E FREQUÊNCIA CARDÍACA', body: 'O Invictus não é dispositivo médico. Sensores e plataformas de saúde podem apresentar atraso, lacunas ou imprecisão. O uso de relógio ou sensor não é obrigatório para inscrição. Em sessão válida sem frequência cardíaca medida, o componente de intensidade do IGA utiliza o fator padrão da Z2, atualmente 75% (0,75), sem estimar BPM e sem bônus das zonas superiores. Quando houver FC medida, ela é utilizada conforme as regras vigentes. A participação não substitui avaliação médica nem orientação profissional.' },
     { id: 'prize', title: '8. PREMIAÇÃO E RESULTADO FINAL', body: 'A premiação, quantidade de posições premiadas, valores e data de homologação publicados nesta edição integram o regulamento. O resultado é homologado depois do encerramento e pode aguardar a conclusão de revisões competitivas ou financeiras pendentes.' },
     { id: 'refunds', title: '9. CANCELAMENTO, REEMBOLSO E CHARGEBACK', body: 'Cancelamentos e reembolsos seguem a legislação aplicável, o regulamento específico da edição e o estágio da competição. Reembolso ou chargeback confirmado pode cancelar a inscrição e retirar a elegibilidade competitiva daquela edição.' },
     { id: 'privacy', title: '10. PRIVACIDADE E DADOS', body: 'Dados necessários à inscrição, pagamento, atividade, saúde autorizada e prevenção à fraude são tratados conforme os Termos de Uso e a Política de Privacidade do Invictus. Dados brutos de saúde, CPF e sinais internos de segurança não são publicados no ranking. Permissões do sistema operacional continuam separadas do aceite deste regulamento.' },
