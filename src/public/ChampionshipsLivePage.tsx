@@ -5,6 +5,7 @@ import { auth } from '../lib/firebaseClient';
 import { getChampionships, type Championship } from '../lib/championshipApi';
 import { subscribeAdminRealtime } from '../lib/adminRealtime';
 import './PublicPortal.css';
+import './ChampionshipsLive.css';
 
 const money = (value: unknown) => Number(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const period = (start?: string, end?: string) => {
@@ -51,7 +52,7 @@ export default function ChampionshipsLivePage() {
         const href=cardio?'/campeonatos/cardio':'/campeonatos/musculacao';
         const hero=cardio?'cardio-card.webp':'strength-card.webp';
         return <a className="live-champ-card" href={href} key={`${champ.id}-${champ.editionId}`}><div className="live-champ-img" style={{backgroundImage:`linear-gradient(0deg,rgba(4,4,4,.92),rgba(4,4,4,.08)),url(/assets/invictus/${hero})`}}><span className={champ.registrationOpen?'open':'closed'}>{champ.registrationOpen?'INSCRIÇÕES ABERTAS':'INDISPONÍVEL'}</span>{cardio?<Footprints/>:<Dumbbell/>}</div><div className="live-champ-body"><small>{champ.categoryLabel} · {champ.edition}</small><h3>{champ.title}</h3><p>{champ.subtitle || champ.description}</p><div className="live-champ-meta"><span><CalendarDays/> {period(champ.startAt,champ.endAt)}</span><span><Trophy/> {money(champ.registrationPrice)}</span></div>{!champ.registrationOpen&&<em>{champ.registrationReadinessReason || 'Inscrições ainda não abertas.'}</em>}<b>Ver detalhes <ArrowRight size={14}/></b></div></a>})}</div>}
-      <section className="pub-card live-ecosystem"><p className="pub-eyebrow">OUTRAS FORMAS DE COMPETIR</p><h2>O ecossistema continua conectado</h2><div><a href="/entre-amigos"><Users/><b>Entre Amigos · PRO</b><span>Desafios privados com IGA e prêmio opcional em Invictus Coins.</span></a><a href="/power-lift"><Dumbbell/><b>Power Lift · PRO</b><span>Benefício PRO com progressão sazonal, marcas auditadas e rankings Elite/Geral.</span></a><a href="/conta"><ShieldCheck/><b>Minha Conta</b><span>Acompanhe inscrições confirmadas no site e no app.</span></a></div></section>
+      <section className="pub-card live-ecosystem"><p className="pub-eyebrow">OUTRAS FORMAS DE COMPETIR</p><h2>O ecossistema continua conectado</h2><div><a href="/entre-amigos"><Users/><b>Entre Amigos</b><span>Desafios privados com IGA e prêmio opcional em Invictus Coins.</span></a><a href="/power-lift"><Dumbbell/><b>Power Lift</b><span>Progressão sazonal, marcas auditadas e rankings Elite/Geral.</span></a><a href="/conta"><ShieldCheck/><b>Minha Conta</b><span>Acompanhe inscrições confirmadas no site e no app.</span></a></div></section>
     </div>
   </main>;
 }
