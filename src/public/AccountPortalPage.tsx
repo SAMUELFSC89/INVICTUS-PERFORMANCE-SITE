@@ -104,9 +104,10 @@ export default function AccountPortalPage() {
   };
 
   const changePassword = async () => {
-    if (!user.email) return;
+    const currentEmail = auth.currentUser?.email;
+    if (!currentEmail) return;
     setBusy(true); setError(''); setNotice('');
-    try { await sendReset(user.email); setNotice('Enviamos um e-mail para você definir uma nova senha.'); }
+    try { await sendReset(currentEmail); setNotice('Enviamos um e-mail para você definir uma nova senha.'); }
     catch (err: any) { setError(friendlyAuthError(err)); }
     finally { setBusy(false); }
   };
