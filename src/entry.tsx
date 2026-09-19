@@ -13,6 +13,8 @@ import ChampionshipsLivePage from './public/ChampionshipsLivePage';
 import AccountPortalPage from './public/AccountPortalPage';
 import AccountSignupPage from './public/AccountSignupPage';
 import AccountOnboardingPage from './public/AccountOnboardingPage';
+import AccountDeletionPage from './public/AccountDeletionPage';
+import LegalPage from './public/LegalPage';
 import PrivateChallengesPortalPage from './public/PrivateChallengesPortalPage';
 import PowerLiftPortalPage from './public/PowerLiftPortalPage';
 import DropsStorePage from './public/DropsStorePage';
@@ -32,6 +34,9 @@ const isPowerLiftAdminRoute = path === '/admin/powerlift' || path.startsWith('/a
 const isAdminRoute = path === '/admin' || path.startsWith('/admin/');
 const isAccountSignupRoute = path === '/conta/cadastro';
 const isAccountOnboardingRoute = path === '/conta/completar';
+const isAccountDeletionRoute = path === '/conta/excluir';
+const isTermsRoute = path === '/termos';
+const isPrivacyRoute = path === '/privacidade';
 const isAccountRoute = path === '/conta' || path.startsWith('/conta/');
 const isPrivateChallengesRoute = path === '/entre-amigos' || path.startsWith('/entre-amigos/');
 const isPowerLiftRoute = path === '/power-lift' || path.startsWith('/power-lift/');
@@ -61,18 +66,24 @@ createRoot(document.getElementById('root')!).render(
                   ? <AccountSignupPage />
                   : isAccountOnboardingRoute
                     ? <AccountOnboardingPage />
-                    : isAccountRoute
-                      ? <AccountPortalPage />
-                      : isPrivateChallengesRoute
-                        ? <PrivateChallengesPortalPage />
-                        : isPowerLiftRoute
-                          ? <PowerLiftPortalPage />
-                          : isDropsRoute
-                            ? <DropsStorePage />
-                            : isChampionshipsLiveRoute
-                              ? <ChampionshipsLivePage />
-                              : championshipId
-                                ? <ChampionshipSignupPage championshipId={championshipId} />
-                                : <RebuildApp />}
+                    : isAccountDeletionRoute
+                      ? <AccountDeletionPage />
+                      : isTermsRoute
+                        ? <LegalPage kind="terms" />
+                        : isPrivacyRoute
+                          ? <LegalPage kind="privacy" />
+                          : isAccountRoute
+                            ? <AccountPortalPage />
+                            : isPrivateChallengesRoute
+                              ? <PrivateChallengesPortalPage />
+                              : isPowerLiftRoute
+                                ? <PowerLiftPortalPage />
+                                : isDropsRoute
+                                  ? <DropsStorePage />
+                                  : isChampionshipsLiveRoute
+                                    ? <ChampionshipsLivePage />
+                                    : championshipId
+                                      ? <ChampionshipSignupPage championshipId={championshipId} />
+                                      : <RebuildApp />}
   </StrictMode>,
 );
