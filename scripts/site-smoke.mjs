@@ -24,11 +24,35 @@ const routes = [
   '/admin/powerlift',
 ];
 
+const approvedAssets = [
+  'logo-invictus.png',
+  'favicon-invictus.png',
+  'favicon.ico',
+  'og-invictus.jpg',
+  'home-hero.webp',
+  'home-hero-mobile.webp',
+  'championships-hero.webp',
+  'cardio-hero.webp',
+  'cardio-hero-mobile.webp',
+  'strength-hero.webp',
+  'friends-hero.webp',
+  'powerlift-hero.webp',
+  'drops-hero.webp',
+  'account-hero.webp',
+  'season-card.webp',
+  'cardio-card.webp',
+  'strength-card.webp',
+  'institutional-banner.webp',
+];
+
 const sourceContracts = [
-  ['src/RebuildApp.tsx', ['window.location.assign(route)', 'PRO · IGA + PRÊMIO EM COINS', 'BENEFÍCIO PRO']],
-  ['src/entry.tsx', ['ChampionshipsLivePage', 'PrivateChallengesPortalPage', 'PowerLiftPortalPage', 'DropsStorePage', 'AccountSignupPage', 'AccountOnboardingPage']],
+  ['src/RebuildApp.tsx', ['window.location.assign(route)', 'PRO · IGA + PRÊMIO EM COINS', 'BENEFÍCIO PRO', 'logo-invictus.png', 'home-hero-mobile.webp', 'approvedInstitutional']],
+  ['src/entry.tsx', ['ChampionshipsLivePage', 'PrivateChallengesPortalPage', 'PowerLiftPortalPage', 'DropsStorePage', 'AccountSignupPage', 'AccountOnboardingPage', 'ApprovedAssets.css']],
   ['src/public/DropsStorePage.tsx', ['subscribeAdminRealtime', 'getStoreOrder', 'STORE_ORDER_CHANGED']],
   ['src/public/PrivateChallengesPortalPage.tsx', ['RANKING POR IGA', 'COINS OPCIONAIS', 'stakeAmount', 'igaScore']],
+  ['src/public/ChampionshipsLivePage.tsx', ['cardio-card.webp', 'strength-card.webp']],
+  ['src/public/ChampionshipSignupPage.tsx', ['cardio-hero-mobile.webp', 'strength-hero.webp', 'championship-detail-hero']],
+  ['index.html', ['favicon-invictus.png', 'og-invictus.jpg', 'twitter:image']],
 ];
 
 function fail(message) {
@@ -87,6 +111,17 @@ async function assertBundles(html) {
   }
 }
 
+async function assertApprovedAssets() {
+  for (const file of approvedAssets) {
+    const url = `/assets/invictus/${file}`;
+    const response = await fetch(`${origin}${url}`, { redirect: 'manual' });
+    if (!response.ok) fail(`Asset aprovado ${url} respondeu HTTP ${response.status}`);
+    const contentType = response.headers.get('content-type') || '';
+    if (contentType.includes('text/html')) fail(`Asset aprovado ${url} retornou HTML em vez do arquivo visual.`);
+    console.log(`[smoke] asset OK ${url}`);
+  }
+}
+
 try {
   await assertSourceContracts();
 
@@ -107,7 +142,8 @@ try {
       if (route === '/') homeHtml = html;
     }
     await assertBundles(homeHtml);
-    console.log(`Smoke OK: ${routes.length} rotas + bundles + contratos de fonte.`);
+    await assertApprovedAssets();
+    console.log(`Smoke OK: ${routes.length} rotas + bundles + ${approvedAssets.length} assets aprovados + contratos de fonte.`);
   } finally {
     if (!previewState.exited) {
       preview.kill('SIGTERM');
