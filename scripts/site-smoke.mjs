@@ -16,6 +16,9 @@ const routes = [
   '/conta',
   '/conta/cadastro',
   '/conta/completar',
+  '/conta/excluir',
+  '/termos',
+  '/privacidade',
   '/admin',
   '/admin/audit',
   '/admin/audit/athlete',
@@ -47,12 +50,16 @@ const approvedAssets = [
 
 const sourceContracts = [
   ['src/RebuildApp.tsx', ['window.location.assign(route)', 'logo-invictus.png', 'home-hero-mobile.webp', 'approvedInstitutional', 'Crie uma disputa privada', 'Prove sua evolução em Supino']],
-  ['src/entry.tsx', ['ChampionshipsLivePage', 'PrivateChallengesPortalPage', 'PowerLiftPortalPage', 'DropsStorePage', 'AccountSignupPage', 'AccountOnboardingPage', 'ApprovedAssets.css']],
+  ['src/entry.tsx', ['ChampionshipsLivePage', 'AccountDeletionPage', 'LegalPage', "path === '/conta/excluir'", "path === '/termos'", "path === '/privacidade'"]],
   ['src/public/DropsStorePage.tsx', ['subscribeAdminRealtime', 'getStoreOrder', 'STORE_ORDER_CHANGED', 'Novidades Invictus chegando']],
   ['src/public/PrivateChallengesPortalPage.tsx', ['RANKING POR IGA', 'COINS OPCIONAIS', 'stakeAmount', 'igaScore']],
   ['src/public/ChampionshipsLivePage.tsx', ['cardio-card.webp', 'strength-card.webp', "import './ChampionshipsLive.css';", '<b>Entre Amigos</b>', '<b>Power Lift</b>']],
-  ['src/public/AccountPortalPage.tsx', ['getChampionships()', 'Campeonatos disponíveis', 'cardio-card.webp', 'strength-card.webp', 'Continuar inscrição', 'Inscrição confirmada']],
-  ['src/public/ChampionshipSignupPage.tsx', ['cardio-hero-mobile.webp', 'strength-hero.webp', 'championship-detail-hero', 'Criar conta Invictus']],
+  ['src/public/AccountPortalPage.tsx', ['getChampionships()', 'Campeonatos disponíveis', 'Minhas inscrições', 'Baixar aplicativo', 'Alterar senha', 'Entrar em contato', '/conta/excluir', 'AppDownloadPanel']],
+  ['src/public/AppDownloadPanel.tsx', ['VITE_APP_STORE_URL', 'VITE_GOOGLE_PLAY_URL', 'App Store', 'Google Play']],
+  ['src/public/AccountDeletionPage.tsx', ['getAccountDeletionStatus', 'requestAccountDeletion', 'Solicitar exclusão da conta', 'EXCLUIR']],
+  ['src/lib/accountApi.ts', ["'/api/account-deletion'", 'getAccountDeletionStatus', 'requestAccountDeletion']],
+  ['src/public/ChampionshipSignupPage.tsx', ['getChampionshipRuleSections', 'COMPETITIVE_HR_FULL_TEXT', 'LEGAL_TERMS_OF_USE', 'LEGAL_PRIVACY_POLICY', 'acceptedRegulation', 'acceptedHr', 'acceptedTerms', 'AppDownloadPanel']],
+  ['src/lib/publicLegal.ts', ['TERMOS DE USO DA PLATAFORMA INVICTUS', 'POLÍTICA DE PRIVACIDADE E PROTEÇÃO DE DADOS', 'CIÊNCIA SOBRE FREQUÊNCIA CARDÍACA E PONTUAÇÃO COMPETITIVA', 'getChampionshipRuleSections']],
   ['index.html', ['favicon-invictus.png', 'og-invictus.jpg', 'twitter:image']],
 ];
 
