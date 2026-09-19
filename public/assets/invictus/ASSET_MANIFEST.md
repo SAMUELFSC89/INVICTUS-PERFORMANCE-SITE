@@ -1,28 +1,33 @@
-# Assets oficiais do rebuild
+# Assets oficiais aprovados do site Invictus
 
-Os componentes do site público apontam exclusivamente para arquivos aprovados. Nenhum deles deve ser substituído por stock, placeholder ou imagem apenas aproximada.
+Todos os arquivos desta pasta foram aprovados para uso no rebuild. Não substituir por stock, placeholder ou aproximações.
 
-## Heróis públicos aprovados
-- home-hero.webp
-- championships-hero.webp
-- cardio-hero.webp
-- friends-hero.webp
-- powerlift-hero.webp
-- drops-hero.webp
-- account-hero.webp
+## Marca
+- `logo-invictus.png` — header/footer e portais públicos
+- `favicon-invictus.png` — ícone PNG
+- `favicon.ico` — favicon compatível
+- `og-invictus.jpg` — compartilhamento social/Open Graph (1200×630)
 
-## Cards de campeonatos
-- champ-card-cardio.webp
-- champ-card-musculacao.webp
-- champ-card-powerlift.webp
-- champ-card-temporada.webp
-- champ-card-friends.webp
-- champ-card-open.webp
+## Heroes
+- `home-hero.webp` — Home desktop
+- `home-hero-mobile.webp` — Home mobile
+- `championships-hero.webp` — catálogo de Campeonatos
+- `cardio-hero.webp` — campeonato Cardio desktop
+- `cardio-hero-mobile.webp` — campeonato Cardio mobile
+- `strength-hero.webp` — campeonato de Musculação
+- `friends-hero.webp` — Entre Amigos
+- `powerlift-hero.webp` — Power Lift
+- `drops-hero.webp` — Drops
+- `account-hero.webp` — Minha Conta
 
-## Regra de identidade
-Preto/grafite/dourado, fotografia cinematográfica, iluminação quente de arena e presença equilibrada de homens e mulheres. Sempre que a marca aparecer em roupa, equipamento ou produto, deve usar a identidade Invictus aprovada.
+## Cards e apoio institucional
+- `cardio-card.webp` — card oficial Cardio no catálogo
+- `strength-card.webp` — card oficial Musculação no catálogo
+- `season-card.webp` — asset aprovado de Temporada; manter versionado até a superfície sazonal correspondente estar ativa
+- `institutional-banner.webp` — CTA/banner institucional da Home
 
-Textos, preços, status, botões e demais UI permanecem em HTML/CSS.
-
-## Admin
-O painel administrativo **não usa hero cinematográfico** e não é peça de marketing. `/admin` é uma interface operacional autenticada para controlar usuários, financeiro, anti-fraude, Drops, configurações e demais módulos do ecossistema.
+## Regras de implementação
+- Textos, preços, status, rankings, botões e demais UI continuam em HTML/CSS e dados reais do backend.
+- Produtos do Drops usam as imagens reais publicadas pelo catálogo; não criar produtos fictícios a partir do hero.
+- O painel `/admin` não usa hero cinematográfico: é interface operacional, não peça de marketing.
+- Não modificar, regenerar ou aplicar filtros nos arquivos aprovados sem nova aprovação explícita.
