@@ -1,7 +1,11 @@
 import { auth } from './firebaseClient';
 
 const configuredBase = String(import.meta.env.VITE_APP_API_BASE || '').trim();
-const API_BASE = (configuredBase || window.location.origin).replace(/\/$/, '');
+const localHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+// Em produção/preview o site sempre usa /api na própria origem. A Vercel
+// encaminha server-side para o backend do app, evitando CORS no navegador e
+// mantendo um único checkout/uma única API para site e aplicativo.
+const API_BASE = ((localHost && configuredBase) ? configuredBase : window.location.origin).replace(/\/$/, '');
 
 export async function adminRequest<T = any>(
   action: string,
