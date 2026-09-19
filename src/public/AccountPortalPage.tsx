@@ -1,11 +1,12 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, BadgeCheck, CalendarDays, CheckCircle2, CreditCard, Dumbbell, FileText, Footprints, KeyRound, LogIn, LogOut, Mail, RefreshCw, ShieldCheck, Smartphone, Trash2, Trophy, UserRound } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BadgeCheck, CalendarDays, CheckCircle2, CreditCard, Dumbbell, FileText, Footprints, KeyRound, LayoutDashboard, LogIn, LogOut, Mail, RefreshCw, ShieldCheck, Smartphone, Trash2, Trophy, UserRound } from 'lucide-react';
 import { onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, type User } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebaseClient';
 import { getChampionships, getMyChampionshipRegistrations, type Championship, type ChampionshipRegistration } from '../lib/championshipApi';
 import { SUPPORT_EMAIL } from '../lib/publicLegal';
 import { subscribeAdminRealtime } from '../lib/adminRealtime';
+import { adminRequest } from '../lib/adminApi';
 import AppDownloadPanel from './AppDownloadPanel';
 import './PublicPortal.css';
 import './ChampionshipsLive.css';
@@ -45,9 +46,19 @@ export default function AccountPortalPage() {
   const [password, setPassword] = useState('');
   const [recovering, setRecovering] = useState(false);
   const [resetSent, setResetSent] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const lastRevision = useRef<number | null>(null);
 
   useEffect(() => onAuthStateChanged(auth, current => { setUser(current); setReady(true); }), []);
+
+  useEffect(() => {
+    if (!user) { setIsAdmin(false); return; }
+    let cancelled = false;
+    // Verificação silenciosa: só decide se mostramos o atalho "Painel Admin".
+    // A autoridade de verdade continua sendo validada pelo backend em toda chamada real do /admin.
+    adminRequest('metrics').then(() => { if (!cancelled) setIsAdmin(true); }).catch(() => { if (!cancelled) setIsAdmin(false); });
+    return () => { cancelled = true; };
+  }, [user]);
 
   const load = useCallback(async () => {
     if (!auth.currentUser) { setProfile(null); setChampionships([]); setRegistrations([]); return; }
@@ -135,6 +146,7 @@ export default function AccountPortalPage() {
       <section className="pub-card account-menu-section">
         <div className="account-section-head"><div><p className="pub-eyebrow">CONTA E SUPORTE</p><h2>O que você precisa?</h2><p className="account-section-copy">Acesse rapidamente suas inscrições, segurança, documentos e canais de contato.</p></div></div>
         <div className="account-menu-grid">
+          {isAdmin && <a href="/admin" className="account-admin-entry"><LayoutDashboard/><div><b>Painel Admin</b><span>Central administrativa Invictus</span></div><ArrowRight/></a>}
           <a href="#campeonatos"><Trophy/><div><b>Campeonatos</b><span>Ver edições disponíveis</span></div><ArrowRight/></a>
           <a href="#inscricoes"><BadgeCheck/><div><b>Minhas inscrições</b><span>Acompanhar participação</span></div><ArrowRight/></a>
           <a href="#aplicativo"><Smartphone/><div><b>Baixar aplicativo</b><span>App Store e Google Play</span></div><ArrowRight/></a>

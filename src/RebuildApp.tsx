@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Activity, ArrowRight, BarChart3, Crown, Dumbbell, FileCheck2, Gift, Menu, ShieldCheck, Star, Target, Trophy, Users, X } from 'lucide-react';
+import { SUPPORT_EMAIL } from './lib/publicLegal';
 
 type Route='/'|'/campeonatos'|'/entre-amigos'|'/power-lift'|'/drops'|'/conta';
 const nav:[string,Route][]=[['Início','/'],['Campeonatos','/campeonatos'],['Entre Amigos','/entre-amigos'],['Power Lift','/power-lift'],['Drops','/drops']];
@@ -12,8 +13,15 @@ const heroBg=(desktop:string,mobile?:string)=>({
 const go=(route:Route)=>{if(route==='/'){window.scrollTo({top:0,behavior:'smooth'});return;}window.location.assign(route);};
 
 function Brand(){return <div className="brand"><img className="brandLogo" src={asset('logo-invictus.png')} alt="Invictus Performance"/></div>}
-function Header(){const[open,setOpen]=useState(false);return <header><button className="brandBtn" onClick={()=>go('/')}><Brand/></button><nav className={open?'open':''}>{nav.map(([label,route])=><button key={route} className={route==='/'?'active':''} onClick={()=>go(route)}>{label}</button>)}</nav><div className="headActions"><button className="ghost" onClick={()=>go('/conta')}>Entrar</button><button className="gold" onClick={()=>go('/campeonatos')}>Inscreva-se</button><button className="menu" onClick={()=>setOpen(value=>!value)}>{open?<X/>:<Menu/>}</button></div></header>}
-function Footer(){return <footer><Brand/><div className="footerNav">{nav.map(([label,route])=><button key={route} onClick={()=>go(route)}>{label}</button>)}</div><div className="footerCopy"><b>Mais que treino.<br/>É legado.</b><span>© 2026 Invictus Performance</span></div></footer>}
+const goHref=(href:string)=>{window.location.assign(href);};
+function Header(){const[open,setOpen]=useState(false);const close=()=>setOpen(false);return <header><button className="brandBtn" onClick={()=>go('/')}><Brand/></button><nav className={open?'open':''}>{nav.map(([label,route])=><button key={route} className={route==='/'?'active':''} onClick={()=>{go(route);close();}}>{label}</button>)}<div className="navAuth"><button className="ghost" onClick={()=>{go('/conta');close();}}>Entrar</button><button className="gold" onClick={()=>{goHref('/conta/cadastro');close();}}>Inscreva-se</button></div></nav><div className="headActions"><button className="ghost" onClick={()=>go('/conta')}>Entrar</button><button className="gold" onClick={()=>goHref('/conta/cadastro')}>Inscreva-se</button><button className="menu" onClick={()=>setOpen(value=>!value)}>{open?<X/>:<Menu/>}</button></div></header>}
+function Footer(){return <footer className="siteFooter">
+  <div className="footerCol footerBrand"><Brand/><p>Mais que treino.<br/>É legado.</p></div>
+  <div className="footerCol"><h4>Navegação</h4>{nav.map(([label,route])=><button key={route} onClick={()=>go(route)}>{label}</button>)}</div>
+  <div className="footerCol"><h4>Conta</h4><button onClick={()=>go('/conta')}>Entrar</button><button onClick={()=>goHref('/conta/cadastro')}>Inscreva-se</button><button onClick={()=>goHref('/conta/excluir')}>Excluir conta</button></div>
+  <div className="footerCol"><h4>Institucional</h4><button onClick={()=>goHref('/termos')}>Termos de Uso</button><button onClick={()=>goHref('/privacidade')}>Política de Privacidade</button><a href={`mailto:${SUPPORT_EMAIL}`}>Fale conosco</a></div>
+  <div className="footerCopy"><span>© {new Date().getFullYear()} Invictus Performance</span></div>
+</footer>}
 function Title({title,eyebrow}:{title:string;eyebrow?:string}){return <div className="sectionTitle">{eyebrow&&<span>{eyebrow}</span>}<h2>{title}</h2></div>}
 function Hero({assetName,mobileAssetName,eyebrow,title,goldTitle,desc,primary,secondary,onPrimary,onSecondary,chips=[]}:{assetName:string;mobileAssetName?:string;eyebrow:string;title:string;goldTitle?:string;desc:string;primary:string;secondary?:string;onPrimary?:()=>void;onSecondary?:()=>void;chips?:string[]}){return <section className="hero approvedHero" style={heroBg(assetName,mobileAssetName)}><div className="heroCopy"><p className="eyebrow">{eyebrow}</p><h1>{title}{goldTitle&&<><br/><em>{goldTitle}</em></>}</h1><p>{desc}</p><div className="heroActions"><button className="gold" onClick={onPrimary}>{primary}<ArrowRight size={16}/></button>{secondary&&<button className="outline" onClick={onSecondary}>{secondary}</button>}</div><div className="chips">{chips.map(chip=><span key={chip}>{chip}</span>)}</div></div></section>}
 function Step({n,icon,title,text}:{n:string;icon:React.ReactNode;title:string;text:string}){return <article className="step"><strong>{n}</strong>{icon}<div><h3>{title}</h3><p>{text}</p></div></article>}

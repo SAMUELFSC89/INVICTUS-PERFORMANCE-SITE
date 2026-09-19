@@ -51,8 +51,9 @@ const approvedAssets = [
 const sourceContracts = [
   ['src/RebuildApp.tsx', ['window.location.assign(route)', 'logo-invictus.png', 'home-hero-mobile.webp', 'approvedInstitutional', 'Crie uma disputa privada', 'Prove sua evolução em Supino']],
   ['src/entry.tsx', ['ChampionshipsLivePage', 'AccountDeletionPage', 'LegalPage', "path === '/conta/excluir'", "path === '/termos'", "path === '/privacidade'"]],
-  ['src/public/DropsStorePage.tsx', ['subscribeAdminRealtime', 'getStoreOrder', 'STORE_ORDER_CHANGED', 'Novidades Invictus chegando']],
-  ['src/public/PrivateChallengesPortalPage.tsx', ['RANKING POR IGA', 'COINS OPCIONAIS', 'stakeAmount', 'igaScore']],
+  ['src/public/DropsStorePage.tsx', ['AppDownloadPanel', 'DISPONÍVEL NO APLICATIVO', 'Catálogo, compra e resgate acontecem no app', 'Invictus Coins']],
+  ['src/public/PrivateChallengesPortalPage.tsx', ['AppDownloadPanel', 'DISPONÍVEL NO APLICATIVO', 'RANKING POR IGA', 'COINS OPCIONAIS', 'Invictus PRO']],
+  ['src/public/PowerLiftPortalPage.tsx', ['AppDownloadPanel', 'DISPONÍVEL NO APLICATIVO', 'BENEFÍCIO PRO', 'Invictus Coins']],
   ['src/public/ChampionshipsLivePage.tsx', ['cardio-card.webp', 'strength-card.webp', "import './ChampionshipsLive.css';", '<b>Entre Amigos</b>', '<b>Power Lift</b>']],
   ['src/public/AccountPortalPage.tsx', ['getChampionships()', 'Campeonatos disponíveis', 'Minhas inscrições', 'Baixar aplicativo', 'Alterar senha', 'Entrar em contato', '/conta/excluir', 'AppDownloadPanel']],
   ['src/public/AppDownloadPanel.tsx', ['VITE_APP_STORE_URL', 'VITE_GOOGLE_PLAY_URL', 'App Store', 'Google Play']],
