@@ -10,6 +10,7 @@ export type Championship = {
   subtitle: string;
   description: string;
   categoryLabel: string;
+  durationDays?: number;
   startAt: string;
   endAt: string;
   settlementAt?: string;
@@ -21,12 +22,20 @@ export type Championship = {
   participantCount?: number;
   prizePool?: number;
   revealedPrizePool?: number;
-  prizeDistribution?: Array<{ rank: number; amount: number; label: string }>;
-  revealedPrizeDistribution?: Array<{ rank: number; amount: number; label: string }>;
+  prizeDistribution?: Array<{ rank: number; percentage?: number; amount: number; label: string }>;
+  revealedPrizeDistribution?: Array<{ rank: number; percentage?: number; amount: number; label: string }>;
   status: string;
   regulationVersion: string;
   regulationHash: string;
-  antiFraudProfile?: Record<string, unknown>;
+  antiFraudProfile?: {
+    minDurationMinutes?: number;
+    maxDurationMinutes?: number;
+    requireGeofence?: boolean;
+    requireContinuousGPS?: boolean;
+    maxRiskScore?: number;
+    allowedCardioTypes?: string[];
+    [key: string]: unknown;
+  };
 };
 
 export type ChampionshipRegistration = {
