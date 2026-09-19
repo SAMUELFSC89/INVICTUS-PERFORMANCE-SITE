@@ -137,7 +137,7 @@ export default function AccountPortalPage() {
 
   return <main className="pub-page account-portal">
     <header className="pub-header"><a href="/"><ArrowLeft size={17}/> Início</a><a href="/" className="pub-logo">INVICTUS <span>PERFORMANCE</span></a><button onClick={()=>void signOut(auth)}><LogOut size={16}/> Sair</button></header>
-    <section className="account-live-hero" id="dados" style={{backgroundImage:'linear-gradient(90deg,rgba(4,4,4,.96),rgba(4,4,4,.35)),url(/assets/invictus/account-hero.webp)'}}><div><p className="pub-eyebrow">MINHA CONTA</p><h1>{displayName}</h1><p>{user.email}</p><span><BadgeCheck size={15}/> PLANO {tier}</span></div></section>
+    <section className="account-live-hero" id="dados"><div><p className="pub-eyebrow">MINHA CONTA</p><h1>{displayName}</h1><p>{user.email}</p><span><BadgeCheck size={15}/> PLANO {tier}</span></div></section>
     <div className="account-live-shell">
       {error&&<div className="pub-alert error">{error}</div>}
       {notice&&<div className="pub-alert success"><CheckCircle2 size={16}/>{notice}</div>}
@@ -163,12 +163,11 @@ export default function AccountPortalPage() {
         {championships.length ? <div className="live-champs-grid account-championship-grid">{championships.map(champ => {
           const cardio = champ.type === 'run_elite_corrida';
           const href = cardio ? '/campeonatos/cardio' : '/campeonatos/musculacao';
-          const hero = cardio ? 'cardio-card.webp' : 'strength-card.webp';
           const registration = registrations.find(item => item.championshipId === champ.id && item.editionId === champ.editionId);
           const registrationPaid = registration?.paymentStatus === 'PAID' || registration?.status === 'paga' || registration?.status === 'ACTIVE';
           const cta = registrationPaid ? 'Inscrição confirmada' : registration ? 'Continuar inscrição' : champ.registrationOpen ? 'Inscrever-se' : 'Ver campeonato';
           return <a className="live-champ-card" href={href} key={`${champ.id}-${champ.editionId}`}>
-            <div className="live-champ-img" style={{backgroundImage:`linear-gradient(0deg,rgba(4,4,4,.92),rgba(4,4,4,.08)),url(/assets/invictus/${hero})`}}><span className={champ.registrationOpen?'open':'closed'}>{champ.registrationOpen?'INSCRIÇÕES ABERTAS':'INDISPONÍVEL'}</span>{cardio?<Footprints/>:<Dumbbell/>}</div>
+            <div className="live-champ-img"><span className={champ.registrationOpen?'open':'closed'}>{champ.registrationOpen?'INSCRIÇÕES ABERTAS':'INDISPONÍVEL'}</span>{cardio?<Footprints/>:<Dumbbell/>}</div>
             <div className="live-champ-body"><small>{champ.categoryLabel} · {champ.edition}</small><h3>{champ.title}</h3><p>{champ.subtitle || champ.description}</p><div className="live-champ-meta"><span><CalendarDays/> {period(champ.startAt,champ.endAt)}</span><span><Trophy/> {money(champ.registrationPrice)}</span></div>{registrationPaid&&<em className="account-registration-inline paid">Sua inscrição nesta edição já está ativa.</em>}{registration&&!registrationPaid&&<em className="account-registration-inline pending">Você possui uma inscrição aguardando conclusão.</em>}{!champ.registrationOpen&&!registration&&<em>{champ.registrationReadinessReason || 'Inscrições ainda não abertas.'}</em>}<b>{cta} <ArrowRight size={14}/></b></div>
           </a>;
         })}</div> : <div className="pub-loading">Nenhum campeonato disponível neste momento.</div>}

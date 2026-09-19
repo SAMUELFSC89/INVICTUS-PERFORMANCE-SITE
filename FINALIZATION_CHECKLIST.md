@@ -108,22 +108,11 @@ Concluir o entitlement PRO no backend/app e depois alinhar o gate do site à mes
 - SITE PR permanece draft até E2E live, auditoria funcional e assets/auditoria visual final.
 - Só depois remover as telas administrativas do aplicativo, em PR separada.
 
-### 4. Assets visuais finais — DEIXAR POR ÚLTIMO
+### 4. Direção visual pública
 
-Os componentes apontam para `/public/assets/invictus`, mas os binários finais ainda precisam entrar com os exports aprovados, sem stock e sem aproximações:
+Por decisão de produto, o site público não usa fotografias promocionais nem imagens ilustrativas de produtos. A identidade é construída com a logo oficial, tipografia, ícones e superfícies preto/dourado. Isso evita representar atletas, produtos, marcas ou parcerias que não façam parte da oferta publicada.
 
-- `home-hero.webp`
-- `championships-hero.webp`
-- `cardio-hero.webp`
-- `friends-hero.webp`
-- `powerlift-hero.webp`
-- `drops-hero.webp`
-- `account-hero.webp`
-- cards específicos de campeonatos;
-- produtos individuais do Drops quando necessário;
-- logos/marks oficiais Invictus usados pela interface.
-
-Depois da inclusão: conferir desktop + mobile lado a lado com as referências aprovadas.
+Os Drops comunicam recompensas em suplementação — principalmente whey e creatina — sem antecipar marca ou embalagem. Cada edição deve mostrar os detalhes reais antes do resgate.
 
 ## Critério de conclusão
 

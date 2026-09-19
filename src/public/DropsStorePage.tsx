@@ -1,27 +1,27 @@
-import { ArrowLeft, Coins, Gift, PackageSearch, ShieldCheck, ShoppingBag, Smartphone, Truck } from 'lucide-react';
+import { ArrowLeft, Bell, Coins, Gift, PackageSearch, ShieldCheck, Smartphone, Sparkles } from 'lucide-react';
 import AppDownloadPanel from './AppDownloadPanel';
 import './DropsStore.css';
 
 export default function DropsStorePage(){
   return <main className="drops-live-page">
     <header className="drops-live-header"><a href="/"><ArrowLeft size={17}/> Início</a><a className="drops-live-logo" href="/">INVICTUS <span>PERFORMANCE</span></a><a href="/conta">Minha conta</a></header>
-    <section className="drops-live-hero" style={{backgroundImage:'linear-gradient(90deg,rgba(4,4,4,.97),rgba(4,4,4,.48)),url(/assets/invictus/drops-hero.webp)'}}><div><p>PRODUTOS. RECOMPENSAS. EXPERIÊNCIA INVICTUS.</p><h1>DROPS <em>INVICTUS</em></h1><span>Produtos e recompensas do universo Invictus, com lançamentos limitados que podem ser resgatados com Invictus Coins.</span><div className="drops-live-chips"><b><ShoppingBag size={14}/> PRODUTOS INVICTUS</b><b><Coins size={14}/> INVICTUS COINS</b><b><Truck size={14}/> PEDIDOS RASTREÁVEIS</b></div></div></section>
+    <section className="drops-live-hero"><div><p>SUPLEMENTAÇÃO. RECOMPENSAS. PERFORMANCE.</p><h1>DROPS <em>INVICTUS</em></h1><span>Recompensas em suplementação para apoiar sua evolução, com foco principal em whey protein e creatina. Cada Drop apresenta todos os detalhes antes do resgate.</span><div className="drops-live-chips"><b><Sparkles size={14}/> WHEY E CREATINA</b><b><Coins size={14}/> INVICTUS COINS</b><b><Bell size={14}/> DROPS ANUNCIADOS NO APP</b></div></div></section>
     <div className="drops-live-shell">
       <section className="drops-live-gate">
         <Smartphone size={34}/>
-        <p>DISPONÍVEL NO APLICATIVO</p>
-        <h2>Catálogo, compra e resgate acontecem no app</h2>
-        <span>Aqui no site você conhece a Loja Invictus. Para ver o catálogo completo, comprar produtos ou resgatar um Drop com suas Coins, abra o aplicativo Invictus com sua conta.</span>
+        <p>RECOMPENSAS EM SUPLEMENTAÇÃO</p>
+        <h2>Whey e creatina em edições limitadas</h2>
+        <span>Cada edição informa a marca, a quantidade, o estoque disponível e as condições de resgate antes da sua confirmação.</span>
         <div className="drops-live-howto">
-          <article><PackageSearch size={16}/><div><b>Explore o catálogo</b><span>Suplementos, vestuário, acessórios e combos do universo Invictus.</span></div></article>
-          <article><Gift size={16}/><div><b>Resgate em Drops</b><span>Lançamentos limitados com estoque reservado, resgatáveis com Invictus Coins.</span></div></article>
-          <article><Truck size={16}/><div><b>Acompanhe seu pedido</b><span>Pagamento, preparo e entrega rastreáveis direto na sua conta.</span></div></article>
+          <article><PackageSearch size={16}/><div><b>Recompensas para sua rotina</b><span>Whey e creatina são os principais tipos de suplemento dos Drops.</span></div></article>
+          <article><Gift size={16}/><div><b>Detalhes antes do resgate</b><span>Marca, quantidade, estoque e regras aparecem em cada edição.</span></div></article>
+          <article><Bell size={16}/><div><b>Aviso oficial</b><span>As novidades serão comunicadas pelo site e pelo aplicativo Invictus.</span></div></article>
         </div>
       </section>
 
       <AppDownloadPanel/>
 
-      <section className="drops-live-rules"><article><ShieldCheck/><h3>100% seguro</h3><p>Pedidos rastreáveis do pagamento até a entrega, com endereço e status acompanhados na sua conta.</p></article><article><Coins/><h3>Invictus Coins</h3><p>Coins são recompensas do ecossistema: não têm valor em dinheiro, não são vendidas e não podem ser sacadas via PIX.</p></article><article><Gift/><h3>Drops limitados</h3><p>Cada Drop tem estoque separado e reservado — quando esgota, só volta na próxima janela.</p></article></section>
+      <section className="drops-live-rules"><article><ShieldCheck/><h3>Informação clara</h3><p>Você vê o suplemento, a quantidade, o estoque e as condições completas antes de usar suas Coins.</p></article><article><Coins/><h3>Invictus Coins</h3><p>Coins são recompensas do ecossistema: não têm valor em dinheiro, não são vendidas e não podem ser sacadas via PIX.</p></article><article><Gift/><h3>Whey e creatina</h3><p>São os principais prêmios dos Drops, sempre identificados com todos os detalhes da edição.</p></article></section>
     </div>
   </main>;
 }

@@ -4,10 +4,11 @@ import './AccountPortalEnhancements.css';
 import './PublicPortal.css';
 
 type Item = { q: string; a: string };
-type Group = { title: string; items: Item[] };
+type Group = { id: string; title: string; items: Item[] };
 
 const groups: Group[] = [
   {
+    id: 'campeonatos',
     title: 'Campeonatos',
     items: [
       { q: 'Como funcionam os Campeonatos Invictus?', a: 'São competições oficiais de Cardio e Musculação, organizadas em edições com calendário, taxa, regulamento e premiação publicados antes da inscrição. A inscrição e o pagamento acontecem aqui pelo site; as atividades da edição são registradas e validadas pelo aplicativo Invictus.' },
@@ -19,6 +20,7 @@ const groups: Group[] = [
     ],
   },
   {
+    id: 'iga',
     title: 'Entre Amigos e o IGA',
     items: [
       { q: 'O que é Entre Amigos?', a: 'Um benefício exclusivo do Invictus PRO para criar um desafio privado, convidar amigos por código e disputar a classificação pelo IGA dentro da janela do próprio desafio. A criação, o convite e o acompanhamento em tempo real acontecem no aplicativo.' },
@@ -28,10 +30,11 @@ const groups: Group[] = [
     ],
   },
   {
+    id: 'power-lift',
     title: 'Power Lift',
     items: [
       { q: 'Como funciona a temporada do Power Lift?', a: 'O Power Lift roda em temporadas oficiais de 30 dias. Dentro de cada temporada, você registra marcas em três modalidades — Supino, Agachamento Livre e Levantamento Terra — e evolui de categoria em cada uma delas de forma independente.' },
-      { q: 'Como uma marca é homologada?', a: 'Você grava um vídeo contínuo mostrando os pesos utilizados e a execução completa do movimento. O vídeo passa primeiro por análise automática; quando a confiança não é alta o suficiente, ele segue para revisão manual da equipe técnica antes de ser aprovado ou recusado. Só marcas aprovadas contam.' },
+      { q: 'Como uma marca é homologada?', a: 'Você grava um vídeo contínuo mostrando os pesos utilizados e a execução completa do movimento. O vídeo é analisado antes de contar no ranking e, quando necessário, passa por uma revisão adicional da equipe Invictus. Só marcas aprovadas contam.' },
       { q: 'Como funcionam as categorias, de Ferro a Diamante?', a: 'Cada modalidade evolui por seis categorias — Ferro, Bronze, Prata, Ouro, Platina e Diamante — com base na carga homologada. Uma marca aprovada avança no máximo uma categoria por vez em relação à sua categoria atual naquela modalidade, mesmo que o resultado seja alto o bastante para pular mais faixas.' },
       { q: 'O que são o Ranking Elite e o Ranking Geral?', a: 'Chegar a Diamante em uma modalidade libera o Ranking Elite daquela modalidade. Chegar a Diamante nas três modalidades dentro da mesma temporada — o chamado Triplo Diamante — libera o Ranking Geral da sua categoria (masculina ou feminina).' },
       { q: 'Quantas marcas eu posso enviar por dia?', a: 'O envio oficial é de um vídeo por modalidade por dia. Uma carga homologada maior substitui a marca anterior daquela modalidade assim que aprovada.' },
@@ -39,6 +42,7 @@ const groups: Group[] = [
     ],
   },
   {
+    id: 'coins',
     title: 'Drops e Invictus Coins',
     items: [
       { q: 'O que são os Drops?', a: 'Lançamentos limitados de produtos e recompensas do universo Invictus, com estoque próprio e reservado por janela — quando esgota, só retorna na próxima janela de lançamento.' },
@@ -48,24 +52,28 @@ const groups: Group[] = [
     ],
   },
   {
+    id: 'planos',
     title: 'Treino inteligente e assinatura',
     items: [
       { q: 'Como o Invictus monta meu treino de musculação?', a: 'Todo atleta recebe um plano gerado por um motor de prescrição próprio, com exercícios do catálogo oficial Invictus, a partir do seu objetivo, experiência, tempo disponível e equipamento. É a base do plano em qualquer assinatura, Free ou PRO.' },
       { q: 'Qual a diferença entre o treino Free e o treino PRO?', a: 'No PRO, o mesmo plano passa por uma camada adicional de inteligência artificial, que pode ajustar exercícios, séries e repetições dentro do catálogo oficial e de limites seguros, com justificativa explicada. Se a IA estiver indisponível, seu treino do dia continua vindo do motor de prescrição automaticamente — você nunca fica sem plano.' },
       { q: 'O Invictus usa minha idade, peso ou sexo para definir a carga inicial?', a: 'Não. Nenhum plano, Free ou PRO, usa esses dados para definir carga inicial. O Invictus não é um dispositivo médico, não diagnostica lesões e não substitui avaliação de médico, nutricionista ou profissional de educação física.' },
       { q: 'O Invictus se conecta com Apple Health, Google Health Connect ou Strava?', a: 'Sim. Você pode sincronizar essas fontes para enriquecer suas métricas de atividade. A Jornada Cardio usa esses dados para propor metas semanais que se adaptam ao seu progresso, diretamente no aplicativo.' },
-      { q: 'Como funciona a cobrança e o cancelamento da assinatura PRO?', a: 'A assinatura é gerenciada pela App Store ou pelo Google Play, que mostram preço, período, renovação e eventual teste antes da compra. O cancelamento é feito na sua conta da loja, não dentro do app; ao cancelar, o acesso PRO continua até o fim do período já pago.' },
+      { q: 'Onde eu conheço e ativo o Invictus PRO?', a: 'Você conhece os benefícios do PRO pelo site e inicia pela sua conta Invictus. Antes de confirmar, a tela de contratação informa o preço, o período, a renovação e o meio de pagamento disponível. O acesso é liberado para a mesma conta usada no site e no aplicativo.' },
+      { q: 'Como funciona o cancelamento do PRO?', a: 'O cancelamento deve ser feito pelo mesmo canal em que a assinatura foi contratada. Ao cancelar a renovação, os benefícios permanecem ativos até o fim do período já pago. A sua conta e o histórico de atividades não são excluídos.' },
     ],
   },
   {
+    id: 'integridade',
     title: 'Integridade e antifraude',
     items: [
-      { q: 'O Invictus verifica se as atividades são reais?', a: 'Sim. Atividades e vídeos passam por checagens automáticas de consistência (como coerência de percurso e ritmo em atividades com GPS, e duplicidade de mídia enviada) além de revisão manual da equipe técnica quando necessário. Isso vale tanto para Campeonatos quanto para Power Lift.' },
+      { q: 'O Invictus verifica se as atividades são reais?', a: 'Sim. Atividades e vídeos passam por verificações de consistência e, quando necessário, por revisão da equipe Invictus. Isso protege a igualdade entre os participantes dos Campeonatos e do Power Lift.' },
       { q: 'O que acontece se uma atividade for sinalizada?', a: 'Atividades sinalizadas por inconsistência podem ser colocadas em revisão, ter a pontuação corrigida ou ser desconsideradas do ranking quando faltarem dados obrigatórios ou houver evidência de manipulação, conforme os Termos de Uso.' },
-      { q: 'Por que o Invictus não detalha exatamente como o antifraude funciona?', a: 'Por segurança e para proteger a integridade dos rankings e das premiações, os critérios técnicos exatos de detecção não são divulgados publicamente — do mesmo jeito que a maioria das plataformas esportivas trata seus mecanismos antifraude.' },
+      { q: 'Por que algumas verificações de segurança não são divulgadas em detalhes?', a: 'Para proteger os rankings e as premiações contra tentativas de manipulação. As regras que o atleta precisa cumprir são sempre informadas; apenas os mecanismos de proteção contra fraude permanecem reservados.' },
     ],
   },
   {
+    id: 'aplicativo',
     title: 'Conta e aplicativo',
     items: [
       { q: 'Onde eu baixo o aplicativo Invictus?', a: 'Os links oficiais de download aparecem na sua Central de Conta e nas páginas de Entre Amigos, Power Lift e Drops assim que o Invictus estiver disponível nas lojas.' },
@@ -78,9 +86,10 @@ const groups: Group[] = [
 export default function FaqPage() {
   return <main className="pub-page faq-public-page">
     <header className="pub-header"><a href="/"><ArrowLeft size={17} /> Início</a><a href="/" className="pub-logo">INVICTUS <span>PERFORMANCE</span></a><a href="/conta">Minha conta</a></header>
-    <section className="legal-public-hero"><div><HelpCircle /><p className="pub-eyebrow">CENTRAL DE AJUDA</p><h1>Perguntas Frequentes</h1><p>Como funciona cada recurso do Invictus, explicado por tópico: Campeonatos, Entre Amigos, Power Lift, Drops e Coins, treino inteligente e assinatura, integridade e sua conta.</p></div></section>
+    <section className="legal-public-hero"><div><HelpCircle /><p className="pub-eyebrow">CENTRAL INVICTUS</p><h1>Encontre sua resposta</h1><p>Tudo o que você precisa saber antes de se inscrever, assinar o PRO ou começar a treinar: regras, pagamentos, aplicativo, campeonatos e funcionalidades.</p></div></section>
     <div className="legal-public-shell">
-      {groups.map(group => <section className="pub-card faq-group" key={group.title}>
+      <nav className="faq-index" aria-label="Tópicos da Central Invictus">{groups.map(group=><a key={group.id} href={`#${group.id}`}>{group.title}</a>)}</nav>
+      {groups.map(group => <section id={group.id} className="pub-card faq-group" key={group.title}>
         <p className="pub-eyebrow">{group.title.toUpperCase()}</p>
         {group.items.map(item => <details key={item.q}><summary><HelpCircle size={15} />{item.q}</summary><p>{item.a}</p></details>)}
       </section>)}

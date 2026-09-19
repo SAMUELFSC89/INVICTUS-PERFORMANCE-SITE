@@ -102,9 +102,6 @@ export default function ChampionshipSignupPage({ championshipId }: { championshi
   const isPaid = registration?.paymentStatus === 'PAID' || registration?.status === 'paga' || registration?.status === 'ACTIVE';
   const pending = !isPaid && Boolean(registration);
   const strength = championship?.type === 'arena_musculacao' || championshipId.includes('strength');
-  const desktopHero = strength ? 'strength-hero.webp' : 'cardio-hero.webp';
-  const mobileHero = strength ? 'strength-hero.webp' : 'cardio-hero-mobile.webp';
-  const heroStyle = {'--champ-hero':`url(/assets/invictus/${desktopHero})`,'--champ-hero-mobile':`url(/assets/invictus/${mobileHero})`} as any;
   const prize = championship?.revealedPrizePool ?? championship?.prizePool ?? 0;
   const prizeDistribution=championship?.revealedPrizeDistribution?.length?championship.revealedPrizeDistribution:(championship?.prizeDistribution||[]);
   const statusText = championship?.registrationOpen ? 'INSCRIÇÕES ABERTAS' : (championship?.registrationReadinessReason || 'INSCRIÇÕES INDISPONÍVEIS');
@@ -127,7 +124,7 @@ export default function ChampionshipSignupPage({ championshipId }: { championshi
 
   return <main className="pub-page championship-full-page">
     <header className="pub-header"><button onClick={() => window.location.assign('/campeonatos')}><ArrowLeft size={17}/> Campeonatos</button><a href="/" className="pub-logo">INVICTUS <span>PERFORMANCE</span></a><a href="/conta">Minha conta</a></header>
-    <section className="pub-hero championship-detail-hero" style={heroStyle}><div><p>{category} · CAMPEONATO OFICIAL</p><h1>{title}</h1><span className={championship?.registrationOpen ? 'open' : 'closed'}>{statusText}</span><p className="pub-desc">{championship?.description || 'Competição oficial Invictus com ranking, regras publicadas e atividades validadas.'}</p></div></section>
+    <section className="pub-hero championship-detail-hero"><div><p>{category} · CAMPEONATO OFICIAL</p><h1>{title}</h1><span className={championship?.registrationOpen ? 'open' : 'closed'}>{statusText}</span><p className="pub-desc">{championship?.description || 'Competição oficial Invictus com ranking, regras publicadas e atividades validadas.'}</p></div></section>
 
     <div className="pub-layout">
       <section className="pub-main">

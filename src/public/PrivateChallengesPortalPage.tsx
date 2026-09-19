@@ -6,7 +6,7 @@ export default function PrivateChallengesPortalPage() {
   return <main className="friends-live-page">
     <header className="friends-live-header"><a href="/"><ArrowLeft size={17}/> Início</a><a className="friends-live-logo" href="/">INVICTUS <span>PERFORMANCE</span></a><a href="/conta">Minha conta</a></header>
 
-    <section className="friends-live-hero" style={{backgroundImage:'linear-gradient(90deg,rgba(4,4,4,.97),rgba(4,4,4,.42)),url(/assets/invictus/friends-hero.webp)'}}>
+    <section className="friends-live-hero">
       <div><p>BENEFÍCIO EXCLUSIVO INVICTUS PRO</p><h1>ENTRE <em>AMIGOS</em></h1><h2>Seu treino vira uma disputa de verdade.</h2><span>Crie um desafio privado, convide seus amigos e acompanhe a classificação pelo IGA dentro da janela oficial do desafio. Se o grupo quiser, cada participante pode colocar Invictus Coins para formar um pote interno para o vencedor.</span><div className="friends-live-chips"><b><BarChart3 size={14}/> RANKING POR IGA</b><b><Coins size={14}/> COINS OPCIONAIS</b><b><Users size={14}/> GRUPO PRIVADO</b></div></div>
     </section>
 
@@ -26,7 +26,7 @@ export default function PrivateChallengesPortalPage() {
       <AppDownloadPanel/>
 
       <section className="friends-live-rules"><article><BarChart3/><h3>IGA decide a disputa</h3><p>O IGA combina três fatores calculados a partir das suas atividades sincronizadas: consistência semanal de treinos, qualidade da duração de cada sessão e intensidade por frequência cardíaca. O cálculo é automático e não depende de pontuação manual.</p></article><article><Coins/><h3>Prêmio em Invictus Coins</h3><p>O valor por participante é opcional e definido pelo grupo. As Coins são a recompensa interna do ecossistema: não têm valor em dinheiro e não podem ser sacadas via PIX.</p></article><article><Crown/><h3>Desempate automático</h3><p>Empate no topo estende o desafio por 1 dia, uma única vez, para desempatar conforme o regulamento vigente do recurso no aplicativo.</p></article></section>
-      <p className="friends-live-pro-note"><ShieldCheck size={14}/> Entre Amigos é um benefício exclusivo do Invictus PRO. A criação e a participação exigem um entitlement PRO ativo na sua conta.</p>
+      <p className="friends-live-pro-note"><ShieldCheck size={14}/> Entre Amigos é um benefício exclusivo do Invictus PRO. Para criar ou participar, mantenha o Plano PRO ativo na sua conta.</p>
     </div>
   </main>;
 }
