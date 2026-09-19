@@ -46,11 +46,11 @@ const approvedAssets = [
 ];
 
 const sourceContracts = [
-  ['src/RebuildApp.tsx', ['window.location.assign(route)', 'PRO · IGA + PRÊMIO EM COINS', 'BENEFÍCIO PRO', 'logo-invictus.png', 'home-hero-mobile.webp', 'approvedInstitutional']],
+  ['src/RebuildApp.tsx', ['window.location.assign(route)', 'logo-invictus.png', 'home-hero-mobile.webp', 'approvedInstitutional', 'Crie uma disputa privada', 'Prove sua evolução em Supino']],
   ['src/entry.tsx', ['ChampionshipsLivePage', 'PrivateChallengesPortalPage', 'PowerLiftPortalPage', 'DropsStorePage', 'AccountSignupPage', 'AccountOnboardingPage', 'ApprovedAssets.css']],
   ['src/public/DropsStorePage.tsx', ['subscribeAdminRealtime', 'getStoreOrder', 'STORE_ORDER_CHANGED']],
   ['src/public/PrivateChallengesPortalPage.tsx', ['RANKING POR IGA', 'COINS OPCIONAIS', 'stakeAmount', 'igaScore']],
-  ['src/public/ChampionshipsLivePage.tsx', ['cardio-card.webp', 'strength-card.webp']],
+  ['src/public/ChampionshipsLivePage.tsx', ['cardio-card.webp', 'strength-card.webp', "import './ChampionshipsLive.css';", '<b>Entre Amigos</b>', '<b>Power Lift</b>']],
   ['src/public/ChampionshipSignupPage.tsx', ['cardio-hero-mobile.webp', 'strength-hero.webp', 'championship-detail-hero']],
   ['index.html', ['favicon-invictus.png', 'og-invictus.jpg', 'twitter:image']],
 ];
@@ -74,6 +74,11 @@ async function assertSourceContracts() {
   const forbiddenDemoContent = ['Mariana Costa', 'Lucas Ferreira', '531 atletas', '1.856 atletas', 'R$ 49,90'];
   for (const snippet of forbiddenDemoContent) {
     if (home.includes(snippet)) fail(`Home ainda contém dado demonstrativo removido: ${snippet}`);
+  }
+  const championships = await readFile('src/public/ChampionshipsLivePage.tsx', 'utf8');
+  const forbiddenUpfrontPlanCopy = ['PRO · IGA + PRÊMIO EM COINS', 'BENEFÍCIO PRO', 'Entre Amigos · PRO', 'Power Lift · PRO'];
+  for (const snippet of forbiddenUpfrontPlanCopy) {
+    if (home.includes(snippet) || championships.includes(snippet)) fail(`Descoberta pública voltou a expor plano antes do fluxo: ${snippet}`);
   }
 }
 
