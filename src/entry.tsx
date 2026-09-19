@@ -21,6 +21,7 @@ import './admin/AdminOperational.css';
 import './admin/FinanceOverviewPanel.css';
 import './public/PublicCleanup.css';
 import './public/PrivateChallengesRewards.css';
+import './public/ApprovedAssets.css';
 
 const path = window.location.pathname.replace(/\/$/, '') || '/';
 const isAthleteAuditAdminRoute = path === '/admin/audit/athlete' || path.startsWith('/admin/audit/athlete/');
