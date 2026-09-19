@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap');
+
+:root {
+  --invictus-font-body: 'Manrope', Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --invictus-font-display: 'Sora', 'Manrope', Montserrat, system-ui, sans-serif;
+}
+
+/*
+ * Public visual theme.
+ * Keep the photo on the public site only: admin routes intentionally use their
+ * own surfaces so operational screens stay focused and unchanged.
+ */
+.site,
+.pub-page,
+.pl-live-page,
+.friends-live-page,
+.drops-live-page,
+.explain-page {
+  min-height: 100vh;
+  color: #f7f4ed;
+  font-family: var(--invictus-font-body) !important;
+  background-color: #050505 !important;
+  background-image:
+    linear-gradient(180deg, rgba(3, 3, 3, .70), rgba(3, 3, 3, .84)),
+    url('/assets/invictus/invictus-site-background.webp') !important;
+  background-position: center, center top !important;
+  background-size: cover, cover !important;
+  background-repeat: no-repeat, no-repeat !important;
+  background-attachment: fixed, fixed !important;
+}
+
+/* Let the same gym image run continuously from the header through the page. */
+.site .hero,
+.site .accountHero,
+.pub-page .pub-hero,
+.pub-page .account-live-hero,
+.pub-page .legal-public-hero,
+.pub-page .account-login-wrap,
+.pl-live-page .pl-live-hero,
+.friends-live-page .friends-live-hero,
+.drops-live-page .drops-live-hero,
+.explain-page .explain-hero {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Glass-like navigation/footer keeps the image visible without hurting contrast. */
+.site > header,
+.pub-page .pub-header,
+.pl-live-page .pl-live-header,
+.friends-live-page .friends-live-header,
+.drops-live-page .drops-live-header,
+.explain-page .explain-header {
+  background: rgba(5, 5, 5, .76) !important;
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.site footer.siteFooter {
+  background: rgba(5, 5, 5, .82) !important;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+/* Softer surfaces allow a restrained amount of the site background to remain visible. */
+.site .soft,
+.site .step,
+.site .infoCard,
+.site .activityRow,
+.site .recommendCard,
+.site .featureGrid article,
+.site .liftGrid article,
+.site .rules article,
+.site .productGrid article,
+.site .cta,
+.pub-page .pub-card,
+.pub-page .pub-stats article,
+.pub-page .pub-checkout,
+.pl-live-page .pl-live-loading,
+.pl-live-page .pl-live-gate,
+.pl-live-page .pl-live-season,
+.pl-live-page .pl-live-general,
+.pl-live-page .pl-live-ranking,
+.pl-live-page .pl-live-modalities article,
+.pl-live-page .pl-live-rules article,
+.friends-live-page .friends-live-loading,
+.friends-live-page .friends-live-gate,
+.friends-live-page .friends-live-console,
+.friends-live-page .friends-live-list article,
+.friends-live-page .friends-live-rules article,
+.drops-live-page .drops-live-loading,
+.drops-live-page .drops-live-gate,
+.drops-live-page .drops-live-overview,
+.drops-live-page .drops-live-orders,
+.drops-live-page .drops-live-grid > article,
+.explain-page .explain-compare article,
+.explain-page .explain-steps article,
+.explain-page .explain-legal,
+.explain-page .explain-split article,
+.explain-page .explain-cta {
+  background-color: rgba(10, 10, 10, .88) !important;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+/* Typography refresh: cleaner body copy and a stronger premium display face. */
+.site :where(h1, h2, h3, h4, h5, h6),
+.pub-page :where(h1, h2, h3, h4, h5, h6),
+.pl-live-page :where(h1, h2, h3, h4, h5, h6),
+.friends-live-page :where(h1, h2, h3, h4, h5, h6),
+.drops-live-page :where(h1, h2, h3, h4, h5, h6),
+.explain-page :where(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--invictus-font-display) !important;
+  letter-spacing: -.035em;
+  text-wrap: balance;
+}
+
+.site :where(h1, h2),
+.pub-page :where(h1, h2),
+.pl-live-page :where(h1, h2),
+.friends-live-page :where(h1, h2),
+.drops-live-page :where(h1, h2),
+.explain-page :where(h1, h2) {
+  text-shadow: 0 10px 34px rgba(0, 0, 0, .46);
+}
+
+.site :where(p, li, span, a, button),
+.pub-page :where(p, li, span, a, button),
+.pl-live-page :where(p, li, span, a, button),
+.friends-live-page :where(p, li, span, a, button),
+.drops-live-page :where(p, li, span, a, button),
+.explain-page :where(p, li, span, a, button) {
+  font-family: var(--invictus-font-body);
+}
+
+@media (max-width: 820px) {
+  .site,
+  .pub-page,
+  .pl-live-page,
+  .friends-live-page,
+  .drops-live-page,
+  .explain-page {
+    /* Mobile browsers handle fixed backgrounds inconsistently. Repeat a viewport-sized crop instead. */
+    background-attachment: scroll, scroll !important;
+    background-size: auto, auto 100vh !important;
+    background-repeat: repeat, repeat-y !important;
+    background-position: center, center top !important;
+  }
+}
