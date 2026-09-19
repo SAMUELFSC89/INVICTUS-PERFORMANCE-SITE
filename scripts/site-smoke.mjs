@@ -48,7 +48,7 @@ const approvedAssets = [
 const sourceContracts = [
   ['src/RebuildApp.tsx', ['window.location.assign(route)', 'logo-invictus.png', 'home-hero-mobile.webp', 'approvedInstitutional', 'Crie uma disputa privada', 'Prove sua evolução em Supino']],
   ['src/entry.tsx', ['ChampionshipsLivePage', 'PrivateChallengesPortalPage', 'PowerLiftPortalPage', 'DropsStorePage', 'AccountSignupPage', 'AccountOnboardingPage', 'ApprovedAssets.css']],
-  ['src/public/DropsStorePage.tsx', ['subscribeAdminRealtime', 'getStoreOrder', 'STORE_ORDER_CHANGED']],
+  ['src/public/DropsStorePage.tsx', ['subscribeAdminRealtime', 'getStoreOrder', 'STORE_ORDER_CHANGED', 'Novidades Invictus chegando']],
   ['src/public/PrivateChallengesPortalPage.tsx', ['RANKING POR IGA', 'COINS OPCIONAIS', 'stakeAmount', 'igaScore']],
   ['src/public/ChampionshipsLivePage.tsx', ['cardio-card.webp', 'strength-card.webp', "import './ChampionshipsLive.css';", '<b>Entre Amigos</b>', '<b>Power Lift</b>']],
   ['src/public/AccountPortalPage.tsx', ['getChampionships()', 'Campeonatos disponíveis', 'cardio-card.webp', 'strength-card.webp', 'Continuar inscrição', 'Inscrição confirmada']],
@@ -77,9 +77,25 @@ async function assertSourceContracts() {
     if (home.includes(snippet)) fail(`Home ainda contém dado demonstrativo removido: ${snippet}`);
   }
   const championships = await readFile('src/public/ChampionshipsLivePage.tsx', 'utf8');
+  const drops = await readFile('src/public/DropsStorePage.tsx', 'utf8');
+  const signup = await readFile('src/public/ChampionshipSignupPage.tsx', 'utf8');
   const forbiddenUpfrontPlanCopy = ['PRO · IGA + PRÊMIO EM COINS', 'BENEFÍCIO PRO', 'Entre Amigos · PRO', 'Power Lift · PRO'];
   for (const snippet of forbiddenUpfrontPlanCopy) {
     if (home.includes(snippet) || championships.includes(snippet)) fail(`Descoberta pública voltou a expor plano antes do fluxo: ${snippet}`);
+  }
+  const forbiddenTechnicalPublicCopy = [
+    'backend ainda mantém o catálogo público desativado',
+    'Nenhum produto fictício',
+    'vêm diretamente do backend da loja',
+    'mesmo backend usado pelo aplicativo',
+    'fonte canônica do Invictus',
+    'homologados pelo backend oficial',
+    'O navegador não pode marcar uma inscrição como paga',
+  ];
+  for (const snippet of forbiddenTechnicalPublicCopy) {
+    if (drops.includes(snippet) || championships.includes(snippet) || signup.includes(snippet)) {
+      fail(`Página pública voltou a expor linguagem técnica interna: ${snippet}`);
+    }
   }
 }
 
