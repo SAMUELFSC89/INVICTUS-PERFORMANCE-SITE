@@ -22,6 +22,7 @@ const routes = [
   '/termos',
   '/privacidade',
   '/perguntas-frequentes',
+  '/contato',
   '/admin',
   '/admin/audit',
   '/admin/audit/athlete',
@@ -53,6 +54,7 @@ const sourceContracts = [
   ['src/public/ChampionshipSignupPage.tsx', ['getChampionshipRuleSections', 'COMPETITIVE_HR_FULL_TEXT', 'LEGAL_TERMS_OF_USE', 'LEGAL_PRIVACY_POLICY', 'acceptedRegulation', 'acceptedHr', 'acceptedTerms', 'AppDownloadPanel']],
   ['src/lib/publicLegal.ts', ['TERMOS DE USO DA PLATAFORMA INVICTUS', 'POLÍTICA DE PRIVACIDADE E PROTEÇÃO DE DADOS', 'CIÊNCIA SOBRE FREQUÊNCIA CARDÍACA E PONTUAÇÃO COMPETITIVA', 'getChampionshipRuleSections', 'COMPANY']],
   ['src/public/FaqPage.tsx', ['Encontre sua resposta', 'SUPPORT_EMAIL', '18 anos ou mais']],
+  ['src/public/ContactPage.tsx', ['COMO PODEMOS AJUDAR?', 'SUPPORT_EMAIL', 'Campeonatos', 'Pagamentos', 'Plano PRO']],
   ['src/RebuildApp.tsx', ['perguntas-frequentes', 'COMPANY.cnpj']],
   ['index.html', ['favicon-invictus.png', 'Campeonatos e Plano PRO']],
 ];

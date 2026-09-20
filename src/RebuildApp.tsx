@@ -7,7 +7,7 @@ import { getMyChampionshipRegistrations, type ChampionshipRegistration } from '.
 import { COMPANY, SUPPORT_EMAIL } from './lib/publicLegal';
 
 type Route='/'|'/campeonatos'|'/entre-amigos'|'/power-lift'|'/drops'|'/conta';
-const nav:[string,string][]=[['Início','/'],['Campeonatos','/campeonatos'],['Plano PRO','/#pro'],['Como funciona','/perguntas-frequentes'],['Baixar o app','/#aplicativo']];
+const nav:[string,string][]=[['Início','/'],['Campeonatos','/campeonatos'],['Plano PRO','/#pro'],['Como funciona','/perguntas-frequentes'],['Contato','/contato']];
 const asset=(name:string)=>`/assets/invictus/${name}`;
 const go=(route:Route)=>{if(route==='/'){window.scrollTo({top:0,behavior:'smooth'});return;}window.location.assign(route);};
 
@@ -18,7 +18,7 @@ function Footer(){const[signedIn,setSignedIn]=useState(Boolean(auth.currentUser)
   <div className="footerCol footerBrand"><Brand/><p>Mais que treino.<br/>É legado.</p></div>
   <div className="footerCol"><h4>Navegação</h4>{nav.map(([label,href])=><button key={href} onClick={()=>goHref(href)}>{label}</button>)}<button onClick={()=>goHref('/entre-amigos')}>Entre Amigos</button><button onClick={()=>goHref('/power-lift')}>Power Lift</button><button onClick={()=>goHref('/drops')}>Drops</button></div>
   <div className="footerCol"><h4>Conta</h4>{signedIn?<button onClick={()=>go('/conta')}>Minha Conta</button>:<><button onClick={()=>go('/conta')}>Entrar</button><button onClick={()=>goHref('/conta/cadastro')}>Inscreva-se</button></>}<button onClick={()=>goHref('/conta/excluir')}>Excluir conta</button></div>
-  <div className="footerCol"><h4>Institucional</h4><button onClick={()=>goHref('/treino-inteligente')}>Treino Inteligente</button><button onClick={()=>goHref('/economia-invictus')}>Economia Invictus</button><button onClick={()=>goHref('/perguntas-frequentes')}>Perguntas Frequentes</button><button onClick={()=>goHref('/termos')}>Termos de Uso</button><button onClick={()=>goHref('/privacidade')}>Política de Privacidade</button></div>
+  <div className="footerCol"><h4>Institucional</h4><button onClick={()=>goHref('/treino-inteligente')}>Treino Inteligente</button><button onClick={()=>goHref('/economia-invictus')}>Economia Invictus</button><button onClick={()=>goHref('/perguntas-frequentes')}>Perguntas Frequentes</button><button onClick={()=>goHref('/contato')}>Contato</button><button onClick={()=>goHref('/termos')}>Termos de Uso</button><button onClick={()=>goHref('/privacidade')}>Política de Privacidade</button></div>
   <div className="footerCol footerContact"><h4>Contato</h4><a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a><span>{COMPANY.legalName}</span><span>CNPJ {COMPANY.cnpj}</span><span>{COMPANY.address}</span></div>
   <div className="footerCopy"><span>© {new Date().getFullYear()} Invictus Performance</span></div>
 </footer>}

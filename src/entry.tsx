@@ -16,6 +16,7 @@ import AccountOnboardingPage from './public/AccountOnboardingPage';
 import AccountDeletionPage from './public/AccountDeletionPage';
 import LegalPage from './public/LegalPage';
 import FaqPage from './public/FaqPage';
+import ContactPage from './public/ContactPage';
 import PrivateChallengesPortalPage from './public/PrivateChallengesPortalPage';
 import PowerLiftPortalPage from './public/PowerLiftPortalPage';
 import DropsStorePage from './public/DropsStorePage';
@@ -43,6 +44,7 @@ const isAccountDeletionRoute = path === '/conta/excluir';
 const isTermsRoute = path === '/termos';
 const isPrivacyRoute = path === '/privacidade';
 const isFaqRoute = path === '/perguntas-frequentes';
+const isContactRoute = path === '/contato';
 const isAccountRoute = path === '/conta' || path.startsWith('/conta/');
 const isPrivateChallengesRoute = path === '/entre-amigos' || path.startsWith('/entre-amigos/');
 const isPowerLiftRoute = path === '/power-lift' || path.startsWith('/power-lift/');
@@ -82,6 +84,8 @@ createRoot(document.getElementById('root')!).render(
                           ? <LegalPage kind="privacy" />
                           : isFaqRoute
                             ? <FaqPage />
+                            : isContactRoute
+                              ? <ContactPage />
                             : isAccountRoute
                             ? <AccountPortalPage />
                             : isPrivateChallengesRoute
